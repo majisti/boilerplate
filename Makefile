@@ -1,20 +1,24 @@
-FIG=docker-compose
-RUN=$(FIG) run --rm tools
+DC=docker-compose
+RUN=$(DC) run --rm tools
 
 all: build start install
 
 build:
-	$(FIG) pull && $(FIG) build
+	$(DC) pull && $(DC) build
 
 install:
 	$(RUN) composer install --no-interaction --prefer-dist
 
 start:
-	$(FIG) up -d
+	$(DC) up -d
 
 clean:
-	$(FIG) kill
-	$(FIG) rm -vf
+	$(DC) kill
+	$(DC) rm -vf
+
+tests:
+	$(RUN) bin/codecept build
+	$(RUN) bin/codecept -v run
 
 cs:
 	$(RUN_TEST) bin/php-cs-fixer fix --no-interaction --dry-run --diff -vvv
