@@ -1,0 +1,19 @@
+namespace: Tests
+actor: Tester
+
+paths:
+    tests: src/Tests
+    log: src/Tests/_output
+    data: src/Tests/_data
+    support: src/Tests/_support
+    envs: src/Tests/_envs
+
+settings:
+    bootstrap: _bootstrap.php
+    colors: true
+    memory_limit: 2024M
+
+extensions:
+    enabled:
+        - Tests\Codeception\Extension\MockeryExtension
+        - Codeception\Extension\RunFailed

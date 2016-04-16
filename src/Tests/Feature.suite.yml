@@ -1,0 +1,22 @@
+# Codeception Test Suite Configuration
+#
+# A feature test will regroup a set of classes and services in order to assert
+# at a low level that they behave correctly together as a component. You can see
+# this as Spec BDDing. To not confuse that with Story BDD, where features are
+# tested as the perspective of the acceptance user. Such tests are written with
+# Behat.
+#
+# For example, you might have a bowling game and want to calculate the score of
+# that game. You unit test in isolation all your classes, but in the end you
+# want to know if you calculate the score of the game correctly, the game score
+# calculation is a feature test that can be tested at a low level.
+
+class_name: FeatureTester
+
+modules:
+    enabled:
+        # add framework modules here
+        - Symfony2:
+            var_path: 'var'
+            app_path: 'app'
+        - \Tests\Helper\Feature

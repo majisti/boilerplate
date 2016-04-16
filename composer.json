@@ -12,7 +12,7 @@
     },
     "require": {
         "php": ">=5.5.9",
-        "symfony/symfony": "3.1.*@dev",
+        "symfony/symfony": "3.0.*",
         "doctrine/orm": "^2.5",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/doctrine-cache-bundle": "^1.2",
@@ -24,7 +24,10 @@
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
-        "symfony/phpunit-bridge": "^3.0"
+        "mockery/mockery": "dev-master",
+        "codeception/codeception": "~2.1",
+        "polishsymfonycommunity/symfony-mocker-container": "~1.0",
+        "fzaninotto/faker": "~1.5"
     },
     "scripts": {
         "post-install-cmd": [
@@ -60,7 +63,7 @@
             "file": "app/config/parameters.yml"
         },
         "branch-alias": {
-            "dev-master": "3.1-dev"
+            "dev-master": "3.0-dev"
         }
     }
 }
