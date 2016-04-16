@@ -1,0 +1,15 @@
+nginx:
+    environment:
+        VIRTUAL_HOST: majisti.nas
+fpm:
+    environment:
+        SYMFONY_ENV: dev
+
+tools:
+#        XDEBUG_CONFIG: idekey=PHPSTORM remote_host=192.168.241.130
+#        PHP_IDE_CONFIG: serverName=CUBE_API
+#        XDEBUG: 1
+
+#blackfire:
+#    image: busybox
+#    command: tail -f /dev/null

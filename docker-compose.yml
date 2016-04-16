@@ -1,0 +1,25 @@
+nginx:
+    image: nginx:1.9
+    volumes:
+        - ./docker/nginx/app.conf:/etc/nginx/conf.d/default.conf:ro
+    links:
+        - fpm
+
+fpm:
+    build: docker/fpm
+    env_file:
+        - docker/env
+    environment:
+        - XDEBUG
+    volumes:
+        - .:/var/www/html
+
+tools:
+    build: docker/tools
+    env_file:
+        - docker/env
+    environment:
+        - XDEBUG
+    volumes:
+        - .:/var/www/html
+        - ~/.composer:/var/www/.composer
