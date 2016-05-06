@@ -16,7 +16,7 @@ clean:
 	$(DC) kill
 	$(DC) rm -vf
 
-tests:
+test:
 	$(RUN) bin/codecept build
 	$(RUN) bin/codecept -v run
 

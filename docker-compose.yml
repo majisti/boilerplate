@@ -9,8 +9,6 @@ fpm:
     build: docker/fpm
     env_file:
         - docker/env
-    environment:
-        - XDEBUG
     volumes:
         - .:/var/www/html
 
@@ -18,8 +16,6 @@ tools:
     build: docker/tools
     env_file:
         - docker/env
-    environment:
-        - XDEBUG
     volumes:
         - .:/var/www/html
         - ~/.composer:/var/www/.composer
