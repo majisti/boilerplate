@@ -1,0 +1,88 @@
+#this abstract behat file is meant to be imported by the concrete project.
+
+default:
+    autoload:
+        '': tests/Features/bootstrap
+    calls:
+        error_reporting: 16383 # E_ALL & ~E_USER_DREPRECATED
+    formatters:
+        pretty: ~
+    suites:
+        default:
+            paths:
+                base: tests
+            filters:
+                tags: "~@skip"
+            contexts:
+                - behatch:browser
+                - behatch:debug
+                - Behat\MinkExtension\Context\MinkContext
+                - ScreenshotContext: [%paths.base%/var/logs/screenshots]
+                - FeatureContext: {}
+                - CommandContext: {kernel: '@kernel'}
+    extensions:
+        Behat\Symfony2Extension:
+            kernel:
+                env: "test"
+                debug: "true"
+        Behat\MinkExtension:
+            base_url: http://majisti.nas #concrete projects need to override this!
+            default_session: default
+            show_cmd: "cp %s var/logs/last_response.html"
+            sessions:
+                default:
+                    symfony2: ~
+        Sanpi\Behatch\Extension: ~
+
+#phantomjs:
+#    autoload:
+#        '': tests/Features/bootstrap
+#    extensions:
+#        Behat\MinkExtension:
+#            default_session: phantomjs
+#            sessions:
+#                phantomjs:
+#                    selenium2:
+#                      browser: phantomjs
+#                      wd_host: phantomjs:4444/wd/hub
+#                      capabilities:
+#                        version: ''
+#                        browser: phantomjs
+
+#chrome:
+#    autoload:
+#        '': tests/Features/bootstrap
+#    suites:
+#        default:
+#            paths:
+#                base: vendor/quebecor/cube-frontend-bundle/tests
+#    extensions:
+#        Behat\MinkExtension:
+#            default_session: chrome
+#            sessions:
+#                chrome:
+#                    selenium2:
+#                      browser: chrome
+#                      wd_host: chrome:4444/wd/hub
+#                      capabilities:
+#                        version: ''
+#                        browser: chrome
+
+#firefox:
+#    autoload:
+#        '': %paths.base%/vendor/quebecor/cube-frontend-bundle/tests/Features/bootstrap
+#    suites:
+#        default:
+#            paths:
+#                base: vendor/quebecor/cube-frontend-bundle/tests
+#    extensions:
+#        Behat\MinkExtension:
+#            default_session: firefox
+#            sessions:
+#                firefox:
+#                    selenium2:
+#                      browser: firefox
+#                      wd_host: firefox:4444/wd/hub
+#                      capabilities:
+#                        version: ''
+#                        browser: firefox

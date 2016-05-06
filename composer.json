@@ -1,17 +1,23 @@
 {
-    "name": "symfony/framework-standard-edition",
-    "license": "MIT",
+    "name": "majisti/nas-movies",
+    "license": "proprietary",
     "type": "project",
-    "description": "The \"Symfony Standard Edition\" distribution",
     "autoload": {
-        "psr-4": { "": "src/" },
-        "classmap": [ "app/AppKernel.php", "app/AppCache.php" ]
+        "psr-4": {
+            "": "src/"
+        },
+        "classmap": [
+            "app/AppKernel.php",
+            "app/AppCache.php"
+        ]
     },
     "autoload-dev": {
-        "psr-4": { "Tests\\": "tests/" }
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
     },
     "require": {
-        "php": ">=5.5.9",
+        "php": ">=7.0",
         "symfony/symfony": "3.0.*",
         "doctrine/orm": "^2.5",
         "doctrine/doctrine-bundle": "^1.6",
@@ -28,7 +34,14 @@
         "mockery/mockery": "dev-master",
         "codeception/codeception": "~2.1",
         "polishsymfonycommunity/symfony-mocker-container": "~1.0",
-        "fzaninotto/faker": "~1.5"
+        "fzaninotto/faker": "~1.5",
+        "behat/behat": "~3.0",
+        "behat/symfony2-extension": "~2.1",
+        "behat/mink": "~1.7",
+        "behat/mink-extension": "~2.1",
+        "behat/mink-browserkit-driver": "~1.3",
+        "behat/mink-selenium2-driver": "~1.3",
+        "behatch/contexts": "~2.3"
     },
     "scripts": {
         "post-install-cmd": [
@@ -48,11 +61,8 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ]
     },
-    "config": {
-        "platform": {
-            "php": "5.5.9"
-        }
-    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "extra": {
         "symfony-app-dir": "app",
         "symfony-bin-dir": "bin",
