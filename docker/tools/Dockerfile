@@ -1,3 +1,5 @@
+#The tools container might be a little bit big here.
+#We should probably look into splitting this file.
 FROM php:7
 
 # Environment variable
@@ -35,7 +37,7 @@ RUN git clone --depth 1 -b v$APCU_VERSION https://github.com/krakjoe/apcu.git /u
     && rm -rf /tmp/* /var/tmp/*
 
 # Xdebug
-RUN pecl install -o -f xdebug-2.4.0RC3 \
+RUN pecl install -o -f xdebug-2.4.0 \
     && rm -rf /tmp/pear
 
 # Configuration

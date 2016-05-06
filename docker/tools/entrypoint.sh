@@ -7,9 +7,9 @@ set -e
 # Fixes cache problems
 sed -ie "s/`id -u www-data`/`stat -c %u /var/www/html`/g" /etc/passwd
 
-# Disabled Xdebug if needed
-if [ "$XDEBUG" = "0" ]; then
-    rm /usr/local/etc/php/conf.d/xdebug.ini
+# Disables Xdebug if not needed
+if [ "$XDEBUG" != "1" ]; then
+    rm -f /usr/local/etc/php/conf.d/xdebug.ini
 fi
 
 # Execute all commands with user www-data

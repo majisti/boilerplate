@@ -12,6 +12,11 @@ fpm:
     volumes:
         - .:/var/www/html
 
+rvm:
+    build: docker/rvm
+    volumes:
+        - .:/var/www/html
+
 tools:
     build: docker/tools
     env_file:

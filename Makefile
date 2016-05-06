@@ -11,7 +11,8 @@ configure:
 	cp -n docker-compose.override.yml.dist docker-compose.override.yml
 
 build:
-	$(DC) pull && $(DC) build
+	$(DC) pull
+	$(DC) build
 
 install:
 	$(RUN) composer install --no-interaction --prefer-dist
