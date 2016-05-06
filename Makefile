@@ -1,7 +1,10 @@
 DC=docker-compose
 RUN=$(DC) run --rm tools
 
-all: build start install
+all: configure build start install
+
+configure:
+	cp -n docker-compose.override.yml.dist docker-compose.override.yml
 
 build:
 	$(DC) pull && $(DC) build

@@ -15,5 +15,6 @@
 /vendor/
 /web/bundles/
 .idea/
+docker-compose.override.yml
 
 tests/_output/*

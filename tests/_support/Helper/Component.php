@@ -7,6 +7,6 @@ namespace Tests\Helper;
 
 use Codeception\Module;
 
-class Feature extends Module
+class Component extends Module
 {
 }
