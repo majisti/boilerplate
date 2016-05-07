@@ -30,6 +30,10 @@ ruby-install:
 node-install:
 	$(NODE) npm install
 	ln -sf ../node_modules/bower/bin/bower bin/bower
+	ln -sf ../node_modules/gulp/bin/gulp.js bin/gulp
+
+node-gulp:
+	$(NODE) bin/gulp
 
 vendors-install:
 	$(PHP) composer install --no-interaction --prefer-dist

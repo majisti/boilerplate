@@ -1,0 +1,41 @@
+@mixin maj-bg-img($assetUrl, $position) {
+  background: maj-image-url($assetUrl) $position;
+}
+
+@mixin maj-sprite($sprites) {
+  @include sprite($sprites);
+  display: block;
+}
+
+@mixin maj-glyphicon($name) {
+  @extend .glyphicon;
+  @extend .glyphicon-#{$name};
+}
+
+// Placeholder styling
+// See: http://stackoverflow.com/a/2610741
+@mixin input-placeholder($color, $alpha: 1) {
+  &::-webkit-input-placeholder {
+    color: $color;
+  }
+  &:-moz-placeholder {
+    color: $color;
+    opacity: 1;
+  }
+  &::-moz-placeholder {
+    color: $color;
+    opacity: 1;
+  }
+  &:-ms-input-placeholder {
+    color: $color;
+  }
+  &:placeholder-shown {
+    color: $color;
+  }
+}
+
+@mixin drop-shadow($h, $v, $blur, $spread, $rgbaColor) {
+  -webkit-box-shadow: rem($h) rem($v) rem($blur) rem($spread) $rgbaColor;
+  -moz-box-shadow: rem($h) rem($v) rem($blur) rem($spread) $rgbaColor;
+  box-shadow: rem($h) rem($v) rem($blur) rem($spread) $rgbaColor;
+}

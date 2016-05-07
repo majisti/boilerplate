@@ -1,0 +1,6 @@
+.component-conversation {
+  @include span(7 last);
+  @include push(1);
+  height: 100%;
+  position: relative;
+}

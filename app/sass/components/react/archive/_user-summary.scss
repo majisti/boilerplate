@@ -1,0 +1,24 @@
+.component-user-summary {
+  clear: both;
+  margin-left:  rem($standardSpacing);
+
+  .profile-picture {
+    float: right;
+    margin-left: rem($standardSpacing / 3);
+  }
+
+  .summary {
+    margin-left: rem($standardSpacing / 3);
+    margin-right: rem(($standardSpacing / 3) + 40);
+
+    li {
+      margin-top: rem(-4);
+      display: block;
+    }
+
+    .user-name {
+      font-family: 'Oswald', 'Impact', sans-serif;
+      white-space: nowrap;
+    }
+  }
+}

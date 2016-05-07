@@ -1,0 +1,20 @@
+.component-contact-summary {
+  .profile-picture {
+    float: left;
+    clear: both;
+    margin-right: rem($standardSpacing / 3);
+  }
+
+  .summary {
+    overflow: auto;
+    display: block;
+
+    .name {
+      font-family: $oswald;
+    }
+
+    .title {
+      font-size: rem(12);
+    }
+  }
+}

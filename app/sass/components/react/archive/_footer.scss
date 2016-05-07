@@ -1,0 +1,26 @@
+.component-footer {
+  @include full;
+  background: $darkColor;
+  padding: rem($standardSpacing / 2);
+  color: $lightColor;
+  position: absolute;
+  bottom: 0;
+
+  ul {
+    li {
+      display: inline-block;
+      vertical-align: middle;
+      font-size: rem(10);
+      margin-right: rem($standardSpacing);
+
+      a {
+        color: $primaryColor;
+        text-decoration: underline;
+
+        &:hover {
+          color: $lightColor;
+        }
+      }
+    }
+  }
+}

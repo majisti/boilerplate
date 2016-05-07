@@ -1,0 +1,31 @@
+* {
+  @include input-placeholder($darkColor);
+}
+
+input, textarea {
+  background: none;
+  border: none;
+  border-bottom: rem(1) $primaryColor solid;
+  color: $darkColor;
+  padding: rem(2) rem(6);
+  border-radius: 0;
+  font-size: rem(14);
+}
+
+textarea {
+  resize: none;
+  overflow: auto;
+}
+
+button {
+  background: $primaryColor;
+  color: $darkColor;
+  border-radius: 0;
+  border: rem(2) solid $primaryColor;
+  text-transform: uppercase;
+  cursor: pointer;
+
+  :hover {
+    color: $lightColor;
+  }
+}

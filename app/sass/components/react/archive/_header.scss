@@ -1,0 +1,24 @@
+.component-header {
+  @include full;
+  @include background($primaryColor);
+  @include drop-shadow(0, 5, 5, 0, rgba(0, 0, 0, 0.38));
+  padding: rem($standardSpacing);
+  color: $lightColor;
+
+  input {
+    @include input-placeholder($lightColor);
+    background: none;
+    border: none;
+    border-bottom: rem(1) $lightColor solid;
+    color: $lightColor;
+    padding: rem(2) rem(6);
+    border-radius: 0;
+
+    &:focus {
+      @include input-placeholder($darkColor);
+      background: $lightColor;
+      border: $lightColor rem(1) solid;
+      color: $darkColor;
+    }
+  }
+}

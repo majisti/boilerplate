@@ -1,0 +1,17 @@
+// Susy setup
+$susy: (
+  columns: 12,
+  gutters: .50
+);
+
+// Mappy breakpoints
+$breakpoints: (
+  'small': 320px,
+  'medium': 640px,
+  'large': 920px,
+  'xlarge': 1200px,
+  'xxlarge': 1400px,
+);
+
+$fa-font-path: '//netdna.bootstrapcdn.com/font-awesome/4.5.0/fonts';
+$fa-version: "4.5.0";

@@ -1,0 +1,7 @@
+.component-conversation-details {
+  @include full;
+  @include drop-shadow(0, 5, 5, 0, rgba(0, 0, 0, 0.38));
+  background: $darkColor;
+  color: $lightColor;
+  padding: rem($standardSpacing / 3);
+}

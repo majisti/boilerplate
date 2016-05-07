@@ -1,0 +1,10 @@
+$oswald: 'Oswald', 'Impact', sans-serif;
+$roboto: 'Roboto Slab', 'Times New Roman', serif;
+
+* {
+  font-family: $roboto;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: $oswald;
+}

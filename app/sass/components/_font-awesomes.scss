@@ -1,0 +1,27 @@
+.hint-icon {
+  @extend .fa-stack;
+  @extend .fa-lg;
+
+  .bubble-icon {
+    @extend .fa-stack-2x;
+  }
+
+  .question-mark-icon {
+    @extend .fa-stack-1x;
+  }
+}
+
+.bubble-icon {
+  @extend .fa;
+  @extend .fa-comment;
+}
+
+.question-mark-icon {
+  @extend .fa;
+  @extend .fa-question;
+}
+
+.bars-icon {
+  @extend .fa;
+  @extend .fa-bars;
+}
