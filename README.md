@@ -35,5 +35,5 @@ Testing
 =======
 
 ```
-make tests
+make test
 ```
