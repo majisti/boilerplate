@@ -1,8 +1,8 @@
 DC=docker-compose
-RUN=$(DC) run --rm tools
+RUN=$(DC) run --rm php
 
 DC_TEST=bin/test_env.sh
-RUN_TEST=$(DC_TEST) run --rm tools
+RUN_TEST=$(DC_TEST) run --rm php
 
 all: configure build start gems-install vendors-install
 clean: clean-project clean-tests

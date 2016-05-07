@@ -2,7 +2,7 @@ fpm:
     environment:
         SYMFONY_ENV: test
 
-tools:
+php:
     environment:
         SYMFONY_ENV: test
     links:

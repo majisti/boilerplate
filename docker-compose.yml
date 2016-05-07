@@ -7,8 +7,6 @@ nginx:
 
 fpm:
     build: docker/fpm
-    env_file:
-        - docker/env
     volumes_from:
         - data
 
@@ -17,10 +15,8 @@ ruby:
     volumes_from:
         - data
 
-tools:
-    build: docker/tools
-    env_file:
-        - docker/env
+php:
+    build: docker/php
     volumes_from:
         - data
 

@@ -5,7 +5,7 @@ fpm:
     environment:
         SYMFONY_ENV: dev
 
-#tools:
+#php:
 #        XDEBUG_CONFIG: idekey=PHPSTORM remote_host=192.168.241.130
 #        PHP_IDE_CONFIG: serverName=CUBE_API
 #        XDEBUG: 1
