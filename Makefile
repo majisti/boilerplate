@@ -17,6 +17,9 @@ build:
 gems-install:
 	$(DC) run --rm ruby bundle install
 
+npm-install:
+	$(DC) run --rm node npm install
+
 vendors-install:
 	$(RUN) composer install --no-interaction --prefer-dist
 

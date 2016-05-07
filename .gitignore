@@ -20,5 +20,6 @@
 .idea/
 docker-compose.override.yml
 .ruby-gems
+node_modules
 
 tests/_output/*

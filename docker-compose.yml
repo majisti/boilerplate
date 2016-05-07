@@ -15,6 +15,11 @@ ruby:
     volumes_from:
         - data
 
+node:
+    build: docker/node
+    volumes_from:
+        - data
+
 php:
     build: docker/php
     volumes_from:

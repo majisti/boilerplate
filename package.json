@@ -1,0 +1,11 @@
+{
+  "name": "majisti-nas",
+  "version": "0.0.1",
+  "dependencies": {
+    "lodash": "^4.12"
+  },
+  "devDependencies": {
+  },
+  "author": "Majisti",
+  "license": "ISC"
+}
