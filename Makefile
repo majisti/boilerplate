@@ -1,50 +1,50 @@
 DC=docker-compose
-RUN=$(DC) run --rm php
+PHP=$(DC) run --rm php
+NODE=$(DC) run --rm node
+RUBY=$(DC) run --rm ruby
 
 DC_TEST=bin/test_env.sh
-RUN_TEST=$(DC_TEST) run --rm php
+PHP_TEST=$(DC_TEST) run --rm php
 
-all: configure build start gems-install vendors-install
-clean: clean-project clean-tests
+all: configure build start vendors-install ruby-install node-install
+clean: stop
+restart: stop start
 
 configure:
 	cp -n docker-compose.override.yml.dist docker-compose.override.yml
+
+start:
+	$(DC) up -d
+
+stop:
+	$(DC) kill
+	$(DC) rm -vf
 
 build:
 	$(DC) pull
 	$(DC) build
 
-gems-install:
-	$(DC) run --rm ruby bundle install
+ruby-install:
+	$(RUBY) bundle install
 
-npm-install:
-	$(DC) run --rm node npm install
+node-install:
+	$(NODE) npm install
+	ln -sf ../node_modules/bower/bin/bower bin/bower
 
 vendors-install:
-	$(RUN) composer install --no-interaction --prefer-dist
+	$(PHP) composer install --no-interaction --prefer-dist
 
 vendors-update:
-	$(RUN) 'php yaml-to-json.phar convert composer.yml composer.json && composer update'
-
-start:
-	$(DC) up -d
-
-clean-project:
-	$(DC) kill
-	$(DC) rm -vf
-
-clean-tests:
-	$(DC_TEST) kill
-	$(DC_TEST) rm -vf
+	$(PHP) 'php yaml-to-json.phar convert composer.yml composer.json && composer update'
 
 test:
-	$(RUN_TEST) 'bin/codecept build && bin/codecept -v run && bin/behat -vvv'
+	$(PHP_TEST) 'bin/codecept build && bin/codecept -v run && bin/behat -vvv'
 
 codecept:
-	$(RUN_TEST) bin/codecept -v run
+	$(PHP_TEST) bin/codecept -v run
 
 behat:
-	$(RUN_TEST) bin/behat -vvv
+	$(PHP_TEST) bin/behat -vvv
 
 cs:
-	$(RUN_TEST) bin/php-cs-fixer fix --no-interaction --dry-run --diff -vvv
+	$(PHP_TEST) bin/php-cs-fixer fix --no-interaction --dry-run --diff -vvv

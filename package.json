@@ -5,6 +5,7 @@
     "lodash": "^4.12"
   },
   "devDependencies": {
+    "bower": "^1.7"
   },
   "author": "Majisti",
   "license": "ISC"
