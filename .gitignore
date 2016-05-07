@@ -19,5 +19,6 @@
 /web/bundles/
 .idea/
 docker-compose.override.yml
+.ruby-gems
 
 tests/_output/*

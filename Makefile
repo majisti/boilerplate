@@ -4,7 +4,7 @@ RUN=$(DC) run --rm tools
 DC_TEST=bin/test_env.sh
 RUN_TEST=$(DC_TEST) run --rm tools
 
-all: configure build start install
+all: configure build start gems-install vendors-install
 clean: clean-project clean-tests
 
 configure:
@@ -14,10 +14,13 @@ build:
 	$(DC) pull
 	$(DC) build
 
-install:
+gems-install:
+	$(DC) run --rm ruby bundle install
+
+vendors-install:
 	$(RUN) composer install --no-interaction --prefer-dist
 
-update:
+vendors-update:
 	$(RUN) 'php yaml-to-json.phar convert composer.yml composer.json && composer update'
 
 start:

@@ -9,18 +9,23 @@ fpm:
     build: docker/fpm
     env_file:
         - docker/env
-    volumes:
-        - .:/var/www/html
+    volumes_from:
+        - data
 
-rvm:
-    build: docker/rvm
-    volumes:
-        - .:/var/www/html
+ruby:
+    build: docker/ruby
+    volumes_from:
+        - data
 
 tools:
     build: docker/tools
     env_file:
         - docker/env
+    volumes_from:
+        - data
+
+data:
+    image: busybox
     volumes:
         - .:/var/www/html
         - ~/.composer:/var/www/.composer
