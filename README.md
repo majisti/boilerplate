@@ -13,23 +13,23 @@ Setup
 Make sure your nginx proxy is setup to always start on boot:
 
 ```
-docker run -d -p 8081:80 --restart=always -v /var/run/docker.sock:/tmp/docker.sock:ro jwilder/nginx-proxy
+docker run -d -p 80:80 --restart=always -v /var/run/docker.sock:/tmp/docker.sock:ro jwilder/nginx-proxy
 ```
 note: you might want to use *8080:80* or *8081:80* if port 80 or 8080 are already used.
 
 Once this is done, you only need to run:
 
 ```
-make
+make clean && make
 ```
 
 Add to your `/etc/host` file:
 
 ```
-127.0.0.1   majisti.nas
+127.0.0.1   majisti.skeleteon
 ```
 
-Browse the site at http://majisti.nas:8081
+Browse the site at `http://majisti.skeleton` or `http://majisti.skeleton:port` if you used a different port.
 
 Testing
 =======

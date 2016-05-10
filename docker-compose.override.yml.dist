@@ -1,6 +1,6 @@
 nginx:
     environment:
-        VIRTUAL_HOST: majisti.nas
+        VIRTUAL_HOST: majisti.skeleton
 fpm:
     environment:
         SYMFONY_ENV: dev
