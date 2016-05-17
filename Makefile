@@ -8,7 +8,7 @@ PHP_TEST=$(DC_TEST) run --rm php
 
 all: configure build start vendors-install ruby-install node-install
 clean: stop
-restart: stop start
+restart: stop build start
 
 configure:
 	cp -n docker-compose.override.yml.dist docker-compose.override.yml

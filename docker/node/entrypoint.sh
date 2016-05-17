@@ -6,4 +6,4 @@ sed -ie "s/`id -u www-data`/`stat -c %u /var/www/html`/g" /etc/passwd
 chown -R www-data /var/www
 
 # Execute all commands with user www-data
-su www-data -s /bin/bash -l -c "cd html; $*"
+su www-data -s /bin/bash -c "$*"

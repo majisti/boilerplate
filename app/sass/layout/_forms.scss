@@ -18,14 +18,6 @@ textarea {
 }
 
 button {
-  background: $primaryColor;
-  color: $darkColor;
-  border-radius: 0;
-  border: rem(2) solid $primaryColor;
-  text-transform: uppercase;
-  cursor: pointer;
-
-  :hover {
-    color: $lightColor;
-  }
+  @extend .btn;
+  @extend .btn-primary;
 }

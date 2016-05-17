@@ -5,6 +5,7 @@
     "lodash": "^4.12"
   },
   "devDependencies": {
+    "bootstrap-sass": "^3.3.6",
     "bourbon": "^4.2.6",
     "bower": "^1.7",
     "font-awesome": "^4.5.0",

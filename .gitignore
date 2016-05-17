@@ -23,5 +23,6 @@ docker-compose.override.yml
 node_modules
 web/assets/js/app.js
 web/assets/css/styles.css
+.bundle/
 
 tests/_output/*
