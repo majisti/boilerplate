@@ -80,5 +80,5 @@ gulp.task('default', ['js'], function runAsSequence() {
 
 gulp.task('watch', ['js', 'css'], function watchAssets() {
     gulp.watch(array_values(gulp.watchedJsFiles), ['js']);
-    gulp.watch(array_values(gulp.watchedScssFiles), ['scss']);
+    gulp.watch(array_values(gulp.watchedScssFiles), ['css']);
 });
