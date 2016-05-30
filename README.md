@@ -26,7 +26,7 @@ make clean && make
 Add to your `/etc/host` file:
 
 ```
-127.0.0.1   majisti.skeleteon
+127.0.0.1   majisti.skeleton
 ```
 
 Browse the site at `http://majisti.skeleton` or `http://majisti.skeleton:port` if you used a different port.

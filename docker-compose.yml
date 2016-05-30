@@ -6,6 +6,8 @@ nginx:
         - data
     links:
         - fpm
+    environment:
+        VIRTUAL_HOST: majisti.skeleton
 
 fpm:
     build: docker/fpm

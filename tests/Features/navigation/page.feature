@@ -4,5 +4,5 @@ Feature:
 
   Scenario: Navigate the homepage
     Given I am on the homepage
-    Then the response should contain "Welcome to"
+    Then the response should contain "Hello World"
     Then I take a screenshot named "homepage"

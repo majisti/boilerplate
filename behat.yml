@@ -26,7 +26,7 @@ default:
                 env: "test"
                 debug: "true"
         Behat\MinkExtension:
-            base_url: http://majisti.nas #concrete projects need to override this!
+            base_url: http://majisti.skeleton
             default_session: default
             show_cmd: "cp %s var/logs/last_response.html"
             sessions:
@@ -34,55 +34,47 @@ default:
                     symfony2: ~
         Sanpi\Behatch\Extension: ~
 
-#phantomjs:
-#    autoload:
-#        '': tests/Features/bootstrap
-#    extensions:
-#        Behat\MinkExtension:
-#            default_session: phantomjs
-#            sessions:
-#                phantomjs:
-#                    selenium2:
-#                      browser: phantomjs
-#                      wd_host: phantomjs:4444/wd/hub
-#                      capabilities:
-#                        version: ''
-#                        browser: phantomjs
+phantomjs:
+    autoload:
+        '': tests/Features/bootstrap
+    extensions:
+        Behat\MinkExtension:
+            default_session: phantomjs
+            sessions:
+                phantomjs:
+                    selenium2:
+                      browser: phantomjs
+                      wd_host: phantomjs:4444/wd/hub
+                      capabilities:
+                        version: ''
+                        browser: phantomjs
 
-#chrome:
-#    autoload:
-#        '': tests/Features/bootstrap
-#    suites:
-#        default:
-#            paths:
-#                base: vendor/quebecor/cube-frontend-bundle/tests
-#    extensions:
-#        Behat\MinkExtension:
-#            default_session: chrome
-#            sessions:
-#                chrome:
-#                    selenium2:
-#                      browser: chrome
-#                      wd_host: chrome:4444/wd/hub
-#                      capabilities:
-#                        version: ''
-#                        browser: chrome
+chrome:
+    autoload:
+        '': tests/Features/bootstrap
+    extensions:
+        Behat\MinkExtension:
+            default_session: chrome
+            sessions:
+                chrome:
+                    selenium2:
+                      browser: chrome
+                      wd_host: chrome:4444/wd/hub
+                      capabilities:
+                        version: ''
+                        browser: chrome
 
-#firefox:
-#    autoload:
-#        '': %paths.base%/vendor/quebecor/cube-frontend-bundle/tests/Features/bootstrap
-#    suites:
-#        default:
-#            paths:
-#                base: vendor/quebecor/cube-frontend-bundle/tests
-#    extensions:
-#        Behat\MinkExtension:
-#            default_session: firefox
-#            sessions:
-#                firefox:
-#                    selenium2:
-#                      browser: firefox
-#                      wd_host: firefox:4444/wd/hub
-#                      capabilities:
-#                        version: ''
-#                        browser: firefox
+firefox:
+    autoload:
+        '': tests/Features/bootstrap
+    extensions:
+        Behat\MinkExtension:
+            default_session: firefox
+            sessions:
+                firefox:
+                    selenium2:
+                      browser: firefox
+                      wd_host: firefox:4444/wd/hub
+                      capabilities:
+                        version: ''
+                        browser: firefox
