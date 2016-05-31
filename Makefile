@@ -8,12 +8,15 @@ DC_TEST=bin/test_env.sh
 PHP_TEST=$(DC_TEST) run --rm php
 
 ci: all cs test
-all: configure build start vendors-install ruby-install node-install node-gulp
+all: configure build start vendors-install ruby-install node-install gulp
 clean: stop
 restart: stop build start
 
 configure:
 	cp -n docker-compose.override.yml.dist docker-compose.override.yml
+
+up:
+	$(DC) up
 
 start:
 	$(DC) up -d
@@ -34,7 +37,7 @@ node-install:
 	ln -sf ../node_modules/bower/bin/bower bin/bower
 	ln -sf ../node_modules/gulp/bin/gulp.js bin/gulp
 
-node-gulp:
+gulp:
 	$(NODE) bin/gulp
 
 vendors-install:
