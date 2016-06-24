@@ -10,6 +10,7 @@ ENV APCU_BC_VERSION 1.0.0
 # Dependencies
 RUN apt-get update \
     && apt-get install -y \
+        wget \
         libpq-dev \
         libicu-dev \
         git \

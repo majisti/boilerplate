@@ -31,6 +31,7 @@ require-dev:
     codeception/codeception: ~2.1
     polishsymfonycommunity/symfony-mocker-container: ~1.0
     fzaninotto/faker: ~1.5
+    phpunit/phpunit: ~5.4
     behat/behat: ~3.0
     behat/symfony2-extension: ~2.1
     behat/mink: ~1.7

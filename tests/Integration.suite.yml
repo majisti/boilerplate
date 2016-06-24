@@ -11,7 +11,7 @@
 # want to know if you calculate the score of the game correctly, the game score
 # calculation is a feature test that can be tested at a low level.
 
-class_name: ComponentTester
+class_name: IntegrationTester
 
 modules:
     enabled:
@@ -19,4 +19,4 @@ modules:
         - Symfony2:
             var_path: 'var'
             app_path: 'app'
-        - \Tests\Helper\Component
+        - \Tests\Helper\Integration

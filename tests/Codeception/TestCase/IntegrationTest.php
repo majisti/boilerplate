@@ -5,20 +5,20 @@ namespace Tests\Codeception\TestCase;
 use Codeception\Module\Symfony2;
 use Codeception\TestCase\Test;
 use PSS\SymfonyMockerContainer\DependencyInjection\MockerContainer;
-use Tests\DataConfiguration;
-use Tests\FeatureTester;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\Routing\Router;
+use Tests\DataConfiguration;
+use Tests\IntegrationTester;
 
 /**
  * @author Steven Rosato <steven.rosato@majisti.com>
  */
-abstract class FeatureTest extends Test
+abstract class IntegrationTest extends Test
 {
     use Hamcrest;
 
     /**
-     * @var FeatureTester
+     * @var IntegrationTester
      */
     protected $tester;
 

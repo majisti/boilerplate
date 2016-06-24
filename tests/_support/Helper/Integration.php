@@ -7,6 +7,6 @@ namespace Tests\Helper;
 
 use Codeception\Module;
 
-class Component extends Module
+class Integration extends Module
 {
 }

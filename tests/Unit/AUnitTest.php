@@ -4,7 +4,7 @@ namespace Tests\Unit;
 
 use Tests\Codeception\TestCase\UnitTest;
 
-class FooTest extends UnitTest
+class AUnitTest extends UnitTest
 {
     /**
      * @test

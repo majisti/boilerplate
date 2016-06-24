@@ -6,7 +6,8 @@ RUBY=$(DC) run --rm ruby
 DC_TEST=bin/test_env.sh
 PHP_TEST=$(DC_TEST) run --rm php
 
-all: configure build start vendors-install ruby-install node-install
+ci: all test
+all: configure build start vendors-install ruby-install node-install node-gulp
 clean: stop
 restart: stop build start
 
@@ -51,4 +52,7 @@ behat:
 	$(PHP_TEST) bin/behat -vvv
 
 cs:
-	$(PHP_TEST) bin/php-cs-fixer fix --no-interaction --dry-run --diff -vvv
+	$(PHP) bin/php-cs-fixer fix --no-interaction --dry-run --diff -vvv
+
+cs-fix:
+	$(PHP) bin/php-cs-fixer fix --no-interaction
