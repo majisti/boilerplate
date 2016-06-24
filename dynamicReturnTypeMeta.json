@@ -1,0 +1,16 @@
+{
+  "methodCalls": [
+    {
+      "class" : "\\Mockery",
+      "method": "mock",
+      "position": 0,
+      "mask": "%s|\\Mockery\\MockInterface"
+    },
+    {
+      "class" : "\\Mockery",
+      "method": "spy",
+      "position": 0,
+      "mask": "%s|\\Mockery\\MockInterface"
+    }
+  ]
+}

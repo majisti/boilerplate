@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use Tests\Codeception\TestCase\UnitTest;
+use Utils\Calculator;
 
 class AUnitTest extends UnitTest
 {
