@@ -1,9 +1,8 @@
 <?php
 
-namespace Tests\Unit;
+namespace Unit\Bowling;
 
-use Tests\Codeception\TestCase\UnitTest;
-use Utils\Calculator;
+use Tests\Unit\UnitTest;
 
 class AUnitTest extends UnitTest
 {
