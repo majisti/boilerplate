@@ -47,4 +47,13 @@ class FrameTest extends UnitTest
         $frame->addRollResult(RollResult::SPARE());
         $this->verifyThat($frame->isComplete(), equalTo(false));
     }
+
+    public function testItShouldRecordItsScoreUpToAMaximumOfThirty()
+    {
+        $this->uut()->addToScore(RollResult::STRIKE);
+        $this->uut()->addToScore(RollResult::STRIKE);
+        $this->uut()->addToScore(RollResult::STRIKE);
+        $this->uut()->addToScore(RollResult::STRIKE);
+        $this->verifyThat($this->uut()->getScore(), equalTo(Frame::MAX_SCORE_PER_FRAME));
+    }
 }

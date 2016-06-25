@@ -1,4 +1,0 @@
-suites:
-    main:
-        spec_path: tests
-        spec_prefix: Unit

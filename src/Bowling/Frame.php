@@ -8,11 +8,14 @@ namespace Bowling;
 class Frame
 {
     const MAX_ROLLS_PER_FRAME = 2;
+    const MAX_SCORE_PER_FRAME = 30;
 
     /**
      * @var RollResult[]
      */
     private $rollResults = [];
+
+    private $score = 0;
 
     /**
      * @var bool
@@ -46,7 +49,7 @@ class Frame
         $maxRollsAllowed = self::MAX_ROLLS_PER_FRAME;
 
         if ($this->isLastFrame() && ($this->hasStrike() || $this->hasSpare())) {
-            $maxRollsAllowed++;
+            ++$maxRollsAllowed;
         } elseif ($this->hasStrike()) {
             $maxRollsAllowed = 1;
         }
@@ -60,6 +63,20 @@ class Frame
     public function getRolls()
     {
         return $this->rollResults;
+    }
+
+    public function addToScore(int $score)
+    {
+        if ($this->score + $score > self::MAX_SCORE_PER_FRAME) {
+            $this->score = self::MAX_SCORE_PER_FRAME;
+        } else {
+            $this->score += $score;
+        }
+    }
+
+    public function getScore(): int
+    {
+        return $this->score;
     }
 
     private function hasStrike(): bool

@@ -2,11 +2,12 @@ DC=docker-compose
 PHP=$(DC) run --rm php
 NODE=$(DC) run --rm node
 RUBY=$(DC) run --rm ruby
+COMPOSER=$(PHP) php -n /usr/local/bin/composer
 
 DC_TEST=bin/test_env.sh
 PHP_TEST=$(DC_TEST) run --rm php
 
-ci: all test
+ci: all cs test
 all: configure build start vendors-install ruby-install node-install node-gulp
 clean: stop
 restart: stop build start
@@ -37,10 +38,11 @@ node-gulp:
 	$(NODE) bin/gulp
 
 vendors-install:
-	$(PHP) composer install --no-interaction --prefer-dist
+	$(COMPOSER) install --no-interaction --prefer-dist
 
 vendors-update:
-	$(PHP) 'php yaml-to-json.phar convert composer.yml composer.json && composer update'
+	$(PHP) php yaml-to-json.phar convert composer.yml composer.json
+	$(COMPOSER) update
 
 test:
 	$(PHP_TEST) 'bin/codecept build && bin/codecept -v run && bin/behat -vvv'
@@ -52,7 +54,7 @@ behat:
 	$(PHP_TEST) bin/behat -vvv
 
 cs:
-	$(PHP) bin/php-cs-fixer fix --no-interaction --dry-run --diff -vvv
+	$(PHP) php -n bin/php-cs-fixer fix --no-interaction --dry-run --diff -vvv
 
 cs-fix:
-	$(PHP) bin/php-cs-fixer fix --no-interaction
+	$(PHP) php -n bin/php-cs-fixer fix --no-interaction

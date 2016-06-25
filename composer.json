@@ -4,7 +4,10 @@
     "type": "project",
     "autoload": {
         "psr-4": {
-            "": "src/"
+            "": [
+                "src/",
+                "tests/"
+            ]
         },
         "classmap": [
             "app/AppKernel.php",
@@ -31,7 +34,6 @@
         "myclabs/php-enum": "~1.4"
     },
     "require-dev": {
-        "phpspec/phpspec": "~2.0",
         "sensio/generator-bundle": "^3.0",
         "mockery/mockery": "dev-master",
         "codeception/codeception": "~2.1",

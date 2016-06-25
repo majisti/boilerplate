@@ -22,16 +22,36 @@ use MyCLabs\Enum\Enum;
  */
 class RollResult extends Enum
 {
-    const GUTTER     = 0;
-    const ONE_PIN    = 1;
-    const TWO_PINS   = 2;
+    const GUTTER = 0;
+    const ONE_PIN = 1;
+    const TWO_PINS = 2;
     const THREE_PINS = 3;
-    const FOUR_PINS  = 4;
-    const FIVE_PINS  = 5;
-    const SIX_PINS   = 6;
+    const FOUR_PINS = 4;
+    const FIVE_PINS = 5;
+    const SIX_PINS = 6;
     const SEVEN_PINS = 7;
     const EIGHT_PINS = 8;
-    const NINE_PINS  = 9;
-    const STRIKE     = 10;
-    const SPARE      = 'spare';
+    const NINE_PINS = 9;
+    const STRIKE = 10;
+    const SPARE = 'spare';
+
+    public function isStrike(): bool
+    {
+        return $this->getValue() === self::STRIKE;
+    }
+
+    public function isSpare(): bool
+    {
+        return $this->getValue() === self::SPARE;
+    }
+
+    public function isGutter(): bool
+    {
+        return $this->getValue() === self::GUTTER;
+    }
+
+    public function isEqual(RollResult $roll): bool
+    {
+        return $this == $roll;
+    }
 }

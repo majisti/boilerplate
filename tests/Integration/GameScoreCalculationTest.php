@@ -2,9 +2,9 @@
 
 namespace Integration;
 
-use Bowling\Game;
+use Bowling\GameFactory;
 use Bowling\RollResult;
-use Bowling\ScoreCalculator;
+use Bowling\ScoreListener;
 use Tests\Codeception\TestCase\IntegrationTest;
 
 /**
@@ -13,13 +13,13 @@ use Tests\Codeception\TestCase\IntegrationTest;
 class GameScoreCalculationTest extends IntegrationTest
 {
     /**
-     * @var ScoreCalculator
+     * @var GameFactory
      */
-    private $calculator;
+    private $gameFactory;
 
-    public function setUp()
+    public function _before()
     {
-        $this->calculator = new ScoreCalculator();
+        $this->gameFactory = new GameFactory();
     }
 
     /**
@@ -30,34 +30,29 @@ class GameScoreCalculationTest extends IntegrationTest
      */
     public function testItCalculatesScoreForAGame(array $rolls, int $expectedResult)
     {
-        $game = new Game();
+        $this->gameFactory = new GameFactory();
+        $game = $this->gameFactory->createNewGame();
+        $game->addRollListener(new ScoreListener());
 
         foreach ($rolls as $roll) {
             $game->roll($roll);
         }
 
-        $this->verifyThat($this->calculator->calculateScoreForGame($game), equalTo($expectedResult));
+        $this->verifyThat($game->getCurrentScore(), equalTo($expectedResult));
     }
 
     public function getRolls()
     {
-//        yield [[RollResult::ONE_PIN(), RollResult::TWO_PINS()], 3];
-//        yield [[RollResult::STRIKE(), RollResult::TWO_PINS(), RollResult::THREE_PINS()], 20];
-//        yield [[RollResult::STRIKE(), RollResult::STRIKE(), RollResult::THREE_PINS(), RollResult::FIVE_PINS()], 49];
-//        yield [[RollResult::STRIKE(), RollResult::ONE_PIN(), RollResult::SPARE(), RollResult::FIVE_PINS()], 40];
-        yield [$this->perfectGame(), 300];
-    }
+        $gameFactory = new GameFactory();
 
-    /**
-     * @return RollResult[]
-     */
-    private function perfectGame()
-    {
-        $rolls = [];
-        for ($i = 0; $i < Game::MAX_NUMBER_OF_STRIKES_POSSIBLE; $i++) {
-            $rolls[] = RollResult::STRIKE();
-        }
-
-        return $rolls;
+        yield [[RollResult::ONE_PIN(), RollResult::TWO_PINS()], 3];
+        yield [[RollResult::STRIKE(), RollResult::TWO_PINS(), RollResult::THREE_PINS()], 20];
+        yield [[RollResult::STRIKE(), RollResult::STRIKE(), RollResult::THREE_PINS(), RollResult::FIVE_PINS()], 49];
+        yield [[RollResult::STRIKE(), RollResult::ONE_PIN(), RollResult::SPARE(), RollResult::FIVE_PINS()], 40];
+        yield [[RollResult::STRIKE(), RollResult::STRIKE(), RollResult::EIGHT_PINS(),
+            RollResult::SPARE(), RollResult::STRIKE(), RollResult::FIVE_PINS(), RollResult::SPARE()], 98];
+        yield [$gameFactory->createSpareGame(RollResult::NINE_PINS())->getRolls(), 190];
+        yield [$gameFactory->createPerfectGame()->getRolls(), 300];
+        yield [$gameFactory->createGutterGame()->getRolls(), 0];
     }
 }

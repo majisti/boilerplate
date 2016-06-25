@@ -18,6 +18,11 @@ class Game
      */
     private $frames = [];
 
+    /**
+     * @var RollListener[]
+     */
+    private $rollListeners = [];
+
     public function roll(RollResult $roll)
     {
         $currentFrame = $this->getCurrentFrame();
@@ -25,6 +30,12 @@ class Game
 
         if ($this->getFramesCount() >= self::MAX_NUMBER_OF_FRAMES_POSSIBLE && !$currentFrame->isLastFrame()) {
             $currentFrame->setAsLastFrame();
+        }
+
+        $this->notifyRollListeners($roll);
+
+        if ($currentFrame->isComplete()) {
+            $this->newFrame();
         }
     }
 
@@ -46,19 +57,27 @@ class Game
         return $this->frames;
     }
 
-    private function getCurrentFrame()
+    /**
+     * @param int $index
+     *
+     * @return Frame|null
+     */
+    public function getFrame(int $index)
+    {
+        if (array_key_exists($index - 1, $this->frames)) {
+            return $this->frames[$index - 1];
+        }
+
+        return;
+    }
+
+    private function getCurrentFrame(): Frame
     {
         if (empty($this->frames)) {
-            $this->addFrame();
+            $this->newFrame();
         }
 
-        $currentFrame = $this->getLastFrame();
-
-        if ($currentFrame->isComplete()) {
-            $currentFrame = $this->addFrame();
-        }
-
-        return $currentFrame;
+        return $this->getLastFrame();
     }
 
     public function getFrameFactory(): FrameFactory
@@ -81,13 +100,13 @@ class Game
     private function getLastFrame()
     {
         if (empty($this->frames)) {
-            return null;
+            return;
         }
 
         return $this->frames[count($this->frames) - 1];
     }
 
-    private function addFrame(): Frame
+    private function newFrame(): Frame
     {
         $frame = $this->getFrameFactory()->createFrame();
 
@@ -101,5 +120,36 @@ class Game
     public function getFramesCount(): int
     {
         return count($this->getFrames());
+    }
+
+    public function getCurrentScore(): int
+    {
+        $score = 0;
+
+        foreach ($this->getFrames() as $frame) {
+            $score += $frame->getScore();
+        }
+
+        return $score;
+    }
+
+    public function addRollListener(RollListener $listener)
+    {
+        $this->rollListeners[] = $listener;
+    }
+
+    /**
+     * @return RollListener[]
+     */
+    public function getRollListeners(): array
+    {
+        return $this->rollListeners;
+    }
+
+    private function notifyRollListeners(RollResult $roll)
+    {
+        foreach ($this->getRollListeners() as $rollListener) {
+            $rollListener->onNewRoll(new RollEvent($this->getCurrentFrame(), $roll));
+        }
     }
 }
