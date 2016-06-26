@@ -20,12 +20,16 @@ This is the Majisti's PHP Backend Scaffolding project. The following is provided
 - Installer
 - React/Redux scaffold (might be in another repo)
 
-## Experimentations
+## Experimentation
 
 - **PHPSpec** [Rejected]
     PHPSpec was dropped in favor of Codeception and Mockery. Though we prefer PHPSpec for writing shorter tests,
     the code completion was no enough within Intellij. We were left blind and needed to read the documentation in order
     to develop test.
+- Bowling Kata [WIP]
+    - Game Score Calculation [Done]
+    - API [Todo]
+    - ...
 
 ## Known Bugs
 
@@ -108,8 +112,6 @@ Behat is good for:
 Do not try to test directly your Javascript (Mocha and Chai would be better)
 - Symfony Command line testing
 - Functional testing (testing that pages work)
-
-**You can only run Behat within the concrete front websites.**
 
 Running Functional tests using BrowserKit (fastest, but does not support JavaScript)
 ```

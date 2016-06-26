@@ -3,6 +3,7 @@
 /phpunit.xml
 /bin/
 !/bin/console
+!/bin/php7-docker-ide
 !/bin/*.sh
 /var/*
 !/var/cache
