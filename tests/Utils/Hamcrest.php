@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\Codeception\TestCase;
+namespace Tests\Utils;
 
 use Hamcrest\MatcherAssert;
 
-require_once __DIR__.'/../../../vendor/hamcrest/hamcrest-php/hamcrest/Hamcrest.php';
+require_once __DIR__.'/../../vendor/hamcrest/hamcrest-php/hamcrest/Hamcrest.php';
 
 /**
  * @author Steven Rosato <steven.rosato@majisti.com>

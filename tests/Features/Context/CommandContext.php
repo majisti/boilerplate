@@ -1,16 +1,23 @@
 <?php
 
+namespace Tests\Features\Context;
+
 use Behat\Behat\Context\Context;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Tests\Utils\Hamcrest;
 
 class CommandContext implements Context
 {
+    use Hamcrest;
+
     private $application;
 
-    /** @var CommandTester */
-    private $tester;
+    /**
+     * @var CommandTester
+     */
+    private $commandTester;
 
     public function __construct(KernelInterface $kernel)
     {
@@ -23,9 +30,9 @@ class CommandContext implements Context
     public function iExecuteTheSymfonyCommand($name)
     {
         $command = $this->application->find($name);
-        $this->tester = new CommandTester($command);
 
-        $this->tester->execute(array('command' => $command->getName()));
+        $this->commandTester = new CommandTester($command);
+        $this->commandTester->execute(array('command' => $command->getName()));
     }
 
     /**
@@ -33,7 +40,6 @@ class CommandContext implements Context
      */
     public function theExitCodeShouldBe($code)
     {
-        //todo: use hamcrest here?
-        $this->assertEquals($code, $this->tester->getStatusCode());
+        $this->verifyThat($code, equalTo($this->commandTester->getStatusCode()));
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Codeception\TestCase;
+namespace Tests\Utils;
 
 /**
  * @author Steven Rosato <steven.rosato@majisti.com>

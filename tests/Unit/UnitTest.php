@@ -4,8 +4,8 @@ namespace Tests\Unit;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit_Framework_TestCase;
-use Tests\Codeception\TestCase\Hamcrest;
 use Tests\UnitTester;
+use Tests\Utils\Hamcrest;
 
 /**
  * @author Steven Rosato <steven.rosato@majisti.com>

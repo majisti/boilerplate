@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Features\Utils;
+
 use Behat\Behat\Hook\Scope\StepScope;
 use Behat\Gherkin\Node\ScenarioInterface;
 use Behat\Gherkin\Node\StepNode;

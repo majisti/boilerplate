@@ -2,7 +2,7 @@
 
 default:
     autoload:
-        '': tests/Features/bootstrap
+        '': %paths.base%/vendor/quebecor/cube-frontend-bundle/tests/Features/Context
     calls:
         error_reporting: 16383 # E_ALL & ~E_USER_DREPRECATED
     formatters:
@@ -17,9 +17,10 @@ default:
                 - behatch:browser
                 - behatch:debug
                 - Behat\MinkExtension\Context\MinkContext
-                - ScreenshotContext: [%paths.base%/var/logs/screenshots]
-                - FeatureContext: {}
-                - CommandContext: {kernel: '@kernel'}
+                - Tests\Features\Context\ScreenshotContext: [%paths.base%/var/logs/screenshots]
+                - Tests\Features\Context\FeatureContext: {}
+                - Tests\Features\Context\NavigationContext: {}
+                - Tests\Features\Context\CommandContext: {kernel: '@kernel'}
     extensions:
         Behat\Symfony2Extension:
             kernel:
@@ -33,10 +34,14 @@ default:
                 default:
                     symfony2: ~
         Sanpi\Behatch\Extension: ~
+        SensioLabs\Behat\PageObjectExtension:
+            namespaces:
+                    page: [Tests\Features\Context\Page]
+                    element: [Tests\Features\Context\Page\Element]
 
 phantomjs:
     autoload:
-        '': tests/Features/bootstrap
+        '': tests/Features/Context
     extensions:
         Behat\MinkExtension:
             default_session: phantomjs
@@ -51,7 +56,7 @@ phantomjs:
 
 chrome:
     autoload:
-        '': tests/Features/bootstrap
+        '': tests/Features/Context
     extensions:
         Behat\MinkExtension:
             default_session: chrome
@@ -66,7 +71,7 @@ chrome:
 
 firefox:
     autoload:
-        '': tests/Features/bootstrap
+        '': tests/Features/Context
     extensions:
         Behat\MinkExtension:
             default_session: firefox

@@ -14,6 +14,8 @@ phantomjs:
     image: cmfatih/phantomjs
     command: "--webdriver=4444"
     entrypoint: phantomjs
+    links:
+        - nginx:majisti.skeleton
 
 chrome:
     image: selenium/standalone-chrome:2.53.0
@@ -26,3 +28,5 @@ firefox:
     image: selenium/standalone-firefox:2.53.0
     volumes:
         - /dev/shm:/dev/shm
+    links:
+        - nginx:majisti.skeleton

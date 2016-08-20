@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Features\Context;
+
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Behat\Hook\Scope\AfterStepScope;
 use Behat\Mink\Driver\Selenium2Driver;

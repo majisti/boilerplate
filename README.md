@@ -4,7 +4,7 @@ This is the Majisti's PHP Backend Scaffolding project. The following is provided
 
 - Symfony setup
 - Full testing suite configured. Acceptance, Functional, Integration and Unit
-- Everything runs under Docker. 0 global project dependencies aside from git, docker and docker-compose.
+- Everything runs under Docker. Minimal global project dependencies: git, docker and docker-compose.
 - Gulp with SCSS, Bourbon and Susy for the frontend.
 - Everything runs under a Makefile and is ready for Continuous Integration
 
@@ -24,8 +24,8 @@ This is the Majisti's PHP Backend Scaffolding project. The following is provided
 
 - **PHPSpec** [Rejected]
     PHPSpec was dropped in favor of Codeception and Mockery. Though we prefer PHPSpec for writing shorter tests,
-    the code completion was no enough within Intellij. We were left blind and needed to read the documentation in order
-    to develop test.
+    the code completion was not enough within Intellij. We were left blind and needed to read the documentation in order
+    to develop tests.
 - Bowling Kata [WIP]
     - Game Score Calculation [Done]
     - API [Todo]
@@ -38,7 +38,7 @@ This is the Majisti's PHP Backend Scaffolding project. The following is provided
 # Installation
 
 ## Docker & docker-compose
-In order to setup this project in less then two minutes, use
+In order to setup this project without external dependencies, use
 docker and docker-compose. If you do not have them installed, you
 can follow our wiki for this virtual machine (Ubuntu Setup) at
 http://integration.majisti.com:8083/display/COOK/Installing+Docker+on+Ubuntu+14.04+LTS
@@ -63,18 +63,22 @@ Add to your `/etc/host` file:
 127.0.0.1   majisti.skeleton
 ```
 
-Browse the site at `http://majisti.skeleton` or `http://majisti.skeleton:port` if you used a different port.
+
+##Usage
+
+- Browse the site at `http://majisti.skeleton` or `http://majisti.skeleton:port` if you used a different port.
+- You can also boot the tmux terminal using `sh tmux.sh`
 
 # Continuous Integration
 
-To run the entire setup with test: `make ci`
+To run the entire setup with tests: `make ci`
 
 # Testing with Behaviour Driven Development
 You can run all tests using `make test`. This will run the whole testing pyramid, such as Acceptance,
 Functional, Integration and Unit tests
 
 The project is setup to be tested using BDD techniques. It is far from perfect
-and it is an effort to bring BDD on the table for the frontend codebase. The
+and it is an effort to bring BDD on the table for the codebase. The
 tools installed are the following:
 
 ## Codeception

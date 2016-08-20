@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Features\Context;
+
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\Environment\InitializedContextEnvironment;
 use Behat\Behat\Context\SnippetAcceptingContext;
@@ -10,7 +12,9 @@ use Behat\Gherkin\Node\KeywordNodeInterface;
 use Behat\Mink\Driver\Selenium2Driver;
 use Behat\MinkExtension\Context\MinkContext;
 use Sanpi\Behatch\Context\DebugContext as DebugContext;
+use SplFileInfo;
 use Symfony\Component\Console\Input\ArgvInput;
+use Tests\Features\Utils\ScenarioHelperTrait;
 
 class ScreenshotContext implements Context, SnippetAcceptingContext
 {

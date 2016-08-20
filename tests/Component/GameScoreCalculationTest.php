@@ -1,16 +1,15 @@
 <?php
 
-namespace Integration;
+namespace Tests\Component;
 
 use Bowling\GameFactory;
 use Bowling\RollResult;
 use Bowling\ScoreListener;
-use Tests\Codeception\TestCase\IntegrationTest;
 
 /**
  * @group bowling
  */
-class GameScoreCalculationTest extends IntegrationTest
+class GameScoreCalculationTest extends ComponentTest
 {
     /**
      * @var GameFactory
