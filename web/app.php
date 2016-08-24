@@ -2,13 +2,13 @@
 
 use Symfony\Component\HttpFoundation\Request;
 
-$env = getenv('SYMFONY_ENV') ?: 'prod';
-$debug = 'dev' === $env;
-
 /**
  * @var Composer\Autoload\ClassLoader
  */
 $loader = require __DIR__.'/../app/autoload.php';
+$env = require __DIR__.'/../app/env.php';
+$debug = 'dev' === $env || 'test' === $env;
+
 include_once __DIR__.'/../var/bootstrap.php.cache';
 
 $kernel = new AppKernel($env, $debug);

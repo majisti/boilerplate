@@ -1,3 +1,6 @@
+nginx:
+    environment:
+        VIRTUAL_HOST: majisti.skeleton.test
 fpm:
     environment:
         SYMFONY_ENV: test

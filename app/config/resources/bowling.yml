@@ -1,0 +1,40 @@
+services:
+
+    resource.game.search_filter:
+        parent: 'api.doctrine.orm.search_filter'
+        arguments:
+            -
+                id: ~
+                name: ~
+
+    resource.game.item_operation.put:
+        class:   'Dunglas\ApiBundle\Api\Operation\Operation'
+        public:  false
+        factory: [ '@api.operation_factory', 'createItemOperation' ]
+        arguments:
+            - '@resource.game'
+            - 'PUT'
+
+    resource.game:
+        parent: 'api.resource'
+        arguments:
+            - 'AppBundle\Entity\Bowling\Game'
+        calls:
+            -
+                method: 'initNormalizationContext'
+                arguments: [ { groups: ['bowling'] }]
+            -
+                method: 'initDenormalizationContext'
+                arguments: [ { groups: ['bowling'] }]
+            -
+                method: 'initFilters'
+                arguments:
+                    -
+                        - '@resource.game.search_filter'
+            -
+                method: 'initItemOperations'
+                arguments:
+                    -
+                        - '@resource.game.item_operation.put'
+        tags:
+            - { name: 'api.resource' }

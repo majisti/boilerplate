@@ -1,0 +1,32 @@
+doctrine:
+    dbal:
+        driver:   pdo_sqlite
+        host:     "%database_host%"
+        port:     "%database_port%"
+        dbname:   "%database_name%"
+        user:     "%database_user%"
+        password: "%database_password%"
+        charset:  UTF8
+        path: %kernel.root_dir%/../db.sqlite
+        # if using pdo_sqlite as your database driver:
+        #   1. add the path in parameters.yml
+        #     e.g. database_path: "%kernel.root_dir%/data/data.db3"
+        #   2. Uncomment database_path in parameters.yml.dist
+        #   3. Uncomment next line:
+        #     path:     "%database_path%"
+
+    orm:
+        auto_generate_proxy_classes: "%kernel.debug%"
+        default_entity_manager: default
+        entity_managers:
+            default:
+              connection: default
+              naming_strategy: doctrine.orm.naming_strategy.underscore
+              auto_mapping: false
+              mappings:
+                  Bowling:
+                      type: xml
+                      prefix: AppBundle\Entity\Bowling
+                      dir: %kernel.root_dir%/../src/AppBundle/Resources/config/doctrine/orm/Bowling
+                      alias: Bowling
+                      is_bundle: false

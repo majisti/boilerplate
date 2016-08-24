@@ -7,11 +7,6 @@ html, body, #root {
   height: 100%;
 }
 
-body {
-  background: url('img/background.jpg') no-repeat fixed;
-  background-size: cover;
-}
-
 main {
   @include full;
   float: none;

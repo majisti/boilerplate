@@ -1,0 +1,11 @@
+imports:
+    # core
+    - { resource: framework.yml }
+    - { resource: doctrine.yml }
+    - { resource: twig.yml }
+    - { resource: swiftmailer.yml }
+
+    # third-party
+    - { resource: dunglas_api.yml }
+    - { resource: nelmio_cors.yml }
+    - { resource: nelmio_api_doc.yml }

@@ -1,17 +1,22 @@
-nginx:
-    environment:
-        VIRTUAL_HOST: majisti.skeleton
-fpm:
-    environment:
-        SYMFONY_ENV: dev
-        SYMFONY__CACHE_DIR: /tmp/cache
-        SYMFONY__LOG_DIR: /tmp/logs
+#nginx:
+    #environment:
+        #VIRTUAL_HOST: majisti.skeleton
+#fpm:
+    #environment:
+        #not sure this is working atm
+        #SYMFONY__CACHE_DIR: /tmp/cache
+        #SYMFONY__LOG_DIR: /tmp/logs
 
-php:
-    environment:
-        SYMFONY__CACHE_DIR: /tmp/cache
-        SYMFONY__LOG_DIR: /tmp/logs
+#        XDEBUG_CONFIG: idekey=PHPSTORM remote_host=YOUR_IP
+#        PHP_IDE_CONFIG: serverName=THE_SERVER_NAME
+#        XDEBUG: 1
 
-#        XDEBUG_CONFIG: idekey=PHPSTORM remote_host=192.168.241.130
-#        PHP_IDE_CONFIG: serverName=CUBE_API
+#php:
+    #environment:
+        #not sure this is working atm
+        #SYMFONY__CACHE_DIR: /tmp/cache
+        #SYMFONY__LOG_DIR: /tmp/logs
+
+#        XDEBUG_CONFIG: idekey=PHPSTORM remote_host=YOUR_IP
+#        PHP_IDE_CONFIG: serverName=THE_SERVER_NAME
 #        XDEBUG: 1
