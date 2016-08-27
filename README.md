@@ -1,12 +1,16 @@
 # Introduction
 
-This is the Majisti's PHP Backend Scaffolding project. The following is provided out of the box:
+This is the Majisti's Scaffolding project. We use it here to bootstrap projects. This is not a generator, just a place
+where to centralize the knowledge of creating rich applications with a PHP backend and frontend (JavaScript, SCSS, etc.).
 
-- Symfony setup
+The following is provided out of the box:
+
+- Symfony 3 setup
 - Full testing suite configured. Acceptance, Functional, Integration and Unit
 - Everything runs under Docker. Minimal global project dependencies: git, docker and docker-compose.
 - Gulp with SCSS, Bourbon and Susy for the frontend.
 - Everything runs under a Makefile and is ready for Continuous Integration
+- Please stay tuned for the React & Redux boilerplate
 
 # Roadmap
 
@@ -18,17 +22,17 @@ This is the Majisti's PHP Backend Scaffolding project. The following is provided
 
 ## Long term
 - Installer
-- React/Redux scaffold (might be in another repo)
+- React/Redux scaffold
 
-## Experimentation
+## Experimentations
 
 - **PHPSpec** [Rejected]
     PHPSpec was dropped in favor of Codeception and Mockery. Though we prefer PHPSpec for writing shorter tests,
     the code completion was not enough within Intellij. We were left blind and needed to read the documentation in order
     to develop tests.
 - Bowling Kata [WIP]
-    - Game Score Calculation [Done]
-    - API [Todo]
+    - Game Score Calculation [Done & Automatically Tested]
+    - API with Dunglas API [Todo]
     - ...
 
 ## Known Bugs
@@ -38,10 +42,8 @@ This is the Majisti's PHP Backend Scaffolding project. The following is provided
 # Installation
 
 ## Docker & docker-compose
-In order to setup this project without external dependencies, use
-docker and docker-compose. If you do not have them installed, you
-can follow our wiki for this virtual machine (Ubuntu Setup) at
-http://integration.majisti.com:8083/display/COOK/Installing+Docker+on+Ubuntu+14.04+LTS
+In order to setup this project without playing around with global dependencies,
+use docker and docker-compose.
 
 ## Setup
 Make sure your nginx proxy is setup to always start on boot:
