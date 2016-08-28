@@ -2,16 +2,17 @@
 
 namespace Unit\Bowling;
 
+use Bowling\Frame;
 use Bowling\Game;
-use Bowling\GameFactory;
-use Bowling\RollResult;
+use Bowling\BowlingFactory;
+use Bowling\Roll;
 use Mockery as m;
 use Tests\Unit\UnitTest;
 
 /**
- * @method GameFactory uut()
+ * @method BowlingFactory uut()
  */
-class GameFactoryTest extends UnitTest
+class BowlingFactoryTest extends UnitTest
 {
     const FIRST_ROLL_INDEX_ON_EACH_FRAME = 0;
     const LAST_ROLL_INDEX_ON_LAST_FRAME = 2;
@@ -22,13 +23,14 @@ class GameFactoryTest extends UnitTest
 
         $this->verifyThat($game, is(anInstanceOf(Game::class)));
         $this->verifyThat($game->getRolls(), is(emptyArray()));
+        $this->verifyThat($this->uut()->createNewGame(), is(not(sameInstance($game))));
     }
 
     public function testItShouldCreatePerfectGame()
     {
         $game = $this->uut()->createPerfectGame();
 
-        $this->verifyThat(count($game->getRolls()), equalTo(Game::MAX_NUMBER_OF_STRIKES_POSSIBLE));
+        $this->verifyThat($game->getRollsCount(), equalTo(Game::MAX_NUMBER_OF_STRIKES_POSSIBLE));
 
         foreach ($game->getRolls() as $roll) {
             $this->verifyThat("Roll {$roll} should be a strike", $roll->isStrike(), equalTo(true));
@@ -37,7 +39,7 @@ class GameFactoryTest extends UnitTest
 
     public function testItShouldCreateSpareGame()
     {
-        $rollThatIsNotASpare = RollResult::EIGHT_PINS();
+        $rollThatIsNotASpare = Roll::EIGHT_PINS();
         $game = $this->uut()->createSpareGame($rollThatIsNotASpare);
 
         foreach ($game->getFrames() as $frame) {
@@ -59,5 +61,12 @@ class GameFactoryTest extends UnitTest
         foreach ($game->getRolls() as $roll) {
             $this->verifyThat("Roll {$roll} should be a gutter", $roll->isGutter(), equalTo(true));
         }
+    }
+
+    public function testItCanCreateAFrame()
+    {
+        $frame = $this->uut()->createFrame();
+        $this->verifyThat($frame, is(anInstanceOf(Frame::class)));
+        $this->verifyThat($this->uut()->createFrame(), is(not(sameInstance($frame))));
     }
 }

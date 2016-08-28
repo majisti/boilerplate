@@ -2,14 +2,13 @@
 
 namespace Unit\Bowling;
 
+use Bowling\BowlingFactory;
 use Bowling\Frame;
-use Bowling\FrameFactory;
 use Bowling\Game;
-use Bowling\RollEvent;
-use Bowling\RollListener;
-use Bowling\RollResult;
-use Tests\Unit\UnitTest;
+use Bowling\GameDispatcher;
+use Bowling\Roll;
 use Mockery as m;
+use Tests\Unit\UnitTest;
 
 /**
  * @method Game uut()
@@ -22,42 +21,46 @@ class GameTest extends UnitTest
     private $frame;
 
     /**
-     * @var FrameFactory|m\MockInterface
+     * @var BowlingFactory|m\MockInterface
      */
-    private $frameFactory;
+    private $bowlingFactory;
+
+    /**
+     * @var GameDispatcher|m\MockInterface
+     */
+    private $dispatcher;
 
     public function setUp()
     {
+        $this->dispatcher = m::spy(GameDispatcher::class);
         $this->frame = m::spy(Frame::class);
-        $this->frameFactory = m::spy(FrameFactory::class);
+        $this->bowlingFactory = m::spy(BowlingFactory::class);
 
-        $this->frameFactory
+        $this->bowlingFactory
             ->shouldReceive('createFrame')
             ->andReturn($this->frame)
-            ->byDefault()
-        ;
-        $this->uut()->setFrameFactory($this->frameFactory);
+            ->byDefault();
+        $this->uut()->setBowlingFactory($this->bowlingFactory);
+
+        parent::setUp();
     }
 
     public function testItCreatesANewFrameWhenItIsCompleted()
     {
         $this->frame->shouldReceive('isComplete')->andReturn(false, false, true);
-
-        $this->uut()->roll(RollResult::ONE_PIN());
-        $this->uut()->roll(RollResult::ONE_PIN());
-        $this->uut()->roll(RollResult::ONE_PIN());
+        $this->addRolls([Roll::ONE_PIN(), Roll::ONE_PIN(), Roll::ONE_PIN()]);
 
         $this->verifyThat(count($this->uut()->getFrames()), equalTo(2));
     }
 
     public function testItReturnsAllRolls()
     {
-        $this->frame->shouldReceive('getRolls')->andReturn([RollResult::GUTTER()]);
+        $this->frame->shouldReceive('getRolls')->andReturn([Roll::GUTTER()]);
         $this->frame->shouldReceive('isComplete')->andReturn(false, true);
 
         $rollCount = 10;
         for ($i = 0; $i < $rollCount; $i++) {
-            $this->uut()->roll(RollResult::GUTTER());
+            $this->uut()->addRoll(Roll::GUTTER());
         }
 
         $this->verifyThat(count($this->uut()->getRolls()), equalTo($rollCount));
@@ -66,37 +69,12 @@ class GameTest extends UnitTest
     public function testShouldHaveAMaximumOfTenFrames()
     {
         $this->frame->shouldReceive('isComplete')->andReturn(false, true, true, true, true, true, true, true, true, true, false);
-        $this->frame->shouldReceive('isLastFrame')->andReturn(false, true);
-        $this->frame->shouldReceive('setAsLastFrame')->once();
 
         for ($i = 0; $i < Game::MAX_NUMBER_OF_STRIKES_POSSIBLE + 20; $i++) {
-            $this->uut()->roll(RollResult::STRIKE());
+            $this->addRolls([Roll::STRIKE()]);
         }
 
         $this->verifyThat($this->uut()->getFramesCount(), equalTo(Game::MAX_NUMBER_OF_FRAMES_POSSIBLE));
-    }
-
-    public function testItReturnsCurrentScore()
-    {
-        $this->frame->shouldReceive('isComplete')->andReturn(false, true);
-        $this->frame->shouldReceive('getScore')->andReturn(RollResult::STRIKE);
-
-        $this->uut()->roll(RollResult::STRIKE());
-        $this->uut()->roll(RollResult::STRIKE());
-
-        $this->verifyThat($this->uut()->getCurrentScore(), equalTo(20));
-    }
-
-    public function testItShouldNotifyRollListenersWithNewRolls()
-    {
-        $listeners = [m::spy(RollListener::class), m::spy(RollListener::class)];
-
-        foreach ($listeners as $listener) {
-            $listener->shouldReceive('onNewRoll')->once()->with(anInstanceOf(RollEvent::class));
-            $this->uut()->addRollListener($listener);
-        }
-
-        $this->uut()->roll(RollResult::GUTTER());
     }
 
     public function testItProvidesNthFrame()
@@ -107,12 +85,96 @@ class GameTest extends UnitTest
         $expectedFrame = m::spy(Frame::class);
         $expectedFrame->shouldReceive('isComplete')->andReturn(true);
 
-        $this->frameFactory->shouldReceive('createFrame')->andReturn($unwantedFrame, $expectedFrame);
+        $this->bowlingFactory->shouldReceive('createFrame')->andReturn($unwantedFrame, $expectedFrame);
 
         for ($i = 0; $i < Game::MAX_NUMBER_OF_STRIKES_POSSIBLE; $i++) {
-            $this->uut()->roll(RollResult::STRIKE());
+            $this->addRolls([Roll::STRIKE()]);
         }
 
         $this->verifyThat($this->uut()->getFrame(2), equalTo($expectedFrame));
+    }
+
+    public function testShouldReturnFirstFrame()
+    {
+        $this->addRolls([Roll::STRIKE(), Roll::STRIKE()]);
+
+        $frame = $this->uut()->getFirstFrame();
+        $frames = $this->uut()->getFrames();
+
+        $this->verifyThat($frame, is(sameInstance($frames[0])));
+    }
+
+    public function testShouldReturnLastFrame()
+    {
+        $this->addRolls([Roll::STRIKE(), Roll::STRIKE()]);
+
+        $frame = $this->uut()->getLastFrame();
+        $frames = $this->uut()->getFrames();
+
+        $this->verifyThat($frame, is(sameInstance($frames[count($frames) - 1])));
+    }
+
+    public function testShouldReturnSumOfAllFramesScore()
+    {
+        $this->frame->shouldReceive('isComplete')->andReturn(false, true);
+        $this->frame->shouldReceive('getScore')->atLeast()->times(2)->andReturn(10);
+        $this->addRolls([Roll::STRIKE(), Roll::STRIKE()]);
+
+        $this->verifyThat($this->uut()->getCurrentScore(), equalTo(20));
+    }
+
+    public function testCanRetrieveIndexOfFrame()
+    {
+        $this->addRolls([Roll::STRIKE()]);
+
+        $frame = $this->uut()->getFrame($expectedIndex = 1);
+        $this->verifyThat($this->uut()->getFrameIndex($frame), equalTo($expectedIndex));
+    }
+    
+    public function testAdvancingFrameShouldCompleteWithSpareWhenFrameHasOneRoll()
+    {
+        $this->frame->shouldDeferMissing();
+
+        $this->addRolls([Roll::EIGHT_PINS()]);
+        $frame = $this->uut()->advanceFrame();
+        
+        $this->verifyThat($frame->isComplete(), is(true));
+        $this->verifyThat($frame->getRollsCount(), equalTo(2));
+        $this->verifyThat($frame->getRoll(Frame::SECOND_ROLL), equalTo(Roll::SPARE()));
+    }
+
+    public function testIsIterable()
+    {
+        $this->frame->shouldReceive('isComplete')->andReturn(true);
+        $this->addRolls([Roll::STRIKE(), Roll::STRIKE()]);
+
+        $iterator = $this->uut()->getIterator();
+        $this->verifyThat($iterator->count(), is(equalTo(3)));
+    }
+
+    public function testDispatchesNewRollEvents()
+    {
+        $this->dispatcher->shouldReceive('notifyNewRoll')->once();
+        $this->uut()->setGameDispatcher($this->dispatcher);
+
+        $this->addRolls([Roll::GUTTER()]);
+    }
+
+    public function testDispatchesNewFrameEvents()
+    {
+        $this->dispatcher->shouldReceive('notifyNewFrame')->once();
+        $this->uut()->setGameDispatcher($this->dispatcher);
+
+        $this->addRolls([Roll::STRIKE()]);
+    }
+
+    /**
+     * @param Roll[] $rolls
+     */
+    private function addRolls(array $rolls)
+    {
+        foreach ($rolls as $roll) {
+            $this->uut()->addRoll($roll);
+        }
     }
 }

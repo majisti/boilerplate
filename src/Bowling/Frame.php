@@ -2,18 +2,27 @@
 
 namespace Bowling;
 
+use ArrayIterator;
+use Bowling\Exception\MaximumScoreExceededException;
+use IteratorAggregate;
+use Traversable;
+
 /**
  * @author Steven Rosato <steven.rosato@majisti.com>
  */
-class Frame
+class Frame implements IteratorAggregate
 {
     const MAX_ROLLS_PER_FRAME = 2;
     const MAX_SCORE_PER_FRAME = 30;
+    
+    const FIRST_ROLL = 0;
+    const SECOND_ROLL = 1;
+    const THIRD_ROLL = 2;
 
     /**
-     * @var RollResult[]
+     * @var Roll[]
      */
-    private $rollResults = [];
+    private $rolls = [];
 
     private $score = 0;
 
@@ -22,10 +31,10 @@ class Frame
      */
     private $isLastFrame = false;
 
-    public function addRollResult(RollResult $roll)
+    public function addRoll(Roll $roll)
     {
         if (!$this->isComplete()) {
-            $this->rollResults[] = $roll;
+            $this->rolls[] = $roll;
         }
     }
 
@@ -41,7 +50,7 @@ class Frame
 
     public function rollCount(): int
     {
-        return count($this->rollResults);
+        return count($this->rolls);
     }
 
     public function isComplete(): bool
@@ -58,20 +67,30 @@ class Frame
     }
 
     /**
-     * @return RollResult[]
+     * @return Roll[]
      */
     public function getRolls()
     {
-        return $this->rollResults;
+        return $this->rolls;
     }
 
-    public function addToScore(int $score)
+    public function getRollsCount(): int
     {
-        if ($this->score + $score > self::MAX_SCORE_PER_FRAME) {
-            $this->score = self::MAX_SCORE_PER_FRAME;
-        } else {
-            $this->score += $score;
+        return count($this->getRolls());
+    }
+    
+    public function hasRolls(): bool
+    {
+        return $this->getRollsCount() > 0;
+    }
+
+    public function setScore(int $score)
+    {
+        if ($score > static::MAX_SCORE_PER_FRAME) {
+            throw MaximumScoreExceededException::create($score, static::MAX_SCORE_PER_FRAME);
         }
+
+        $this->score = $score;
     }
 
     public function getScore(): int
@@ -79,10 +98,15 @@ class Frame
         return $this->score;
     }
 
-    private function hasStrike(): bool
+    public function resetScore()
     {
-        foreach ($this->rollResults as $roll) {
-            if ($roll == RollResult::STRIKE()) {
+        $this->setScore(0);
+    }
+
+    public function hasStrike(): bool
+    {
+        foreach ($this->rolls as $roll) {
+            if ($roll == Roll::STRIKE()) {
                 return true;
             }
         }
@@ -90,14 +114,40 @@ class Frame
         return false;
     }
 
-    private function hasSpare(): bool
+    public function hasSpare(): bool
     {
-        foreach ($this->rollResults as $roll) {
-            if ($roll == RollResult::SPARE()) {
+        foreach ($this->rolls as $roll) {
+            if ($roll == Roll::SPARE()) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    /**
+     * @return Roll|null
+     */
+    public function getRoll(int $rollIndex)
+    {
+        return $this->getRolls()[$rollIndex] ?? null;
+    }
+
+    public function editRoll(int $rollIndex, Roll $newRoll)
+    {
+        $this->rolls[$rollIndex] = $newRoll;
+    }
+
+    public function removeLastRoll()
+    {
+        unset($this->rolls[$this->getRollsCount() - 1]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getIterator()
+    {
+        return new ArrayIterator($this->getRolls());
     }
 }

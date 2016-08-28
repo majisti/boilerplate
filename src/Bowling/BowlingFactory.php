@@ -2,7 +2,7 @@
 
 namespace Bowling;
 
-class GameFactory
+class BowlingFactory
 {
     public function createNewGame(): Game
     {
@@ -14,7 +14,7 @@ class GameFactory
         $game = $this->createNewGame();
 
         for ($i = 0; $i < Game::MAX_NUMBER_OF_ROLLS_POSSIBLE; ++$i) {
-            $game->roll(RollResult::GUTTER());
+            $game->addRoll(Roll::GUTTER());
         }
 
         return $game;
@@ -25,26 +25,32 @@ class GameFactory
         $game = $this->createNewGame();
 
         for ($i = 0; $i < Game::MAX_NUMBER_OF_STRIKES_POSSIBLE; ++$i) {
-            $game->roll(RollResult::STRIKE());
+            $game->addRoll(Roll::STRIKE());
         }
 
         return $game;
     }
 
     /*
+     * fixme: I do not think we should have a gutter on the last roll
      * Note: Last roll on last frame will be a gutter.
      */
-    public function createSpareGame(RollResult $rollWhenNotASpare): Game
+    public function createSpareGame(Roll $rollWhenNotASpare): Game
     {
         $game = $this->createNewGame();
 
         for ($i = 0; $i < Game::MAX_NUMBER_OF_FRAMES_POSSIBLE; ++$i) {
-            $game->roll($rollWhenNotASpare);
-            $game->roll(RollResult::SPARE());
+            $game->addRoll($rollWhenNotASpare);
+            $game->addRoll(Roll::SPARE());
         }
 
-        $game->roll($rollWhenNotASpare);
+        $game->addRoll($rollWhenNotASpare);
 
         return $game;
+    }
+
+    public function createFrame(): Frame
+    {
+        return new Frame();
     }
 }

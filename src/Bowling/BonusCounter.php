@@ -9,6 +9,9 @@ use LogicException;
  */
 class BonusCounter
 {
+    const BONUS_ROLLS_FOR_SPARE = 1;
+    const BONUS_ROLLS_FOR_STRIKE = 2;
+
     /**
      * @var Frame
      */
