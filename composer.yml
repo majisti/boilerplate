@@ -1,6 +1,11 @@
-name: majisti/nas-movies
-license: proprietary
+name: majisti/boilerplate
+description: A full stack boilerplate, including Symfony, Behat, Codeception, React & Redux with Webpack all under docker. It also even comes with examples!
+license: MIT
 type: project
+authors:
+    -
+        name: Steven Rosato
+        email: steven.rosato@majisti.com
 autoload:
     psr-4:
         '': [src/, tests/]

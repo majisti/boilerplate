@@ -1,3 +1,4 @@
+THIS_FILE := $(lastword $(MAKEFILE_LIST))
 DC=docker-compose
 PHP=$(DC) run --rm php
 NODE=$(DC) run --rm node
@@ -41,11 +42,14 @@ node-install:
 assets:
 	$(NODE) bin/gulp
 
+composer-compile:
+	$(PHP) php yaml-to-json.phar convert composer.yml composer.json
+
 vendors-install:
 	$(COMPOSER) install --no-interaction --prefer-dist
 
 vendors-update:
-	$(PHP) php yaml-to-json.phar convert composer.yml composer.json
+	$(MAKE) -f $(THIS_FILE) composer-compile
 	$(COMPOSER) update
 
 test-start:
