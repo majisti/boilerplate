@@ -5,9 +5,10 @@ namespace Unit\Bowling;
 use Bowling\BowlingFactory;
 use Bowling\Frame;
 use Bowling\Game;
-use Bowling\GameDispatcher;
+use Bowling\GameEvent;
 use Bowling\Roll;
 use Mockery as m;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Tests\Unit\UnitTest;
 
 /**
@@ -26,13 +27,13 @@ class GameTest extends UnitTest
     private $bowlingFactory;
 
     /**
-     * @var GameDispatcher|m\MockInterface
+     * @var EventDispatcher|m\MockInterface
      */
     private $dispatcher;
 
     public function setUp()
     {
-        $this->dispatcher = m::spy(GameDispatcher::class);
+        $this->dispatcher = m::spy(EventDispatcher::class);
         $this->frame = m::spy(Frame::class);
         $this->bowlingFactory = m::spy(BowlingFactory::class);
 
@@ -154,16 +155,22 @@ class GameTest extends UnitTest
 
     public function testDispatchesNewRollEvents()
     {
-        $this->dispatcher->shouldReceive('notifyNewRoll')->once();
-        $this->uut()->setGameDispatcher($this->dispatcher);
+        $this->dispatcher->shouldReceive('dispatch')
+            ->once()
+            ->with(GameEvent::EVENT_NEW_ROLL, anInstanceOf(GameEvent::class))
+        ;
+        $this->uut()->setDispatcher($this->dispatcher);
 
         $this->addRolls([Roll::GUTTER()]);
     }
 
     public function testDispatchesNewFrameEvents()
     {
-        $this->dispatcher->shouldReceive('notifyNewFrame')->once();
-        $this->uut()->setGameDispatcher($this->dispatcher);
+        $this->dispatcher->shouldReceive('dispatch')
+            ->once()
+            ->with(GameEvent::EVENT_NEW_FRAME, anInstanceOf(GameEvent::class))
+        ;
+        $this->uut()->setDispatcher($this->dispatcher);
 
         $this->addRolls([Roll::STRIKE()]);
     }

@@ -3,10 +3,10 @@
 namespace Tests\Component;
 
 use Bowling\BowlingFactory;
-use Bowling\GameDispatcher;
-use Bowling\Roll;
 use Bowling\Player;
-use Bowling\ScoreCalculationListener;
+use Bowling\Roll;
+use Bowling\ScoreCalculationSubscriber;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * @group bowling
@@ -33,11 +33,11 @@ class GameScoreCalculationTest extends ComponentTest
     {
         $this->gameFactory = new BowlingFactory();
 
-        $gameDispatcher = new GameDispatcher();
-        $gameDispatcher->addGameListener(new ScoreCalculationListener());
+        $gameDispatcher = new EventDispatcher();
+        $gameDispatcher->addSubscriber(new ScoreCalculationSubscriber());
 
         $game = $this->gameFactory->createNewGame();
-        $game->setGameDispatcher($gameDispatcher);
+        $game->setDispatcher($gameDispatcher);
         
         $player = new Player($game);
 

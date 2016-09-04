@@ -2,8 +2,13 @@
 
 namespace Bowling;
 
-class GameEvent
+use Symfony\Component\EventDispatcher\Event;
+
+class GameEvent extends Event
 {
+    const EVENT_NEW_ROLL = 'game.new-roll';
+    const EVENT_NEW_FRAME = 'game.new-frame';
+
     /**
      * @var Game
      */
@@ -41,12 +46,18 @@ class GameEvent
         return $this->game;
     }
 
-    public function getFrame(): Frame
+    /**
+     * @return Frame|null
+     */
+    public function getFrame()
     {
         return $this->frame;
     }
 
-    public function getRoll(): Roll
+    /**
+     * @return Roll|null
+     */
+    public function getRoll()
     {
         return $this->roll;
     }

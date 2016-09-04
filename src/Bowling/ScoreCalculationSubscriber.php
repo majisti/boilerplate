@@ -2,7 +2,9 @@
 
 namespace Bowling;
 
-class ScoreCalculationListener implements GameListener
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
+class ScoreCalculationSubscriber implements EventSubscriberInterface
 {
     /**
      * @var ScoreCalculator
@@ -12,11 +14,6 @@ class ScoreCalculationListener implements GameListener
     public function onNewRoll(GameEvent $event)
     {
         $this->getScoreCalculator()->calculateScore($event->getGame());
-    }
-
-    public function onNewFrame(GameEvent $event)
-    {
-        //we do not need to do anything here
     }
 
     public function getScoreCalculator(): ScoreCalculator
@@ -31,5 +28,15 @@ class ScoreCalculationListener implements GameListener
     public function setScoreCalculator(ScoreCalculator $scoreCalculator)
     {
         $this->scoreCalculator = $scoreCalculator;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getSubscribedEvents()
+    {
+        return [
+            GameEvent::EVENT_NEW_ROLL => 'onNewRoll',
+        ];
     }
 }

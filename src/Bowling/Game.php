@@ -5,6 +5,7 @@ namespace Bowling;
 use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use IteratorAggregate;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Game implements IteratorAggregate
 {
@@ -23,7 +24,7 @@ class Game implements IteratorAggregate
     private $frames;
 
     /**
-     * @var GameDispatcher
+     * @var EventDispatcher
      */
     private $dispatcher;
 
@@ -131,7 +132,7 @@ class Game implements IteratorAggregate
         return $this->getCurrentFrame()->isLastFrame();
     }
 
-    public function setGameDispatcher(GameDispatcher $dispatcher)
+    public function setDispatcher(EventDispatcher $dispatcher)
     {
         $this->dispatcher = $dispatcher;
     }
@@ -235,18 +236,18 @@ class Game implements IteratorAggregate
     private function notifyNewRoll(Frame $frame, Roll $roll)
     {
         if ($this->dispatcher) {
-            $this->dispatcher->notifyNewRoll($this, $frame, $roll);
+            $this->dispatcher->dispatch(GameEvent::EVENT_NEW_ROLL, new GameEvent($this, $frame, $roll));
         }
     }
 
     private function notifyNewFrame(Frame $frame)
     {
         if ($this->dispatcher) {
-            $this->dispatcher->notifyNewFrame($this, $frame);
+            $this->dispatcher->dispatch(GameEvent::EVENT_NEW_FRAME, new GameEvent($this, $frame));
         }
     }
 
-    public function completeFrameWithSpare()
+    private function completeFrameWithSpare()
     {
         $lastFrame = $this->getLastFrame();
 

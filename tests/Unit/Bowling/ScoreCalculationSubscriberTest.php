@@ -4,15 +4,15 @@ namespace Unit\Bowling;
 
 use Bowling\Game;
 use Bowling\GameEvent;
-use Bowling\ScoreCalculationListener;
+use Bowling\ScoreCalculationSubscriber;
 use Bowling\ScoreCalculator;
 use Mockery as m;
 use Tests\Unit\UnitTest;
 
 /**
- * @method ScoreCalculationListener uut()
+ * @method ScoreCalculationSubscriber uut()
  */
-class ScoreCalculationListenerTest extends UnitTest
+class ScoreCalculationSubscriberTest extends UnitTest
 {
     /**
      * @var ScoreCalculator|m\MockInterface
@@ -27,7 +27,7 @@ class ScoreCalculationListenerTest extends UnitTest
 
     protected function createUnitUnderTest()
     {
-        $listener = new ScoreCalculationListener();
+        $listener = new ScoreCalculationSubscriber();
         $listener->setScoreCalculator($this->scoreCalculator);
 
         return $listener;
@@ -40,5 +40,12 @@ class ScoreCalculationListenerTest extends UnitTest
         
         $this->scoreCalculator->shouldReceive('calculateScore')->once()->with($game);
         $this->uut()->onNewRoll($event);
+    }
+
+    public function testIsSubscribedToNewRollEvents()
+    {
+        $events = $this->uut()->getSubscribedEvents();
+
+        $this->verifyThat($events, self::arrayHasKey(GameEvent::EVENT_NEW_ROLL));
     }
 }
