@@ -195,7 +195,7 @@ class Game implements IteratorAggregate
         if ($this->getFramesCount() < self::MAX_NUMBER_OF_FRAMES_POSSIBLE) {
             $this->frames->add($frame);
         }
-        
+
         $this->notifyNewFrame($frame);
 
         return $frame;
@@ -238,7 +238,7 @@ class Game implements IteratorAggregate
             $this->dispatcher->notifyNewRoll($this, $frame, $roll);
         }
     }
-    
+
     private function notifyNewFrame(Frame $frame)
     {
         if ($this->dispatcher) {

@@ -3,8 +3,10 @@
 namespace Tests\Component;
 
 use Bowling\BowlingFactory;
+use Bowling\GameDispatcher;
 use Bowling\Roll;
-use Bowling\Scorer;
+use Bowling\Player;
+use Bowling\ScoreCalculationListener;
 
 /**
  * @group bowling
@@ -30,11 +32,17 @@ class GameScoreCalculationTest extends ComponentTest
     public function testItCalculatesScoreForAGame(array $rolls, int $expectedResult)
     {
         $this->gameFactory = new BowlingFactory();
+
+        $gameDispatcher = new GameDispatcher();
+        $gameDispatcher->addGameListener(new ScoreCalculationListener());
+
         $game = $this->gameFactory->createNewGame();
-        $scorer = new Scorer($game);
+        $game->setGameDispatcher($gameDispatcher);
+        
+        $player = new Player($game);
 
         foreach ($rolls as $roll) {
-            $scorer->throw($roll);
+            $player->throw($roll);
         }
 
         $this->verifyThat($game->getCurrentScore(), equalTo($expectedResult));

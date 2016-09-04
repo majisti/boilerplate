@@ -5,7 +5,6 @@ namespace Bowling;
 use ArrayIterator;
 use Bowling\Exception\MaximumScoreExceededException;
 use IteratorAggregate;
-use Traversable;
 
 /**
  * @author Steven Rosato <steven.rosato@majisti.com>
@@ -14,7 +13,7 @@ class Frame implements IteratorAggregate
 {
     const MAX_ROLLS_PER_FRAME = 2;
     const MAX_SCORE_PER_FRAME = 30;
-    
+
     const FIRST_ROLL = 0;
     const SECOND_ROLL = 1;
     const THIRD_ROLL = 2;
@@ -78,7 +77,7 @@ class Frame implements IteratorAggregate
     {
         return count($this->getRolls());
     }
-    
+
     public function hasRolls(): bool
     {
         return $this->getRollsCount() > 0;

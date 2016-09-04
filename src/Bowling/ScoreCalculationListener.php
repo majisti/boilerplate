@@ -2,32 +2,26 @@
 
 namespace Bowling;
 
-class Scorer
+class ScoreCalculationListener implements GameListener
 {
-    /**
-     * @var Game
-     */
-    private $game;
-
     /**
      * @var ScoreCalculator
      */
     private $scoreCalculator;
 
-    public function __construct(Game $game)
+    public function onNewRoll(GameEvent $event)
     {
-        $this->game = $game;
+        $this->getScoreCalculator()->calculateScore($event->getGame());
     }
 
-    public function throw(Roll $roll)
+    public function onNewFrame(GameEvent $event)
     {
-        $this->game->addRoll($roll);
-        $this->getScoreCalculator()->calculateScore($this->game);
+        //we do not need to do anything here
     }
 
     public function getScoreCalculator(): ScoreCalculator
     {
-        if( null === $this->scoreCalculator ) {
+        if (null === $this->scoreCalculator) {
             $this->scoreCalculator = new ScoreCalculator();
         }
 
