@@ -2,45 +2,57 @@
 
 namespace Bowling;
 
-class Game
+use ArrayIterator;
+use Doctrine\Common\Collections\ArrayCollection;
+use IteratorAggregate;
+
+class Game implements IteratorAggregate
 {
     const MAX_NUMBER_OF_ROLLS_POSSIBLE = 21;
     const MAX_NUMBER_OF_STRIKES_POSSIBLE = 12;
     const MAX_NUMBER_OF_FRAMES_POSSIBLE = 10;
 
     /**
-     * @var FrameFactory
+     * @var BowlingFactory
      */
-    private $frameFactory;
+    private $bowlingFactory;
 
     /**
-     * @var Frame[]
+     * @var Frame[]|ArrayCollection
      */
-    private $frames = [];
+    private $frames;
 
     /**
-     * @var RollListener[]
+     * @var GameDispatcher
      */
-    private $rollListeners = [];
+    private $dispatcher;
 
-    public function roll(RollResult $roll)
+    public function __construct()
     {
-        $currentFrame = $this->getCurrentFrame();
-        $currentFrame->addRollResult($roll);
-
-        if ($this->getFramesCount() >= self::MAX_NUMBER_OF_FRAMES_POSSIBLE && !$currentFrame->isLastFrame()) {
-            $currentFrame->setAsLastFrame();
-        }
-
-        $this->notifyRollListeners($roll);
-
-        if ($currentFrame->isComplete()) {
-            $this->newFrame();
-        }
+        $this->frames = new ArrayCollection();
     }
 
     /**
-     * @return RollResult[]
+     * @return Frame The frame where the roll was added to
+     */
+    public function addRoll(Roll $roll): Frame
+    {
+        $frame = $this->getCurrentFrame();
+        $frame->addRoll($roll);
+
+        $this->notifyNewRoll($frame, $roll);
+
+        if ($this->getFramesCount() >= self::MAX_NUMBER_OF_FRAMES_POSSIBLE && !$frame->isLastFrame()) {
+            $frame->setAsLastFrame();
+        }
+
+        $this->addNewFrameWhenPossible();
+
+        return $frame;
+    }
+
+    /**
+     * @return Roll[]
      */
     public function getRolls()
     {
@@ -52,9 +64,17 @@ class Game
         return $rolls;
     }
 
+    public function getRollsCount(): int
+    {
+        return count($this->getRolls());
+    }
+
+    /**
+     * @return Frame[]
+     */
     public function getFrames()
     {
-        return $this->frames;
+        return $this->frames->toArray();
     }
 
     /**
@@ -64,68 +84,131 @@ class Game
      */
     public function getFrame(int $index)
     {
-        if (array_key_exists($index - 1, $this->frames)) {
-            return $this->frames[$index - 1];
+        if ($this->frames->containsKey($index - 1)) {
+            return $this->frames->get($index - 1);
         }
 
-        return;
+        return null;
     }
 
-    private function getCurrentFrame(): Frame
+    public function getFrameIndex(Frame $frameToFind): int
     {
-        if (empty($this->frames)) {
-            $this->newFrame();
+        foreach ($this->getFrames() as $index => $frame) {
+            if ($frame === $frameToFind) {
+                return $index + 1;
+            }
         }
 
-        return $this->getLastFrame();
+        return -1;
     }
 
-    public function getFrameFactory(): FrameFactory
+    public function getRoll(int $index)
     {
-        if (!$this->frameFactory) {
-            $this->frameFactory = new FrameFactory();
+        if (array_key_exists($index - 1, $this->getRolls())) {
+            return $this->getRolls()[$index - 1];
         }
 
-        return $this->frameFactory;
+        return null;
     }
 
-    public function setFrameFactory(FrameFactory $frameFactory)
+    public function rollIterator(): ArrayIterator
     {
-        $this->frameFactory = $frameFactory;
+        return new ArrayIterator($this->getRolls());
+    }
+
+    public function hasRolls(): bool
+    {
+        return $this->getRollsCount() > 0;
+    }
+
+    public function hasFrames(): bool
+    {
+        return $this->getFramesCount() > 0;
+    }
+
+    public function isOnLastFrame(): bool
+    {
+        return $this->getCurrentFrame()->isLastFrame();
+    }
+
+    public function setGameDispatcher(GameDispatcher $dispatcher)
+    {
+        $this->dispatcher = $dispatcher;
     }
 
     /**
      * @return Frame|null
      */
-    private function getLastFrame()
+    public function getFirstFrame()
     {
-        if (empty($this->frames)) {
-            return;
+        if ($this->frames->isEmpty()) {
+            return null;
         }
 
-        return $this->frames[count($this->frames) - 1];
+        return $this->frames->first();
     }
 
-    private function newFrame(): Frame
+    private function getCurrentFrame(): Frame
     {
-        $frame = $this->getFrameFactory()->createFrame();
-
-        if ($this->getFramesCount() < self::MAX_NUMBER_OF_FRAMES_POSSIBLE) {
-            $this->frames[] = $frame;
+        if ($this->frames->isEmpty()) {
+            $this->advanceFrame();
         }
 
         return $this->getLastFrame();
     }
 
+    public function getBowlingFactory(): BowlingFactory
+    {
+        if (!$this->bowlingFactory) {
+            $this->bowlingFactory = new BowlingFactory();
+        }
+
+        return $this->bowlingFactory;
+    }
+
+    public function setBowlingFactory(BowlingFactory $bowlingFactory)
+    {
+        $this->bowlingFactory = $bowlingFactory;
+    }
+
+    /**
+     * @return Frame|null
+     */
+    public function getLastFrame()
+    {
+        if ($this->frames->isEmpty()) {
+            return null;
+        }
+
+        return $this->frames->last();
+    }
+
+    /**
+     * Uncompleted frames gets completed with a spare.
+     */
+    public function advanceFrame(): Frame
+    {
+        $this->completeFrameWithSpare();
+
+        $frame = $this->getBowlingFactory()->createFrame();
+
+        if ($this->getFramesCount() < self::MAX_NUMBER_OF_FRAMES_POSSIBLE) {
+            $this->frames->add($frame);
+        }
+        
+        $this->notifyNewFrame($frame);
+
+        return $frame;
+    }
+
     public function getFramesCount(): int
     {
-        return count($this->getFrames());
+        return $this->frames->count();
     }
 
     public function getCurrentScore(): int
     {
         $score = 0;
-
         foreach ($this->getFrames() as $frame) {
             $score += $frame->getScore();
         }
@@ -133,23 +216,42 @@ class Game
         return $score;
     }
 
-    public function addRollListener(RollListener $listener)
-    {
-        $this->rollListeners[] = $listener;
-    }
-
     /**
-     * @return RollListener[]
+     * {@inheritdoc}
      */
-    public function getRollListeners(): array
+    public function getIterator(): ArrayIterator
     {
-        return $this->rollListeners;
+        return new ArrayIterator($this->getFrames());
     }
 
-    private function notifyRollListeners(RollResult $roll)
+    private function addNewFrameWhenPossible()
     {
-        foreach ($this->getRollListeners() as $rollListener) {
-            $rollListener->onNewRoll(new RollEvent($this->getCurrentFrame(), $roll));
+        if ($this->getCurrentFrame()->isComplete() &&
+            $this->getFramesCount() <= static::MAX_NUMBER_OF_FRAMES_POSSIBLE) {
+            $this->advanceFrame();
+        }
+    }
+
+    private function notifyNewRoll(Frame $frame, Roll $roll)
+    {
+        if ($this->dispatcher) {
+            $this->dispatcher->notifyNewRoll($this, $frame, $roll);
+        }
+    }
+    
+    private function notifyNewFrame(Frame $frame)
+    {
+        if ($this->dispatcher) {
+            $this->dispatcher->notifyNewFrame($this, $frame);
+        }
+    }
+
+    public function completeFrameWithSpare()
+    {
+        $lastFrame = $this->getLastFrame();
+
+        if ($lastFrame && $lastFrame->getRollsCount() === 1) {
+            $lastFrame->addRoll(Roll::SPARE());
         }
     }
 }

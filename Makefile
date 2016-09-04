@@ -3,10 +3,12 @@ DC=docker-compose
 PHP=$(DC) run --rm php
 NODE=$(DC) run --rm node
 RUBY=$(DC) run --rm ruby
-COMPOSER=$(PHP) php -n /usr/local/bin/composer
+COMPOSER=$(PHP) php -n -d extension=zip.so /usr/local/bin/composer
 
 DC_TEST=bin/test_env.sh
 PHP_TEST=$(DC_TEST) run --rm php
+
+CS_FIXERS=-empty_return
 
 ci: all cs test
 all: configure build start vendors-install ruby-install node-install gulp
@@ -75,7 +77,7 @@ test-unit:
 	$(PHP_TEST) bin/codecept -v run Unit
 
 cs:
-	$(PHP) php -n bin/php-cs-fixer fix --no-interaction --dry-run --diff -vvv
+	$(PHP) php -n bin/php-cs-fixer fix --no-interaction --dry-run --diff -vvv --fixers=$(CS_FIXERS)
 
 cs-fix:
-	$(PHP) php -n bin/php-cs-fixer fix --no-interaction
+	$(PHP) php -n bin/php-cs-fixer fix --no-interaction --fixers=$(CS_FIXERS)
