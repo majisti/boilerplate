@@ -33,11 +33,11 @@ class GameScoreCalculationTest extends ComponentTest
     {
         $this->gameFactory = new BowlingFactory();
 
-        $gameDispatcher = new EventDispatcher();
-        $gameDispatcher->addSubscriber(new ScoreCalculationSubscriber());
+        $dispatcher = new EventDispatcher();
+        $dispatcher->addSubscriber(new ScoreCalculationSubscriber());
 
         $game = $this->gameFactory->createNewGame();
-        $game->setDispatcher($gameDispatcher);
+        $game->setEventDispatcher($dispatcher);
         
         $player = new Player($game);
 

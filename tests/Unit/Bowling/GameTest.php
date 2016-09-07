@@ -159,7 +159,7 @@ class GameTest extends UnitTest
             ->once()
             ->with(GameEvent::EVENT_NEW_ROLL, anInstanceOf(GameEvent::class))
         ;
-        $this->uut()->setDispatcher($this->dispatcher);
+        $this->uut()->setEventDispatcher($this->dispatcher);
 
         $this->addRolls([Roll::GUTTER()]);
     }
@@ -170,7 +170,7 @@ class GameTest extends UnitTest
             ->once()
             ->with(GameEvent::EVENT_NEW_FRAME, anInstanceOf(GameEvent::class))
         ;
-        $this->uut()->setDispatcher($this->dispatcher);
+        $this->uut()->setEventDispatcher($this->dispatcher);
 
         $this->addRolls([Roll::STRIKE()]);
     }

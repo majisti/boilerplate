@@ -42,7 +42,7 @@ class ScoreCalculatorTest extends UnitTest
 
         $this->game->shouldReceive('getFrames')->andReturn([$firstFrame, $secondFrame]);
 
-        $this->uut()->calculateScore($this->game);
+        $this->uut()->calculateGameScore($this->game);
 
         $this->verifyThat($firstFrame->getScore(), equalTo(10 + 2 + 3));
         $this->verifyThat($secondFrame->getScore(), equalTo(2 + 3));
@@ -55,7 +55,7 @@ class ScoreCalculatorTest extends UnitTest
 
         $this->game->shouldReceive('getFrames')->andReturn([$firstFrame, $secondFrame]);
 
-        $this->uut()->calculateScore($this->game);
+        $this->uut()->calculateGameScore($this->game);
 
         $this->verifyThat($firstFrame->getScore(), equalTo(10 + 3));
         $this->verifyThat($secondFrame->getScore(), equalTo(3 + 4));
@@ -67,7 +67,7 @@ class ScoreCalculatorTest extends UnitTest
 
         $this->game->shouldReceive('getFrames')->andReturn([$frame]);
 
-        $this->uut()->calculateScore($this->game);
+        $this->uut()->calculateGameScore($this->game);
 
         $this->verifyThat($frame->getScore(), equalTo(20));
     }
@@ -78,7 +78,7 @@ class ScoreCalculatorTest extends UnitTest
 
         $this->game->shouldReceive('getFrames')->andReturn([$frame]);
 
-        $this->uut()->calculateScore($this->game);
+        $this->uut()->calculateGameScore($this->game);
 
         $this->verifyThat($frame->getScore(), equalTo(Roll::THREE_PINS));
     }
@@ -91,10 +91,10 @@ class ScoreCalculatorTest extends UnitTest
         $this->game->shouldReceive('getFrames')
             ->andReturn([$firstFrame, $secondFrame], [$firstFrame, $secondFrame]);
 
-        $this->uut()->calculateScore($this->game);
+        $this->uut()->calculateGameScore($this->game);
 
         $secondFrame->editRoll(Frame::FIRST_ROLL, Roll::FOUR_PINS());
-        $this->uut()->calculateScore($this->game);
+        $this->uut()->calculateGameScore($this->game);
 
         $this->verifyThat($firstFrame->getScore(), equalTo(3 + 7 + 4));
         $this->verifyThat($secondFrame->getScore(), equalTo(4));

@@ -132,7 +132,7 @@ class Game implements IteratorAggregate
         return $this->getCurrentFrame()->isLastFrame();
     }
 
-    public function setDispatcher(EventDispatcher $dispatcher)
+    public function setEventDispatcher(EventDispatcher $dispatcher)
     {
         $this->dispatcher = $dispatcher;
     }

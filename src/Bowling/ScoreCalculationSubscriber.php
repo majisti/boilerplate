@@ -13,7 +13,7 @@ class ScoreCalculationSubscriber implements EventSubscriberInterface
 
     public function onNewRoll(GameEvent $event)
     {
-        $this->getScoreCalculator()->calculateScore($event->getGame());
+        $this->getScoreCalculator()->calculateGameScore($event->getGame());
     }
 
     public function getScoreCalculator(): ScoreCalculator

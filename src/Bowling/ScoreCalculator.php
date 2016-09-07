@@ -16,17 +16,17 @@ class ScoreCalculator
      */
     private $lastRoll = null;
 
-    public function calculateScore(Game $game)
+    public function calculateGameScore(Game $game)
     {
         $this->registeredBonusCounters = new ArrayCollection();
         $this->lastRoll = null;
 
         foreach ($game->getFrames() as $frame) {
-            $this->doCalculation($frame);
+            $this->calculateFrameScore($frame);
         }
     }
 
-    private function doCalculation(Frame $frame)
+    private function calculateFrameScore(Frame $frame)
     {
         $frame->resetScore();
 

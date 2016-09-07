@@ -37,8 +37,8 @@ class ScoreCalculationSubscriberTest extends UnitTest
     {
         $game = new Game();
         $event = new GameEvent($game);
-        
-        $this->scoreCalculator->shouldReceive('calculateScore')->once()->with($game);
+
+        $this->scoreCalculator->shouldReceive('calculateGameScore')->once()->with($game);
         $this->uut()->onNewRoll($event);
     }
 
