@@ -49,6 +49,11 @@ class Card
         return $this->suit;
     }
 
+    public function isAce()
+    {
+        return $this->getRank() === static::RANK_ACE;
+    }
+
     public static function createRandom(): Card
     {
         $types = self::SUITS;
@@ -57,5 +62,18 @@ class Card
         $randomValue = rand(1, static::CARDS_PER_TYPE_COUNT);
 
         return new static($randomType, $randomValue);
+    }
+
+    /**
+     * Returns the score value of the rank. Note that the value
+     * of the ace will always be 1, when in fact it can be 1 or 11.
+     *
+     * @return int
+     */
+    public static function estimateScoreValue(Card $card): int
+    {
+        return $card->getRank() < self::RANK_JACK
+            ? $card->getRank()
+            : 10;
     }
 }

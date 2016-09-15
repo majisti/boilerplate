@@ -31,9 +31,33 @@ class HandCalculatorTest extends UnitTest
         $hand->add(new Card(Card::SUIT_HEARTS, 2));
         $hand->add(new Card(Card::SUIT_HEARTS, 5));
         
-        $this->uut()->calculateForHand($hand);
+        $this->uut()->calculate($hand);
         
-        $this->verifyThat($hand->getScore(), equalTo(7));
+        $this->verifyThat($hand->getBestScore(), equalTo(7));
         $this->verifyThat($hand->hasAlternateScore(), is(false));
+    }
+
+    public function testCanCalculateScoreForHandContainingAnAce()
+    {
+        $hand = new Hand();
+        $hand->add(new Card(Card::SUIT_HEARTS, Card::RANK_ACE));
+        $hand->add(new Card(Card::SUIT_HEARTS, Card::RANK_ACE));
+        $hand->add(new Card(Card::SUIT_HEARTS, 5));
+
+        $this->uut()->calculate($hand);
+
+        $this->verifyThat($hand->getBestScore(), equalTo(17));
+        $this->verifyThat($hand->getAlternativeScore(), equalTo(7));
+    }
+
+    public function testCanCalculateABlackJack()
+    {
+        $hand = new Hand();
+        $hand->add(new Card(Card::SUIT_HEARTS, Card::RANK_KING));
+        $hand->add(new Card(Card::SUIT_HEARTS, Card::RANK_ACE));
+
+        $this->uut()->calculate($hand);
+
+        $this->verifyThat($hand->getBestScore(), equalTo(21));
     }
 }

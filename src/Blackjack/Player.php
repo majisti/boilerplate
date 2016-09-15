@@ -2,25 +2,23 @@
 
 namespace Blackjack;
 
-class Player
+use Blackjack\Event\PlayerTurnEvent;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+
+class Player extends BlackjackPlayer
 {
-    /**
-     * @var Hand
-     */
-    private $hand;
-
-    public function __construct()
+    public function hit(Dealer $dealer)
     {
-        $this->hand = new Hand();
+        $dealer->hit($this);
     }
 
-    public function receiveCard(Card $card)
+    public function stand(EventDispatcher $dispatcher)
     {
-        $this->hand->add($card);
+        $this->endOfTurn($dispatcher);
     }
 
-    public function getHand(): Hand
+    public function endOfTurn(EventDispatcher $dispatcher)
     {
-        return $this->hand;
+        $dispatcher->dispatch(PlayerTurnEvent::END_OF_TURN, new PlayerTurnEvent($this));
     }
 }

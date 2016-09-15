@@ -3,14 +3,16 @@
 namespace Unit\Blackjack;
 
 use Blackjack\Card;
+use Blackjack\Dealer;
+use Blackjack\Event\PlayerTurnEvent;
 use Blackjack\Player;
 use Mockery as m;
-use Tests\Unit\UnitTest;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * @method Player uut()
  */
-class PlayerTest extends UnitTest
+class PlayerTest extends BlackjackPlayerTest
 {
     public function setUp()
     {
@@ -22,18 +24,34 @@ class PlayerTest extends UnitTest
         return new Player();
     }
     
-    public function testReceivingCardAddsItToHisHand()
+    public function testCanCallHitToDealer()
     {
-        $this->receiveManyCards(3);
-        
-        $hand = $this->uut()->getHand();
-        $this->verifyThat($hand->count(), equalTo(3));
+        $dealer = m::mock(Dealer::class);
+        $dealer->shouldReceive('hit')->once()->with($this->uut());
+
+        $this->uut()->hit($dealer);
+    }
+    
+    public function testCanStandByEndingHisTurn()
+    {
+        $dispatcher = $this->getEndOfTurnMock();
+        $this->uut()->stand($dispatcher);
     }
 
-    private function receiveManyCards(int $count)
+    public function testCanEndTurn()
     {
-        for ($i = 0; $i < $count; $i++) {
-            $this->uut()->receiveCard(new Card());
-        }
+        $dispatcher = $this->getEndOfTurnMock();
+        $this->uut()->endOfTurn($dispatcher);
+    }
+
+    /**
+     * @return m\MockInterface|EventDispatcher
+     */
+    private function getEndOfTurnMock()
+    {
+        $dispatcher = m::mock(EventDispatcher::class);
+        $dispatcher->shouldReceive('dispatch')->once()
+            ->with(PlayerTurnEvent::END_OF_TURN, PlayerTurnEvent::class);
+        return $dispatcher;
     }
 }

@@ -125,7 +125,7 @@ class AsciiCardDrawer
         if ($currentRowIndex === $this->rowsCount - 1 && !$hideCard) {
             $charIndex = $this->columnsCount - strlen(static::VERTICAL_BORDER) - 2;
             if ($card->getRank() === 10) {
-                $row{$charIndex -1} = '1';
+                $row{$charIndex - 1} = '1';
                 $row{$charIndex} = '0';
             } else {
                 $row{$charIndex} = $this->getCorrespondingRankDisplay($card->getRank());

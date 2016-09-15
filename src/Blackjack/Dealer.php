@@ -2,47 +2,39 @@
 
 namespace Blackjack;
 
-class Dealer
+class Dealer extends BlackjackPlayer
 {
+    const DEALER_MINIMUM_SCORE = 17;
+
     /**
      * @var Deck
      */
     private $deck;
 
-    /**
-     * @var Hand
-     */
-    private $hand;
-
     public function __construct(Deck $deck)
     {
         $this->deck = $deck;
-        $this->hand = new Hand();
-    }
-    
-    public function giveCardToPlayer(Player $player)
-    {
-        $this->giveCardsToPlayer($player, 1);
+        parent::__construct();
     }
 
-    public function giveCardsToPlayer(Player $player, int $count)
+    public function hit(Player $player, int $count = 1)
     {
-        for ($i = 0; $i < $count; $i++) {
+        for ($i = 0; $i < $count; ++$i) {
             $player->receiveCard($this->deck->draw());
         }
     }
 
     public function drawManyCards(int $count): Hand
     {
-        for ($i = 0; $i < $count; $i++) {
-            $this->hand->add($this->deck->draw());
+        for ($i = 0; $i < $count; ++$i) {
+            $this->receiveCard($this->deck->draw());
         }
-        
+
         return $this->getHand();
     }
-    
-    public function getHand(): Hand
+
+    public function hasToDraw(): bool
     {
-        return $this->hand;
+        return $this->getBestScore() < static::DEALER_MINIMUM_SCORE;
     }
 }

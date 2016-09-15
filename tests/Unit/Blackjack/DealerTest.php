@@ -8,13 +8,12 @@ use Blackjack\Deck;
 use Blackjack\Hand;
 use Blackjack\Player;
 use Mockery as m;
-use Tests\Unit\UnitTest;
 
 /**
  * @method Dealer uut()
  * @property Deck|m\MockInterface deck
  */
-class DealerTest extends UnitTest
+class DealerTest extends BlackjackPlayerTest
 {
     public function setUp()
     {
@@ -36,7 +35,7 @@ class DealerTest extends UnitTest
             ->times(2)
             ->with(anInstanceOf(Card::class));
         
-        $this->uut()->giveCardsToPlayer($player, 2);
+        $this->uut()->hit($player, 2);
     }
 
     public function testCanGiveCardsToHimself()
@@ -45,5 +44,15 @@ class DealerTest extends UnitTest
 
         $this->verifyThat($hand, is(anInstanceOf(Hand::class)));
         $this->verifyThat($hand->count(), is(equalTo(2)));
+    }
+
+    public function testKnowsIfMustContinueToDraw()
+    {
+        $hand = m::mock(Hand::class);
+        $hand->shouldReceive('getBestScore')->andReturn(16, 17);
+        $this->uut()->setHand($hand);
+
+        $this->verifyThat($this->uut()->hasToDraw(), is(true));
+        $this->verifyThat($this->uut()->hasToDraw(), is(false));
     }
 }
