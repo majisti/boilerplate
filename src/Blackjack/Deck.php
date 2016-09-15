@@ -10,4 +10,21 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Deck extends ArrayCollection
 {
+    /**
+     * @param Card[] $cards
+     */
+    public function addCards(array $cards)
+    {
+        foreach ($cards as $card) {
+            $this->add($card);
+        }
+    }
+
+    /**
+     * @return Card|null
+     */
+    public function draw()
+    {
+        return $this->remove($this->count() - 1);
+    }
 }
