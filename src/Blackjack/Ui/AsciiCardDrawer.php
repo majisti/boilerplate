@@ -109,7 +109,12 @@ class AsciiCardDrawer
         $row .= str_repeat($tile, $this->columnsCount - 2);
 
         if ($currentRowIndex === 0 && !$hideCard) {
-            $row{strlen(static::VERTICAL_BORDER) + 1} = $this->getCorrespondingRankDisplay($card->getRank());
+            if ($card->getRank() === 10) {
+                $row{strlen(static::VERTICAL_BORDER) + 1} = '1';
+                $row{strlen(static::VERTICAL_BORDER) + 2} = '0';
+            } else {
+                $row{strlen(static::VERTICAL_BORDER) + 1} = $this->getCorrespondingRankDisplay($card->getRank());
+            }
         }
 
         if ($currentRowIndex === (int) ($this->rowsCount / 2) && !$hideCard) {
@@ -119,7 +124,12 @@ class AsciiCardDrawer
 
         if ($currentRowIndex === $this->rowsCount - 1 && !$hideCard) {
             $charIndex = $this->columnsCount - strlen(static::VERTICAL_BORDER) - 2;
-            $row{$charIndex} = $this->getCorrespondingRankDisplay($card->getRank());
+            if ($card->getRank() === 10) {
+                $row{$charIndex -1} = '1';
+                $row{$charIndex} = '0';
+            } else {
+                $row{$charIndex} = $this->getCorrespondingRankDisplay($card->getRank());
+            }
         }
 
         $row .= static::VERTICAL_BORDER;

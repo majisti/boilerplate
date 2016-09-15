@@ -91,19 +91,19 @@ EOF;
 
         $drawing = <<<EOF
 -------------   -------------
-| A         |   | K         |
+| A         |   | 10        |
 |           |   |           |
 |           |   |           |
 |     ♦     |   |     ♦     |
 |           |   |           |
 |           |   |           |
-|         A |   |         K |
+|         A |   |        10 |
 -------------   -------------
 EOF;
         yield [
             [
                 new Card(Card::SUIT_DIAMONDS, Card::RANK_ACE),
-                new Card(Card::SUIT_DIAMONDS, Card::RANK_KING),
+                new Card(Card::SUIT_DIAMONDS, 10),
             ],
             $drawing
         ];
