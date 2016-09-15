@@ -176,7 +176,7 @@ Where *YOUR_HOST_IP* is the ip of the host machine (not the ip of the VM used fo
 
 Now to make step debugging work within PHPStorm, you must do the following:
 
-- Go into settings > Languages and Frameworks > PHP > Debug and change the port to 8000
+- Go into settings > Languages and Frameworks > PHP > Debug and change the port to 7500
 - Click the *Listen for PHP Debug Connections* button. The icon is at the top right and looks like a phone.
 - Go within PHP > Servers and add a new server named CUBE_API. You must also setup the Path Mapping.
     You must point your project to map to /var/www/html
@@ -184,6 +184,9 @@ Now to make step debugging work within PHPStorm, you must do the following:
 Running your code within the command line will stop at the line where you place a breakpoint.
 To debug within your browser, you must install the Chrome XDebug Helper extension. Once installed,
 you can click on it and select "debug". Your code will stop on the line.
+
+Note: for now, step debugging using bin/test_env.sh will not work.
+You need to use docker-compose run --rm php bin/codecept -v run
 
 # Intellij
 
