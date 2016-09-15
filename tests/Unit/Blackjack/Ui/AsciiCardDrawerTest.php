@@ -12,7 +12,7 @@ use Tests\Unit\UnitTest;
  */
 class AsciiCardDrawerTest extends UnitTest
 {
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
     }
@@ -35,7 +35,7 @@ class AsciiCardDrawerTest extends UnitTest
 |         2 |
 -------------
 EOF;
-        yield [[new Card(Card::SUIT_CLUBS, 2)], $drawing];
+        yield [[new Card(2, Card::SUIT_CLUBS)], $drawing];
 
         $drawing = <<<EOF
 -------------
@@ -48,7 +48,7 @@ EOF;
 |         J |
 -------------
 EOF;
-        yield [[new Card(Card::SUIT_HEARTS, Card::RANK_JACK)], $drawing];
+        yield [[new Card(Card::RANK_JACK, Card::SUIT_HEARTS)], $drawing];
 
         $drawing = <<<EOF
 -------------
@@ -61,7 +61,7 @@ EOF;
 |         Q |
 -------------
 EOF;
-        yield [[new Card(Card::SUIT_SPADES, Card::RANK_QUEEN)], $drawing];
+        yield [[new Card(Card::RANK_QUEEN, Card::SUIT_SPADES)], $drawing];
 
         $drawing = <<<EOF
 -------------
@@ -74,7 +74,7 @@ EOF;
 |         K |
 -------------
 EOF;
-        yield [[new Card(Card::SUIT_DIAMONDS, Card::RANK_KING)], $drawing];
+        yield [[new Card(Card::RANK_KING, Card::SUIT_DIAMONDS)], $drawing];
 
         $drawing = <<<EOF
 -------------
@@ -87,7 +87,7 @@ EOF;
 |         A |
 -------------
 EOF;
-        yield [[new Card(Card::SUIT_DIAMONDS, Card::RANK_ACE)], $drawing];
+        yield [[new Card(Card::RANK_ACE, Card::SUIT_DIAMONDS)], $drawing];
 
         $drawing = <<<EOF
 -------------   -------------
@@ -102,8 +102,8 @@ EOF;
 EOF;
         yield [
             [
-                new Card(Card::SUIT_DIAMONDS, Card::RANK_ACE),
-                new Card(Card::SUIT_DIAMONDS, 10),
+                new Card(Card::RANK_ACE, Card::SUIT_DIAMONDS),
+                new Card(10, Card::SUIT_DIAMONDS),
             ],
             $drawing
         ];
@@ -121,8 +121,8 @@ EOF;
 EOF;
         yield [
             [
-                new Card(Card::SUIT_DIAMONDS, Card::RANK_ACE),
-                new Card(Card::SUIT_DIAMONDS, Card::RANK_KING),
+                new Card(Card::RANK_ACE, Card::SUIT_DIAMONDS),
+                new Card(Card::RANK_KING, Card::SUIT_DIAMONDS),
             ],
             $drawing,
             $shouldHideFirstCard = true

@@ -3,18 +3,18 @@
 namespace Unit\Blackjack;
 
 use Blackjack\Card;
-use Blackjack\Dealer;
-use Blackjack\Event\PlayerTurnEvent;
+use Blackjack\Hand;
+use Blackjack\HandCalculator;
 use Blackjack\Player;
 use Mockery as m;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Tests\Unit\UnitTest;
 
 /**
  * @method Player uut()
  */
-class PlayerTest extends BlackjackPlayerTest
+class PlayerTest extends UnitTest
 {
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
     }
@@ -23,35 +23,38 @@ class PlayerTest extends BlackjackPlayerTest
     {
         return new Player();
     }
-    
-    public function testCanCallHitToDealer()
-    {
-        $dealer = m::mock(Dealer::class);
-        $dealer->shouldReceive('hit')->once()->with($this->uut());
 
-        $this->uut()->hit($dealer);
-    }
-    
-    public function testCanStandByEndingHisTurn()
+    public function testCanTellIfItHasABlackJack()
     {
-        $dispatcher = $this->getEndOfTurnMock();
-        $this->uut()->stand($dispatcher);
+        $hand = m::mock(Hand::class);
+        $hand->shouldReceive('hasBlackjack')->andReturn(true, false);
+
+        $this->uut()->setHand($hand);
+
+        $this->verifyThat($this->uut()->hasBlackjack(), equalTo(true));
+        $this->verifyThat($this->uut()->hasBlackjack(), equalTo(false));
     }
 
-    public function testCanEndTurn()
+    public function testReceivingCardAddsItToHisHand()
     {
-        $dispatcher = $this->getEndOfTurnMock();
-        $this->uut()->endOfTurn($dispatcher);
+        $this->receiveManyCards(3);
+
+        $hand = $this->uut()->getHand();
+        $this->verifyThat($hand->count(), equalTo(3));
     }
 
-    /**
-     * @return m\MockInterface|EventDispatcher
-     */
-    private function getEndOfTurnMock()
+    protected function receiveManyCards(int $count)
     {
-        $dispatcher = m::mock(EventDispatcher::class);
-        $dispatcher->shouldReceive('dispatch')->once()
-            ->with(PlayerTurnEvent::END_OF_TURN, PlayerTurnEvent::class);
-        return $dispatcher;
+        for ($i = 0; $i < $count; $i++) {
+            $this->uut()->receiveCard(new Card());
+        }
+    }
+
+    public function testWillUseHandCalculatorToCalculateHand()
+    {
+        $handCalculator = m::mock(HandCalculator::class);
+        $handCalculator->shouldReceive('calculate')->with(anInstanceOf(Hand::class));
+
+        $this->uut()->calculateHand($handCalculator);
     }
 }

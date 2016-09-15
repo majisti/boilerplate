@@ -13,7 +13,7 @@ use Tests\Unit\UnitTest;
  */
 class DeckShufflerTest extends UnitTest
 {
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
     }
@@ -32,7 +32,7 @@ class DeckShufflerTest extends UnitTest
             $card = Card::createRandom();
 
             $unShuffledCards[] = $card;
-            $unShuffledDeck->add($card);
+            $unShuffledDeck->addCard($card);
         }
 
         $shuffledDeck = $this->uut()->shuffle($unShuffledDeck);

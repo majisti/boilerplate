@@ -2,45 +2,20 @@
 
 namespace Blackjack;
 
-use Doctrine\Common\Collections\ArrayCollection;
-
-/**
- * @method Card[] toArray()
- */
-class Hand extends ArrayCollection
+class Hand extends CardCollection
 {
     const MAXIMUM_SCORE = 21;
 
     private $score = 0;
     private $alternateScore = 0;
 
-    public function getBestScore(): int
+    public function hasBlackjack(): bool
     {
-        return $this->score > $this->alternateScore
-            ? $this->score
-            : $this->alternateScore;
-    }
+        if ($this->count() == 2) {
+            return $this->hasAce() && $this->hasTen();
+        }
 
-    public function setScore(int $score)
-    {
-        $this->score = $score;
-    }
-
-    public function getAlternativeScore(): int
-    {
-        return $this->score < $this->alternateScore
-            ? $this->score
-            : $this->alternateScore;
-    }
-
-    public function setAlternateScore(int $score)
-    {
-        $this->alternateScore = $score;
-    }
-
-    public function hasAlternateScore()
-    {
-        return $this->alternateScore > 0;
+        return false;
     }
 
     public function hasAce(): bool
@@ -65,12 +40,42 @@ class Hand extends ArrayCollection
         return false;
     }
 
-    public function hasBlackjack(): bool
+    public function hasBusted(): bool
     {
-        if ($this->count() == 2) {
-            return $this->hasAce() && $this->hasTen();
+        return $this->getBestScore() > static::MAXIMUM_SCORE
+        && ($this->getAlternativeScore() > static::MAXIMUM_SCORE || !$this->hasAlternateScore());
+    }
+
+    public function getBestScore(): int
+    {
+        $bestScore = $this->score;
+
+        if ($bestScore < $this->alternateScore && $this->alternateScore <= static::MAXIMUM_SCORE) {
+            $bestScore = $this->alternateScore;
         }
 
-        return false;
+        return $bestScore;
+    }
+
+    public function getAlternativeScore(): int
+    {
+        return $this->getBestScore() === $this->score
+            ? $this->alternateScore
+            : $this->score;
+    }
+
+    public function hasAlternateScore()
+    {
+        return $this->alternateScore > 0;
+    }
+
+    public function setAlternateScore(int $score)
+    {
+        $this->alternateScore = $score;
+    }
+
+    public function setScore(int $score)
+    {
+        $this->score = $score;
     }
 }

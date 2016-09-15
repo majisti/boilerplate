@@ -18,11 +18,16 @@ class DeckBuilder
     {
         foreach (Card::SUITS as $suit) {
             for ($rank = 1; $rank <= Card::CARDS_PER_TYPE_COUNT; ++$rank) {
-                $this->cards[] = new Card($suit, $rank);
+                $this->cards[] = new Card($rank, $suit);
             }
         }
 
         return $this;
+    }
+
+    public function getDeck(): Deck
+    {
+        return new Deck($this->cards);
     }
 
     public function shuffle(): DeckBuilder
@@ -32,11 +37,6 @@ class DeckBuilder
             ->toArray();
 
         return $this;
-    }
-
-    public function getDeck(): Deck
-    {
-        return new Deck($this->cards);
     }
 
     public function getShuffler(): DeckShuffler

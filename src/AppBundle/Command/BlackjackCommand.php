@@ -2,20 +2,19 @@
 
 namespace AppBundle\Command;
 
-use Blackjack\BlackjackPlayer;
-use Blackjack\Dealer;
-use Blackjack\DeckBuilder;
-use Blackjack\Event\PlayerTurnEvent;
-use Blackjack\Game;
-use Blackjack\HandCalculator;
 use Blackjack\Player;
+use Blackjack\Dealer;
+use Blackjack\Event\GameEvent;
+use Blackjack\Event\PlayerEvent;
+use Blackjack\Game;
+use Blackjack\GameCoordinator;
+use Blackjack\Hand;
 use Blackjack\Ui\AsciiCardDrawer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -24,22 +23,15 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class BlackjackCommand extends Command implements EventSubscriberInterface
 {
-    private $dispatcher;
+    /**
+     * @var GameCoordinator
+     */
+    private $gameCoordinator;
 
     /**
      * @var AsciiCardDrawer
      */
     private $drawer;
-
-    /**
-     * @var Player
-     */
-    private $player;
-
-    /**
-     * @var Dealer
-     */
-    private $dealer;
 
     /**
      * @var InputInterface
@@ -51,10 +43,7 @@ class BlackjackCommand extends Command implements EventSubscriberInterface
      */
     private $output;
 
-    /**
-     * @var HandCalculator
-     */
-    private $handCalculator;
+    private $hideHoleCard = true;
 
     protected function configure()
     {
@@ -64,133 +53,57 @@ class BlackjackCommand extends Command implements EventSubscriberInterface
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    public function dealerBlackjack(PlayerEvent $event)
     {
-        //this is far from complete yet, just playing around with ascii card drawing
+        $this->hideHoleCard = false;
+        $this->drawBoard($this->gameCoordinator->getGame());
+        $this->gameCoordinator->endOfGame();
+    }
 
-        $this->input = $input;
-        $this->output = $output;
+    public function dealerEndOfTurn(PlayerEvent $event)
+    {
+        $dealer = $event->getPlayer();
 
-        $deck = (new DeckBuilder())
-            ->addAllCards()
-            ->shuffle()
-            ->getDeck();
+        $this->drawBoard($this->gameCoordinator->getGame());
 
-        $this->dealer = new Dealer($deck);
-        $this->player = new Player();
-        $this->handCalculator = new HandCalculator();
-        $this->drawer = new AsciiCardDrawer();
+        if ($dealer->hasBusted()) {
+            $this->output->writeln('<comment>Dealer busted!</comment>');
+        }
 
-        $this->dispatcher = new EventDispatcher();
-        $this->dispatcher->addSubscriber($this);
+        $this->gameCoordinator->endOfGame();
+    }
 
-        $game = new Game();
-        $game->setDealer($this->dealer);
-        $game->setPlayer($this->player);
-        $game->setEventDispatcher($this->dispatcher);
+    protected function drawBoard(Game $game)
+    {
+        $this->drawDealerHand($game->getDealer());
+        $this->drawPlayerHand($game->getPlayer());
+    }
 
-        $game->initialize();
+    protected function drawDealerHand(Dealer $dealer)
+    {
+        $this->drawer->setShouldHideFirstCard($this->hideHoleCard);
+        $this->output->writeln('<info>DEALER</info>');
+        $this->output->writeln($this->drawer->drawCards($dealer->getHand()->toArray()));
 
-        $this->calculateDealerHand();
-        $this->calculatePlayerHand();
-
-        if ($this->dealer->hasBlackjack()) {
-            $this->drawBoard(false);
-            $this->endOfGame();
-        } else {
-            $this->drawBoard(true);
-
-            $game->start();
-            $this->play();
+        if (!$this->hideHoleCard) {
+            $this->drawScore($dealer);
         }
     }
 
-    public function play()
-    {
-        $this->output->writeln("Player's turn!");
-
-        if ($this->player->hasBlackjack()) {
-            $this->output->writeln('<comment>Blackjack!</comment>');
-            $this->player->endOfTurn($this->dispatcher);
-
-            return;
-        }
-
-        do {
-            $question = new ChoiceQuestion('Hit or stand?', ['hit', 'stand']);
-
-            /* @var $helper QuestionHelper */
-            $helper = $this->getHelper('question');
-            $answer = $helper->ask($this->input, $this->output, $question);
-
-            switch ($answer) {
-                case 'hit':
-                    $this->player->hit($this->dealer);
-                    $this->calculatePlayerHand();
-                    $this->drawBoard();
-                    break;
-                case 'stand':
-                    $this->player->stand($this->dispatcher);
-            }
-        } while (!$this->player->hasBusted() && $answer == 'hit');
-
-        if ($this->player->hasBusted()) {
-            $this->output->writeln('<comment>Busted!</comment>');
-            $this->player->endOfTurn($this->dispatcher);
-        }
-    }
-
-    public function playerEndOfTurn(PlayerTurnEvent $event)
-    {
-        $this->output->writeln("Player's end of turn.");
-
-        if (!$this->player->hasBusted()) {
-            $this->drawBoard();
-            $this->dealerAutomaticAi();
-        }
-    }
-
-    protected function drawPlayersHand()
+    protected function drawPlayerHand(Player $player)
     {
         $this->drawer->setShouldHideFirstCard(false);
         $this->output->writeln('<info>PLAYER #1</info>');
-        $this->output->writeln($this->drawer->drawCards($this->player->getCards()));
-        $this->drawScore($this->player);
+        $this->output->writeln($this->drawer->drawCards($player->getCards()));
+        $this->drawScore($player);
     }
 
-    protected function drawDealerHand(bool $hideFirstCard = false)
-    {
-        $this->drawer->setShouldHideFirstCard($hideFirstCard);
-        $this->output->writeln('<info>DEALER</info>');
-        $this->output->writeln($this->drawer->drawCards($this->dealer->getHand()->toArray()));
-
-        if (!$hideFirstCard) {
-            $this->drawScore($this->dealer);
-        }
-    }
-
-    protected function calculateDealerHand()
-    {
-        $this->handCalculator->calculate($this->dealer->getHand());
-    }
-
-    protected function calculatePlayerHand()
-    {
-        $this->handCalculator->calculate($this->player->getHand());
-    }
-
-    protected function drawBoard(bool $hideDealersCard = false)
-    {
-        $this->drawDealerHand($hideDealersCard);
-        $this->drawPlayersHand();
-    }
-
-    protected function drawScore(BlackjackPlayer $player)
+    protected function drawScore(Player $player)
     {
         if ($player->hasBlackjack()) {
             $this->output->writeln('Blackjack!');
         } else {
-            $this->output->write(sprintf('Score: %s', $player->getBestScore()));
+            $this->output->write(sprintf('Score: <info>%s</info>', $player->getBestScore()));
 
             if ($player->hasAlternativeScore()) {
                 $this->output->write(sprintf('/%s', $player->getAlternativeScore()));
@@ -201,34 +114,78 @@ class BlackjackCommand extends Command implements EventSubscriberInterface
         }
     }
 
-    private function dealerAutomaticAi()
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if (!$this->player->hasBlackjack()) {
-            while ($this->dealer->hasToDraw() && !$this->dealer->hasBusted()) {
-                $this->dealer->drawManyCards(1);
-                $this->calculateDealerHand();
-            }
+        //this is far from complete yet, just playing around with ascii card drawing
 
-            while ($this->dealer->getBestScore() <= $this->player->getBestScore() && !$this->dealer->hasBusted()) {
-                $this->dealer->drawManyCards(1);
-                $this->calculateDealerHand();
-            }
-        }
+        $this->input = $input;
+        $this->output = $output;
+        $this->drawer = new AsciiCardDrawer();
 
-        $this->drawBoard();
+        $this->gameCoordinator = new GameCoordinator();
+        $this->gameCoordinator->prepareGame();
+        $this->gameCoordinator->addSubscriber($this);
+        $this->gameCoordinator->startGame();
+    }
 
-        if ($this->dealer->hasBusted()) {
-            $this->output->writeln('<comment>Dealer busted. Player wins!</comment>');
-        } elseif ($this->dealer->getBestScore() === $this->player->getBestScore()) {
+    public function gameEnd(GameEvent $event)
+    {
+        $game = $event->getGame();
+
+        if ($game->isDraw()) {
             $this->output->writeln('<comment>Draw!</comment>');
-        } else {
+        } elseif ($game->hasDealerWon()) {
             $this->output->writeln('<comment>Dealer wins!</comment>');
+        } elseif ($game->hasPlayerWon()) {
+            $this->output->writeln('<comment>You win!</comment>');
         }
     }
 
-    private function endOfGame()
+    public function gameStart(GameEvent $event)
     {
-        //todo:
+        $this->drawBoard($event->getGame());
+    }
+
+    public function playerEndOfTurn(PlayerEvent $event)
+    {
+        $player = $event->getPlayer();
+
+        if (!$player->hasBusted()) {
+            $this->drawBoard($this->gameCoordinator->getGame());
+        }
+
+        $this->hideHoleCard = false;
+    }
+
+    public function playerTurn(PlayerEvent $event)
+    {
+        $player = $event->getPlayer();
+
+        $this->output->writeln("Player's turn!");
+
+        do {
+            $question = new ChoiceQuestion('Hit or stand?', ['hit', 'stand']);
+
+            /* @var $helper QuestionHelper */
+            $helper = $this->getHelper('question');
+            $answer = $helper->ask($this->input, $this->output, $question);
+
+            switch ($answer) {
+                case 'hit':
+                    $this->gameCoordinator->playerHit();
+                    $this->drawBoard($this->gameCoordinator->getGame());
+                    break;
+                case 'stand':
+                    break;
+            }
+        } while (!$player->hasBusted() && $answer === 'hit' && $player->getBestScore() < Hand::MAXIMUM_SCORE);
+
+        if ($player->hasBusted()) {
+            $this->output->writeln('<comment>You busted!</comment>');
+        }
+
+        $this->gameCoordinator->playerEndOfTurn();
+        $this->gameCoordinator->dealerTurn();
     }
 
     /**
@@ -237,7 +194,12 @@ class BlackjackCommand extends Command implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            PlayerTurnEvent::END_OF_TURN => 'playerEndOfTurn',
+            GameEvent::GAME_STARTED => 'gameStart',
+            GameEvent::GAME_ENDED => 'gameEnd',
+            PlayerEvent::DEALER_BLACKJACK => 'dealerBlackjack',
+            PlayerEvent::PLAYER_START_OF_TURN => 'playerTurn',
+            PlayerEvent::PLAYER_END_OF_TURN => 'playerEndOfTurn',
+            PlayerEvent::DEALER_END_OF_TURN => 'dealerEndOfTurn',
         ];
     }
 }

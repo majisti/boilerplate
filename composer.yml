@@ -37,6 +37,7 @@ require-dev:
     sensio/generator-bundle: ^3.0
     mockery/mockery: dev-master #until > 0.9.5
     codeception/codeception: ~2.1
+    codeception/aspect-mock: ~2.0
     polishsymfonycommunity/symfony-mocker-container: ~1.0
     fzaninotto/faker: ~1.5
     phpunit/phpunit: ~5.4

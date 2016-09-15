@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use AspectMock\Test as AspectMock;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit_Framework_TestCase;
 use Tests\UnitTester;
@@ -25,6 +26,11 @@ abstract class UnitTest extends PHPUnit_Framework_TestCase
      */
     protected $tester;
 
+    protected function tearDown()
+    {
+        AspectMock::clean();
+    }
+
     /**
      * @return mixed
      */
@@ -40,6 +46,12 @@ abstract class UnitTest extends PHPUnit_Framework_TestCase
         }
 
         return null;
+    }
+    
+    protected function getUutNamespace(): string
+    {
+        $rc = new \ReflectionClass($this->uut());
+        return $rc->getNamespaceName();
     }
 
     private function removeUnitPrefixFromClassName(string $className): string

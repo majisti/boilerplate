@@ -2,23 +2,75 @@
 
 namespace Blackjack;
 
-use Blackjack\Event\PlayerTurnEvent;
-use Symfony\Component\EventDispatcher\EventDispatcher;
-
-class Player extends BlackjackPlayer
+class Player
 {
-    public function hit(Dealer $dealer)
+    /**
+     * @var Hand
+     */
+    protected $hand;
+
+    public function __construct()
     {
-        $dealer->hit($this);
+        $this->hand = new Hand();
     }
 
-    public function stand(EventDispatcher $dispatcher)
+    public function calculateHand(HandCalculator $handCalculator)
     {
-        $this->endOfTurn($dispatcher);
+        $handCalculator->calculate($this->getHand());
     }
 
-    public function endOfTurn(EventDispatcher $dispatcher)
+    public function getHand(): Hand
     {
-        $dispatcher->dispatch(PlayerTurnEvent::END_OF_TURN, new PlayerTurnEvent($this));
+        return $this->hand;
+    }
+
+    public function setHand(Hand $hand)
+    {
+        $this->hand = $hand;
+    }
+
+    public function getAlternativeScore(): int
+    {
+        return $this->getHand()->getAlternativeScore();
+    }
+
+    public function getBestScore(): int
+    {
+        return $this->getHand()->getBestScore();
+    }
+
+    public function getCards()
+    {
+        return $this->getHand()->toArray();
+    }
+
+    public function hasAlternativeScore(): bool
+    {
+        return $this->getHand()->hasAlternateScore();
+    }
+
+    public function hasBlackjack()
+    {
+        return $this->getHand()->hasBlackjack();
+    }
+
+    public function hasBusted(): bool
+    {
+        return $this->getHand()->hasBusted();
+    }
+
+    /**
+     * @param Card[]
+     */
+    public function receiveCards(array $cards)
+    {
+        foreach ($cards as $card) {
+            $this->receiveCard($card);
+        }
+    }
+
+    public function receiveCard(Card $card)
+    {
+        $this->hand->addCard($card);
     }
 }

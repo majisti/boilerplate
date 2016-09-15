@@ -33,15 +33,10 @@ class Card
      */
     private $rank;
 
-    public function __construct(string $suit = self::SUIT_SPADES, int $rank = self::RANK_ACE)
+    public function __construct(int $rank = self::RANK_ACE, string $suit = self::SUIT_SPADES)
     {
         $this->suit = $suit;
         $this->rank = $rank;
-    }
-
-    public function getRank(): int
-    {
-        return $this->rank;
     }
 
     public function getSuit(): string
@@ -54,6 +49,11 @@ class Card
         return $this->getRank() === static::RANK_ACE;
     }
 
+    public function getRank(): int
+    {
+        return $this->rank;
+    }
+
     public static function createRandom(): Card
     {
         $types = self::SUITS;
@@ -61,12 +61,13 @@ class Card
         $randomType = $types[rand(0, count($types) - 1)];
         $randomValue = rand(1, static::CARDS_PER_TYPE_COUNT);
 
-        return new static($randomType, $randomValue);
+        return new static($randomValue, $randomType);
     }
 
     /**
      * Returns the score value of the rank. Note that the value
      * of the ace will always be 1, when in fact it can be 1 or 11.
+     * It is up to the one who calculates his score to make a choice.
      *
      * @return int
      */

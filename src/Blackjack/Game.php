@@ -2,10 +2,6 @@
 
 namespace Blackjack;
 
-use Blackjack\Event\GameEvent;
-use Symfony\Component\EventDispatcher\Event;
-use Symfony\Component\EventDispatcher\EventDispatcher;
-
 class Game
 {
     /**
@@ -19,31 +15,18 @@ class Game
     private $player;
 
     /**
-     * @var HandCalculator
+     * @var Player
      */
-    private $handCalculator;
+    private $winner;
 
     /**
-     * @var EventDispatcher
+     * @var bool
      */
-    private $dispatcher;
+    private $isDraw = false;
 
-    public function initialize()
+    public function dealerWins()
     {
-        $dealer = $this->getDealer();
-
-        $dealer->drawManyCards(2);
-        $dealer->hit($this->getPlayer(), 2);
-    }
-
-    public function start()
-    {
-        $handCalculator = $this->getHandCalculator();
-
-        $handCalculator->calculate($this->getDealer()->getHand());
-        $handCalculator->calculate($this->getPlayer()->getHand());
-
-        $this->dispatch(GameEvent::GAME_STARTED, new GameEvent($this));
+        $this->winner = $this->getDealer();
     }
 
     public function getDealer(): Dealer
@@ -56,6 +39,13 @@ class Game
         $this->dealer = $dealer;
     }
 
+    public function getLoser(): Player
+    {
+        return $this->winner === $this->getDealer()
+            ? $this->getDealer()
+            : $this->getPlayer();
+    }
+
     public function getPlayer(): Player
     {
         return $this->player;
@@ -66,29 +56,61 @@ class Game
         $this->player = $player;
     }
 
-    public function getHandCalculator(): HandCalculator
+    public function getWinner(): Player
     {
-        if (null === $this->handCalculator) {
-            $this->handCalculator = new HandCalculator();
-        }
-
-        return $this->handCalculator;
+        return $this->winner;
     }
 
-    public function setHandCalculator(HandCalculator $handCalculator)
+    public function hasDealerWon(): bool
     {
-        $this->handCalculator = $handCalculator;
+        return $this->hasWon($this->getDealer());
     }
 
-    public function setEventDispatcher(EventDispatcher $dispatcher)
+    /**
+     * @return bool
+     */
+    protected function hasWon(Player $player)
     {
-        $this->dispatcher = $dispatcher;
+        return $this->winner
+            ? $this->winner === $player
+            : false;
     }
 
-    private function dispatch(string $eventName, Event $event)
+    public function hasLoser(): bool
     {
-        if ($this->dispatcher) {
-            $this->dispatcher->dispatch($eventName, $event);
-        }
+        return $this->hasWinner();
+    }
+
+    public function hasWinner(): bool
+    {
+        return $this->winner !== null;
+    }
+
+    public function hasPlayerWon(): bool
+    {
+        return $this->hasWon($this->getPlayer());
+    }
+
+    public function initialize()
+    {
+        $dealer = $this->getDealer();
+
+        $dealer->drawMany(2);
+        $dealer->hit($this->getPlayer(), 2);
+    }
+
+    public function isDraw(): bool
+    {
+        return $this->isDraw;
+    }
+
+    public function playerWins()
+    {
+        $this->winner = $this->getPlayer();
+    }
+
+    public function setIsDraw()
+    {
+        $this->isDraw = true;
     }
 }

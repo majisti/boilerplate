@@ -4,30 +4,24 @@ namespace Unit\Blackjack;
 
 use Blackjack\Dealer;
 use Blackjack\Game;
-use Blackjack\Event\GameEvent;
-use Blackjack\HandCalculator;
 use Blackjack\Player;
+use Blackjack\RoundResult;
 use Mockery as m;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Tests\Unit\UnitTest;
 
 /**
  * @method Game uut()
  * @property Dealer|m\MockInterface dealer
  * @property Player|m\MockInterface player
- * @property HandCalculator|m\MockInterface handCalculator
- * @property m\MockInterface|EventDispatcher dispatcher
  */
 class GameTest extends UnitTest
 {
     protected $uut;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->dealer = m::spy(Dealer::class);
         $this->player = m::spy(Player::class);
-        $this->handCalculator = m::spy(HandCalculator::class);
-        $this->dispatcher = m::spy(EventDispatcher::class);
 
         parent::setUp();
     }
@@ -37,14 +31,13 @@ class GameTest extends UnitTest
         $game = new Game();
         $game->setDealer($this->dealer);
         $game->setPlayer($this->player);
-        $game->setHandCalculator($this->handCalculator);
 
         return $game;
     }
 
-    public function testStartingGameWillDistributeCardsToParties()
+    public function testInitializingGameWillDistributeCardsToParties()
     {
-        $this->dealer->shouldReceive('drawManyCards')
+        $this->dealer->shouldReceive('drawMany')
             ->once()
             ->with(2);
 
@@ -55,22 +48,30 @@ class GameTest extends UnitTest
         $this->uut()->initialize();
     }
 
-    public function testDispatchesGameStartedEvent()
+    public function testTellsIfDealerWon()
     {
-        $this->dispatcher->shouldReceive('dispatch')
-            ->once()
-            ->with(GameEvent::GAME_STARTED, anInstanceOf(GameEvent::class))
-        ;
-        $this->uut()->setEventDispatcher($this->dispatcher);
-        $this->uut()->start();
+        $this->uut()->dealerWins();
+        $this->verifyThat($this->uut()->hasDealerWon(), is(true));
+        $this->verifyThat($this->uut()->hasPlayerWon(), is(false));
+    }
+    
+    public function testTellsIfGameIsADraw()
+    {
+        $this->uut()->setIsDraw();
+        $this->verifyThat($this->uut()->isDraw(), is(true));
+    }
+    
+    public function testTellsIfPlayerWon()
+    {
+        $this->uut()->playerWins();
+        $this->verifyThat($this->uut()->hasPlayerWon(), is(true));
+        $this->verifyThat($this->uut()->hasDealerWon(), is(false));
     }
 
-//    public function testStartingGameWillCalculateHandsForEveryoneAndCheckForAnyBlackJacks()
-//    {
-//        $this->handCalculator->shouldReceive('calculate')->times(2);
-//
-//        $this->uut()->start();
-//
-//        $this->markTestIncomplete();
-//    }
+    public function testWinResultEmpty()
+    {
+        $this->verifyThat($this->uut()->hasDealerWon(), is(false));
+        $this->verifyThat($this->uut()->hasPlayerWon(), is(false));
+        $this->verifyThat($this->uut()->isDraw(), is(false));
+    }
 }

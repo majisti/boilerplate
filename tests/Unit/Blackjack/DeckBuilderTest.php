@@ -14,7 +14,7 @@ use Tests\Unit\UnitTest;
  */
 class DeckBuilderTest extends UnitTest
 {
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
     }
@@ -44,7 +44,7 @@ class DeckBuilderTest extends UnitTest
     public function testCanShuffleDeck()
     {
         $expectedDeck = new Deck();
-        $expectedDeck->add(new Card());
+        $expectedDeck->addCard(new Card());
 
         $shuffler = m::mock(DeckShuffler::class);
         $shuffler->shouldReceive('shuffle')

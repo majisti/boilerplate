@@ -3,6 +3,7 @@
 namespace Unit\Blackjack;
 
 use Blackjack\Card;
+use Blackjack\CardCollection;
 use Blackjack\Deck;
 use Doctrine\Common\Collections\ArrayCollection;
 use Mockery as m;
@@ -13,7 +14,7 @@ use Tests\Unit\UnitTest;
  */
 class DeckTest extends UnitTest
 {
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
     }
@@ -22,22 +23,16 @@ class DeckTest extends UnitTest
     {
         return new Deck();
     }
-
-    private function addManyCards(int $count) {
-        for ($i = 0; $i < $count; $i++) {
-            $this->uut()->add(new Card());
-        }
-    }
-
-    public function testIsArrayCollection()
+    
+    public function testIsCardCollection()
     {
-        $this->verifyThat($this->uut(), is(anInstanceOf(ArrayCollection::class)));
+        $this->verifyThat($this->uut(), is(anInstanceOf(CardCollection::class)));
     }
 
     public function testCanDrawCardsAtTheTopOfThePile()
     {
         $this->addManyCards(9);
-        $this->uut()->add($expectedDrawnCard = new Card(Card::SUIT_HEARTS, 3));
+        $this->uut()->addCard($expectedDrawnCard = new Card(3));
 
         $this->verifyThat($this->uut()->count(), equalTo(10));
         $card = $this->uut()->draw();
@@ -48,6 +43,12 @@ class DeckTest extends UnitTest
 
         $this->uut()->draw();
         $this->verifyThat($this->uut()->count(), equalTo(8));
+    }
+
+    private function addManyCards(int $count) {
+        for ($i = 0; $i < $count; $i++) {
+            $this->uut()->addCard(new Card());
+        }
     }
 
     public function testWillReturnNullWhenDrawingIfDeckIsEmpty()

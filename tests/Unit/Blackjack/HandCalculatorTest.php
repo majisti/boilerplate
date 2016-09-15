@@ -15,7 +15,7 @@ class HandCalculatorTest extends UnitTest
 {
     protected $uut;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
     }
@@ -25,24 +25,20 @@ class HandCalculatorTest extends UnitTest
         return new HandCalculator();
     }
     
-    public function testCanCalculateScoreForSimpleHand()
+    public function testCanCalculateABlackJack()
     {
         $hand = new Hand();
-        $hand->add(new Card(Card::SUIT_HEARTS, 2));
-        $hand->add(new Card(Card::SUIT_HEARTS, 5));
-        
+        $hand->addCards([new Card(Card::RANK_KING), new Card(Card::RANK_ACE)]);
+
         $this->uut()->calculate($hand);
-        
-        $this->verifyThat($hand->getBestScore(), equalTo(7));
-        $this->verifyThat($hand->hasAlternateScore(), is(false));
+
+        $this->verifyThat($hand->getBestScore(), equalTo(21));
     }
 
     public function testCanCalculateScoreForHandContainingAnAce()
     {
         $hand = new Hand();
-        $hand->add(new Card(Card::SUIT_HEARTS, Card::RANK_ACE));
-        $hand->add(new Card(Card::SUIT_HEARTS, Card::RANK_ACE));
-        $hand->add(new Card(Card::SUIT_HEARTS, 5));
+        $hand->addCards([new Card(Card::RANK_ACE), new Card(Card::RANK_ACE), new Card(5)]);
 
         $this->uut()->calculate($hand);
 
@@ -50,14 +46,14 @@ class HandCalculatorTest extends UnitTest
         $this->verifyThat($hand->getAlternativeScore(), equalTo(7));
     }
 
-    public function testCanCalculateABlackJack()
+    public function testCanCalculateScoreForSimpleHand()
     {
         $hand = new Hand();
-        $hand->add(new Card(Card::SUIT_HEARTS, Card::RANK_KING));
-        $hand->add(new Card(Card::SUIT_HEARTS, Card::RANK_ACE));
+        $hand->addCards([new Card(2), new Card(5)]);
 
         $this->uut()->calculate($hand);
-
-        $this->verifyThat($hand->getBestScore(), equalTo(21));
+        
+        $this->verifyThat($hand->getBestScore(), equalTo(7));
+        $this->verifyThat($hand->hasAlternateScore(), is(false));
     }
 }
