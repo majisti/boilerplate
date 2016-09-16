@@ -54,8 +54,9 @@ class GameCoordinator
         if (!$this->player->hasBlackjack() && !$this->player->hasBusted()) {
             $this->dispatcher->dispatch(PlayerEvent::DEALER_START_OF_TURN, new PlayerEvent($this->dealer));
             $this->dealer->outplay($this->player, $this->handCalculator);
-            $this->dispatcher->dispatch(PlayerEvent::DEALER_END_OF_TURN, new PlayerEvent($this->dealer));
         }
+
+        $this->dispatcher->dispatch(PlayerEvent::DEALER_END_OF_TURN, new PlayerEvent($this->dealer));
     }
 
     public function playerHit()

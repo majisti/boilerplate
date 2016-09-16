@@ -15,6 +15,7 @@ use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -64,7 +65,10 @@ class BlackjackCommand extends Command implements EventSubscriberInterface
     {
         $dealer = $event->getPlayer();
 
-        $this->drawBoard($this->gameCoordinator->getGame());
+        $game = $this->gameCoordinator->getGame();
+        if (!$game->getPlayer()->hasBusted()) {
+            $this->drawBoard($game);
+        }
 
         if ($dealer->hasBusted()) {
             $this->output->writeln('<comment>Dealer busted!</comment>');
@@ -122,10 +126,7 @@ class BlackjackCommand extends Command implements EventSubscriberInterface
         $this->output = $output;
         $this->drawer = new AsciiCardDrawer();
 
-        $this->gameCoordinator = new GameCoordinator();
-        $this->gameCoordinator->prepareGame();
-        $this->gameCoordinator->addSubscriber($this);
-        $this->gameCoordinator->startGame();
+        $this->resetGame();
     }
 
     public function gameEnd(GameEvent $event)
@@ -138,7 +139,11 @@ class BlackjackCommand extends Command implements EventSubscriberInterface
             $this->output->writeln('<comment>Dealer wins!</comment>');
         } elseif ($game->hasPlayerWon()) {
             $this->output->writeln('<comment>You win!</comment>');
+        } else {
+            $this->output->writeln('<comment>You lose!</comment>');
         }
+
+        $this->askToPlayAgain();
     }
 
     public function gameStart(GameEvent $event)
@@ -201,5 +206,29 @@ class BlackjackCommand extends Command implements EventSubscriberInterface
             PlayerEvent::PLAYER_END_OF_TURN => 'playerEndOfTurn',
             PlayerEvent::DEALER_END_OF_TURN => 'dealerEndOfTurn',
         ];
+    }
+
+    private function askToPlayAgain()
+    {
+        $question = new ConfirmationQuestion('Do you want to play again? [y/n] ');
+
+        /* @var $helper QuestionHelper */
+        $helper = $this->getHelper('question');
+        $answer = $helper->ask($this->input, $this->output, $question);
+
+        switch ($answer) {
+            case 'y':
+                $this->resetGame();
+                break;
+        }
+    }
+
+    protected function resetGame()
+    {
+        $this->hideHoleCard = true;
+        $this->gameCoordinator = new GameCoordinator();
+        $this->gameCoordinator->prepareGame();
+        $this->gameCoordinator->addSubscriber($this);
+        $this->gameCoordinator->startGame();
     }
 }
