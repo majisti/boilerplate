@@ -14,6 +14,13 @@ class DeckBuilder
      */
     private $shuffler;
 
+    public function startOver(): DeckBuilder
+    {
+        $this->cards = [];
+
+        return $this;
+    }
+
     public function addAllCards(): DeckBuilder
     {
         foreach (Card::SUITS as $suit) {

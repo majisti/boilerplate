@@ -35,19 +35,6 @@ class GameTest extends UnitTest
         return $game;
     }
 
-    public function testInitializingGameWillDistributeCardsToParties()
-    {
-        $this->dealer->shouldReceive('drawMany')
-            ->once()
-            ->with(2);
-
-        $this->dealer->shouldReceive('hit')
-            ->once()
-            ->with($this->player, 2);
-
-        $this->uut()->initialize();
-    }
-
     public function testTellsIfDealerWon()
     {
         $this->uut()->dealerWins();
@@ -73,5 +60,14 @@ class GameTest extends UnitTest
         $this->verifyThat($this->uut()->hasDealerWon(), is(false));
         $this->verifyThat($this->uut()->hasPlayerWon(), is(false));
         $this->verifyThat($this->uut()->isDraw(), is(false));
+    }
+
+    public function testReturnsBestScores()
+    {
+        $this->player->shouldReceive('getBestScore')->once()->andReturn(3);
+        $this->dealer->shouldReceive('getBestScore')->once()->andReturn(5);
+
+        $this->verifyThat($this->uut()->getPlayerBestScore(), is(equalTo(3)));
+        $this->verifyThat($this->uut()->getDealerBestScore(), is(equalTo(5)));
     }
 }

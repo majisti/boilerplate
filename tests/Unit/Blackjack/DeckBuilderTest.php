@@ -62,4 +62,15 @@ class DeckBuilderTest extends UnitTest
         $this->verifyThat($shuffledDeck, is(not(sameInstance($deck))));
         $this->verifyThat($expectedDeck->count(), is(equalTo($shuffledDeck->count())));
     }
+
+    public function testStartOver()
+    {
+        $deck = $this->uut()
+            ->addAllCards()
+            ->startOver()
+            ->addAllCards()
+            ->getDeck();
+
+        $this->verifyThat($deck->count(), equalTo(52));
+    }
 }

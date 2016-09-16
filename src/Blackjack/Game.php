@@ -91,14 +91,6 @@ class Game
         return $this->hasWon($this->getPlayer());
     }
 
-    public function initialize()
-    {
-        $dealer = $this->getDealer();
-
-        $dealer->drawMany(2);
-        $dealer->hit($this->getPlayer(), 2);
-    }
-
     public function isDraw(): bool
     {
         return $this->isDraw;
@@ -112,5 +104,15 @@ class Game
     public function setIsDraw()
     {
         $this->isDraw = true;
+    }
+
+    public function getPlayerBestScore()
+    {
+        return $this->getPlayer()->getBestScore();
+    }
+
+    public function getDealerBestScore()
+    {
+        return $this->getDealer()->getBestScore();
     }
 }

@@ -2,7 +2,7 @@
 
 $finder = Symfony\CS\Finder::create()
     ->in(__DIR__.'/src')
-    ->exclude(__DIR__.'/tests/_support/_generated')
+    ->exclude('_support/_generated')
     ->in(__DIR__.'/tests')
 ;
 

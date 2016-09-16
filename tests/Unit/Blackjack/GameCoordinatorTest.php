@@ -68,9 +68,11 @@ class GameCoordinatorTest extends UnitTest
         $this->uut()->prepareGame();
     }
 
-    public function testCalculatePlayersHandsAfterGameInitialization()
+    public function testCalculatePlayersHandsAfterCardDistribution()
     {
-        $this->game->shouldReceive('initialize')->once()->ordered();
+        $this->dealer->shouldReceive('drawMany')->once()->ordered();
+        $this->dealer->shouldReceive('hit')->once()->ordered();
+
         $this->dealer->shouldReceive('calculateHand')->once()->with($this->handCalculator)->ordered();
         $this->player->shouldReceive('calculateHand')->once()->with($this->handCalculator)->ordered();
 
@@ -151,10 +153,10 @@ class GameCoordinatorTest extends UnitTest
     public function testDealerNeverOutplaysAPlayerThatHasBusted()
     {
         $this->player->shouldReceive('hasBusted')->andReturn(true);
-        $this->dealer->shouldReceive('outplay')->never();
+        $this->dealer->shouldReceive('play')->never();
         $this->dispatcher->shouldReceive('dispatch')
             ->with(PlayerEvent::DEALER_END_OF_TURN, PlayerEvent::class)
-            ->never();
+            ->once();
 
         $this->uut()->dealerTurn();
     }
@@ -162,7 +164,7 @@ class GameCoordinatorTest extends UnitTest
     public function testDealerNeverOutplaysAPlayerWithBlackjack()
     {
         $this->player->shouldReceive('hasBlackjack')->andReturn(true);
-        $this->dealer->shouldReceive('outplay')->never();
+        $this->dealer->shouldReceive('play')->never();
 
         $this->uut()->dealerTurn();
     }
@@ -178,13 +180,14 @@ class GameCoordinatorTest extends UnitTest
 
     public function testDealerTurnTriesToOutplayPlayer()
     {
-        $this->dealer->shouldReceive('outplay')->once();
+        $this->dealer->shouldReceive('play')->once();
         $this->uut()->dealerTurn();
     }
 
-    public function testInitializesGame()
+    public function testDistributeInitialCardsToParties()
     {
-        $this->game->shouldReceive('initialize')->once();
+        $this->dealer->shouldReceive('drawMany')->once()->with(2);
+        $this->dealer->shouldReceive('hit')->once()->with(Player::class, 2);
         $this->uut()->prepareGame();
     }
 
@@ -296,5 +299,24 @@ class GameCoordinatorTest extends UnitTest
         ;
 
         $this->uut()->startGame();
+    }
+
+    public function testCanResetGame()
+    {
+        $this->uut()->prepareGame();
+        $lastGame = $this->uut()->getGame();
+        $lastDeck = $this->uut()->getDeck();
+
+        $this->deckBuilder->shouldReceive('startOver')->once()->andReturnSelf();
+        $this->deckBuilder->shouldReceive('shuffle')->andReturnSelf();
+
+        $game = m::mock(Game::class);
+        $game->shouldReceive('setPlayer')->once()->with(anInstanceOf(Player::class));
+        $game->shouldReceive('setDealer')->once()->with(anInstanceOf(Dealer::class));
+
+        $this->uut()->resetGame($game);
+
+        $this->verifyThat($this->uut()->getDeck(), is(not(sameInstance($lastDeck))));
+        $this->verifyThat($this->uut()->getGame(), not(sameInstance($lastGame)));
     }
 }

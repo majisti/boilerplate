@@ -64,7 +64,7 @@ class DealerTest extends PlayerTest
 
         $this->player->shouldReceive('getBestScore')->andReturn(18);
 
-        $this->uut()->outplay($this->player, $handCalculator);
+        $this->uut()->play($handCalculator);
         $this->verifyThat($this->uut()->getBestScore(), equalTo(17));
     }
 
@@ -72,8 +72,8 @@ class DealerTest extends PlayerTest
     {
         $this->deck->shouldReceive('draw')->andReturn(new Card(2));
 
-        $this->player->shouldReceive('getBestScore')->andReturn(17);
-        $this->uut()->outplay($this->player, new HandCalculator());
+        $this->player->shouldReceive('getBestScore')->andReturn(12);
+        $this->uut()->play(new HandCalculator());
 
         $this->verifyThat($this->uut()->getBestScore(), equalTo(18));
     }

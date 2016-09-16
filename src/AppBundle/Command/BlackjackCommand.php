@@ -46,6 +46,12 @@ class BlackjackCommand extends Command implements EventSubscriberInterface
 
     private $hideHoleCard = true;
 
+    public function __construct(GameCoordinator $gameCoordinator)
+    {
+        $this->gameCoordinator = $gameCoordinator;
+        parent::__construct();
+    }
+
     protected function configure()
     {
         $this
@@ -126,7 +132,9 @@ class BlackjackCommand extends Command implements EventSubscriberInterface
         $this->output = $output;
         $this->drawer = new AsciiCardDrawer();
 
-        $this->resetGame();
+        $this->gameCoordinator->prepareGame();
+        $this->gameCoordinator->addSubscriber($this);
+        $this->gameCoordinator->startGame();
     }
 
     public function gameEnd(GameEvent $event)
@@ -220,15 +228,16 @@ class BlackjackCommand extends Command implements EventSubscriberInterface
             case 'y':
                 $this->resetGame();
                 break;
+            case false:
+                $this->output->writeln('Thank you for playing!');
+                break;
         }
     }
 
     protected function resetGame()
     {
         $this->hideHoleCard = true;
-        $this->gameCoordinator = new GameCoordinator();
-        $this->gameCoordinator->prepareGame();
-        $this->gameCoordinator->addSubscriber($this);
+        $this->gameCoordinator->resetGame();
         $this->gameCoordinator->startGame();
     }
 }

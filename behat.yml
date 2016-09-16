@@ -20,7 +20,8 @@ default:
                 - Tests\Features\Context\ScreenshotContext: [%paths.base%/var/logs/screenshots]
                 - Tests\Features\Context\FeatureContext: {}
                 - Tests\Features\Context\NavigationContext: {}
-                - Tests\Features\Context\CommandContext: {kernel: '@kernel'}
+                - Tests\Features\Context\CommandContext: {}
+                - Tests\Features\Context\BlackjackContext: {}
     extensions:
         Behat\Symfony2Extension:
             kernel:
@@ -36,8 +37,9 @@ default:
         Sanpi\Behatch\Extension: ~
         SensioLabs\Behat\PageObjectExtension:
             namespaces:
-                    page: [Tests\Features\Context\Page]
-                    element: [Tests\Features\Context\Page\Element]
+                page: [Tests\Features\Context\Page]
+                element: [Tests\Features\Context\Page\Element]
+        PSS\Behat\Symfony2MockerExtension\ServiceContainer\Symfony2MockerExtension: ~
 
 phantomjs:
     autoload:

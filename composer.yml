@@ -35,9 +35,10 @@ require:
 
 require-dev:
     sensio/generator-bundle: ^3.0
-    mockery/mockery: dev-master #until > 0.9.5
+    mockery/mockery: 'dev-master as 0.9.x-dev' #required for symfony2-mocker-extension
     codeception/codeception: ~2.1
     codeception/aspect-mock: ~2.0
+    polishsymfonycommunity/symfony2-mocker-extension: ~2.0
     polishsymfonycommunity/symfony-mocker-container: ~1.0
     fzaninotto/faker: ~1.5
     phpunit/phpunit: ~5.4

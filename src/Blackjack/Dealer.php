@@ -38,9 +38,9 @@ class Dealer extends Player
         }
     }
 
-    public function outplay(Player $player, HandCalculator $handCalculator)
+    public function play(HandCalculator $handCalculator)
     {
-        while ($this->hasToDraw() && $this->getBestScore() <= $player->getBestScore() && !$this->hasBusted()) {
+        while ($this->hasToDraw()) {
             $this->draw();
             $this->calculateHand($handCalculator);
         }

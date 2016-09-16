@@ -27,6 +27,7 @@ class BlackJackGameTest extends ComponentTest
     {
         $this->deck = new Deck();
         $this->deckBuilder = m::mock(DeckBuilder::class);
+        $this->deckBuilder->shouldReceive('startOver')->andReturnSelf();
         $this->deckBuilder->shouldReceive('addAllCards')->andReturnSelf();
         $this->deckBuilder->shouldReceive('shuffle')->andReturnSelf();
         $this->deckBuilder->shouldReceive('getDeck')->andReturn($this->deck);

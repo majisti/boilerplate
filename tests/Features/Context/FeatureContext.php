@@ -5,6 +5,7 @@ namespace Tests\Features\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Behat\Hook\Scope\AfterStepScope;
 use Behat\Mink\Driver\Selenium2Driver;
+use Behat\Mink\Exception\DriverException;
 use Sanpi\Behatch\Context\BaseContext;
 
 /**
@@ -35,8 +36,11 @@ class FeatureContext extends BaseContext implements SnippetAcceptingContext
      */
     public function saveLastResponseOnFailure(AfterStepScope $scope)
     {
-        if (!$scope->getTestResult()->isPassed()) {
-            $this->getMinkContext()->showLastResponse();
+        try {
+            if (!$scope->getTestResult()->isPassed()) {
+                $this->getMinkContext()->showLastResponse();
+            }
+        } catch (DriverException $e) {
         }
     }
 }

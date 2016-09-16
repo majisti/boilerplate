@@ -10,6 +10,11 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class GameCoordinator
 {
     /**
+     * @var Deck
+     */
+    private $deck;
+
+    /**
      * @var DeckBuilder
      */
     private $deckBuilder;
@@ -53,7 +58,7 @@ class GameCoordinator
     {
         if (!$this->player->hasBlackjack() && !$this->player->hasBusted()) {
             $this->dispatcher->dispatch(PlayerEvent::DEALER_START_OF_TURN, new PlayerEvent($this->dealer));
-            $this->dealer->outplay($this->player, $this->handCalculator);
+            $this->dealer->play($this->handCalculator);
         }
 
         $this->dispatcher->dispatch(PlayerEvent::DEALER_END_OF_TURN, new PlayerEvent($this->dealer));
@@ -78,13 +83,14 @@ class GameCoordinator
             $this->deckBuilder = new DeckBuilder();
         }
 
-        $deck = $this->deckBuilder
+        $this->deck = $this->deckBuilder
+            ->startOver()
             ->addAllCards()
             ->shuffle()
             ->getDeck();
 
         if (!$this->dealer) {
-            $this->dealer = new Dealer($deck);
+            $this->dealer = new Dealer($this->deck);
         }
 
         if (!$this->player) {
@@ -106,10 +112,16 @@ class GameCoordinator
         $this->game->setPlayer($this->player);
         $this->game->setDealer($this->dealer);
 
-        $this->game->initialize();
+        $this->distributeInitialCards();
 
         $this->calculateDealerHand();
         $this->calculatePlayerHand();
+    }
+
+    private function distributeInitialCards()
+    {
+        $this->dealer->drawMany(2);
+        $this->dealer->hit($this->player, 2);
     }
 
     private function calculateDealerHand()
@@ -209,5 +221,22 @@ class GameCoordinator
     public function setGame(Game $game)
     {
         $this->game = $game;
+    }
+
+    public function getDeck(): Deck
+    {
+        return $this->deck;
+    }
+
+    public function resetGame(Game $game = null)
+    {
+        $this->player = $this->dealer = null;
+
+        if (!$game) {
+            $game = new Game();
+        }
+
+        $this->game = $game;
+        $this->prepareGame();
     }
 }

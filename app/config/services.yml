@@ -4,6 +4,12 @@ parameters:
 #    parameter_name: value
 
 services:
-#    service_name:
-#        class: AppBundle\Directory\ClassName
-#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+    app.games.blackjack.game_coordinator:
+        class: Blackjack\GameCoordinator
+
+    app.command.game.blackjack:
+        class: AppBundle\Command\BlackjackCommand
+        arguments:
+            - '@app.games.blackjack.game_coordinator'
+        tags:
+          -  { name: console.command }
