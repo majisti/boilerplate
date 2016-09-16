@@ -8,13 +8,12 @@ COMPOSER=$(PHP) php -n -d extension=zip.so /usr/local/bin/composer
 DC_TEST=bin/test_env.sh
 PHP_TEST=$(DC_TEST) run --rm php
 
-CS_FIXERS=-empty_return
-
 ci: all cs test
 all: configure build start vendors-install ruby-install node-install gulp
 clean: stop
 restart: stop build start
 restart-test: test-stop test-start
+test: test-prepare test-integration test-acceptance
 
 configure:
 	cp -n docker-compose.override.yml.dist docker-compose.override.yml
@@ -61,8 +60,8 @@ test-stop:
 	$(DC_TEST) kill
 	$(DC_TEST) rm -vf
 
-test:
-	$(PHP_TEST) 'bin/codecept build && bin/codecept -v run && bin/behat -vvv'
+test-prepare:
+	$(PHP_TEST) bin/codecept build
 
 test-acceptance:
 	$(PHP_TEST) bin/behat -vvv
@@ -77,7 +76,7 @@ test-unit:
 	$(PHP_TEST) bin/codecept -v run Unit
 
 cs:
-	$(PHP) php -n bin/php-cs-fixer fix --no-interaction --dry-run --diff -vvv --fixers=$(CS_FIXERS)
+	$(PHP) php -n bin/php-cs-fixer fix --no-interaction --dry-run --diff -vvv
 
 cs-fix:
-	$(PHP) php -n bin/php-cs-fixer fix --no-interaction --fixers=$(CS_FIXERS)
+	$(PHP) php -n bin/php-cs-fixer fix --no-interaction
