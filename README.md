@@ -30,10 +30,12 @@ The following is provided out of the box:
     PHPSpec was dropped in favor of Codeception and Mockery. Though we prefer PHPSpec for writing shorter tests,
     the code completion was not enough within Intellij. We were left blind and needed to read the documentation in order
     to develop tests.
-- Bowling Kata [WIP]
+- Bowling Kata
     - Game Score Calculation [Done & Automatically Tested]
     - API with Dunglas API [Todo]
     - ...
+- Blackjack Game
+    - You can play a game of BlackJack within the Symfony Console! Just run the command `docker-compose run --rm php bin/console majisti:game:blackjack`
 
 ## Known Bugs
 
