@@ -5,7 +5,6 @@ namespace Unit\Bowling;
 use Bowling\Frame;
 use Bowling\Game;
 use Bowling\Roll;
-use Bowling\ScoreCalculator;
 use Bowling\Player;
 use Mockery as m;
 use Tests\Unit\UnitTest;
@@ -32,7 +31,7 @@ class PlayerTest extends UnitTest
 
         $this->game->shouldReceive('addRoll')->andReturn($this->frame)->byDefault();
     }
-    
+
     public function createUnitUnderTest()
     {
         return new Player($this->game);

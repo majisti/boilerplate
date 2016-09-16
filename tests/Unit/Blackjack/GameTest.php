@@ -5,12 +5,12 @@ namespace Unit\Blackjack;
 use Blackjack\Dealer;
 use Blackjack\Game;
 use Blackjack\Player;
-use Blackjack\RoundResult;
 use Mockery as m;
 use Tests\Unit\UnitTest;
 
 /**
  * @method Game uut()
+ *
  * @property Dealer|m\MockInterface dealer
  * @property Player|m\MockInterface player
  */
@@ -54,13 +54,13 @@ class GameTest extends UnitTest
         $this->verifyThat($this->uut()->hasDealerWon(), is(true));
         $this->verifyThat($this->uut()->hasPlayerWon(), is(false));
     }
-    
+
     public function testTellsIfGameIsADraw()
     {
         $this->uut()->setIsDraw();
         $this->verifyThat($this->uut()->isDraw(), is(true));
     }
-    
+
     public function testTellsIfPlayerWon()
     {
         $this->uut()->playerWins();

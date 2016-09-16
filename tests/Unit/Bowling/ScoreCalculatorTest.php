@@ -29,7 +29,7 @@ class ScoreCalculatorTest extends UnitTest
         $this->game = m::spy(Game::class);
         $this->frame = m::spy(Frame::class);
     }
-    
+
     public function createUnitUnderTest()
     {
         return new ScoreCalculator();

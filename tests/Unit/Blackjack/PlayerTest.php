@@ -45,7 +45,7 @@ class PlayerTest extends UnitTest
 
     protected function receiveManyCards(int $count)
     {
-        for ($i = 0; $i < $count; $i++) {
+        for ($i = 0; $i < $count; ++$i) {
             $this->uut()->receiveCard(new Card());
         }
     }

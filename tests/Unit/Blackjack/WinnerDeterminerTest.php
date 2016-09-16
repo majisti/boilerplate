@@ -11,6 +11,7 @@ use Tests\Unit\UnitTest;
 
 /**
  * @method WinnerDeterminer uut()
+ *
  * @property Dealer|m\MockInterface $dealer
  * @property Player|m\MockInterface $player
  * @property Game|m\MockInterface game

@@ -25,7 +25,7 @@ class GameScoreCalculationTest extends ComponentTest
 
     /**
      * @param Roll[] $rolls
-     * @param int $expectedResult
+     * @param int    $expectedResult
      *
      * @dataProvider getRolls
      */
@@ -38,7 +38,7 @@ class GameScoreCalculationTest extends ComponentTest
 
         $game = $this->gameFactory->createNewGame();
         $game->setEventDispatcher($dispatcher);
-        
+
         $player = new Player($game);
 
         foreach ($rolls as $roll) {
@@ -57,7 +57,7 @@ class GameScoreCalculationTest extends ComponentTest
         yield [[Roll::STRIKE(), Roll::STRIKE(), Roll::THREE_PINS(), Roll::FIVE_PINS()], 49];
         yield [[Roll::STRIKE(), Roll::ONE_PIN(), Roll::SPARE(), Roll::FIVE_PINS()], 40];
         yield [[Roll::STRIKE(), Roll::STRIKE(), Roll::EIGHT_PINS(),
-            Roll::SPARE(), Roll::STRIKE(), Roll::FIVE_PINS(), Roll::SPARE()], 98];
+            Roll::SPARE(), Roll::STRIKE(), Roll::FIVE_PINS(), Roll::SPARE(), ], 98];
         yield [$gameFactory->createSpareGame(Roll::NINE_PINS())->getRolls(), 190];
         yield [$gameFactory->createPerfectGame()->getRolls(), 300];
         yield [$gameFactory->createGutterGame()->getRolls(), 0];

@@ -12,6 +12,7 @@ use Mockery as m;
 
 /**
  * @method Dealer uut()
+ *
  * @property Deck|m\MockInterface deck
  * @property Player|m\MockInterface player
  */
@@ -20,10 +21,10 @@ class DealerTest extends PlayerTest
     protected function setUp()
     {
         $this->player = m::mock(Player::class);
-        
+
         $this->deck = m::mock(Deck::class);
         $this->deck->shouldReceive('draw')->andReturn(new Card())->byDefault();
-        
+
         parent::setUp();
     }
 
@@ -31,7 +32,7 @@ class DealerTest extends PlayerTest
     {
         return new Dealer($this->deck);
     }
-    
+
     public function testCanGiveCardsToHimself()
     {
         $hand = $this->uut()->drawMany(2);
@@ -46,7 +47,7 @@ class DealerTest extends PlayerTest
         $player->shouldReceive('receiveCard')
             ->times(2)
             ->with(anInstanceOf(Card::class));
-        
+
         $this->uut()->hit($player, 2);
     }
 
@@ -66,7 +67,7 @@ class DealerTest extends PlayerTest
         $this->uut()->outplay($this->player, $handCalculator);
         $this->verifyThat($this->uut()->getBestScore(), equalTo(17));
     }
-    
+
     public function testDealerTriesToBeatPlayer()
     {
         $this->deck->shouldReceive('draw')->andReturn(new Card(2));

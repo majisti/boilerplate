@@ -5,7 +5,6 @@ namespace Unit\Bowling;
 use Bowling\BonusCounter;
 use Bowling\Frame;
 use LogicException;
-use Mockery as m;
 use Tests\Unit\UnitTest;
 
 /**

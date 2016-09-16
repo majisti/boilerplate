@@ -23,7 +23,7 @@ class DeckBuilderTest extends UnitTest
     {
         return new DeckBuilder();
     }
-    
+
     public function testBuildsFullStandardDeck()
     {
         $this->uut()->addAllCards();
@@ -40,7 +40,7 @@ class DeckBuilderTest extends UnitTest
             }
         }
     }
-    
+
     public function testCanShuffleDeck()
     {
         $expectedDeck = new Deck();
@@ -58,7 +58,7 @@ class DeckBuilderTest extends UnitTest
 
         $this->uut()->shuffle();
         $shuffledDeck = $this->uut()->getDeck();
-        
+
         $this->verifyThat($shuffledDeck, is(not(sameInstance($deck))));
         $this->verifyThat($expectedDeck->count(), is(equalTo($shuffledDeck->count())));
     }

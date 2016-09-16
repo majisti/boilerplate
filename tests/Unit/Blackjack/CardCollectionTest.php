@@ -5,7 +5,6 @@ namespace Unit\Blackjack;
 use Blackjack\Card;
 use Blackjack\CardCollection;
 use Tests\Unit\UnitTest;
-use Mockery as m;
 
 /**
  * @method CardCollection uut()

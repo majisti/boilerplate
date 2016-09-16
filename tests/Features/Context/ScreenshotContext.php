@@ -29,7 +29,7 @@ class ScreenshotContext implements Context, SnippetAcceptingContext
      * @var string
      */
     protected $basePath;
-    
+
     /**
      * @var MinkContext
      */
@@ -51,13 +51,14 @@ class ScreenshotContext implements Context, SnippetAcceptingContext
 
     /**
      * @BeforeScenario
+     *
      * @param BeforeScenarioScope $scope
      */
     public function gatherContexts(BeforeScenarioScope $scope)
     {
         /* @var $env InitializedContextEnvironment  */
         $env = $scope->getEnvironment();
-        
+
         $this->minkContext = $env->getContext(MinkContext::class);
         $this->debugContext = $env->getContext(DebugContext::class);
     }
@@ -77,7 +78,7 @@ class ScreenshotContext implements Context, SnippetAcceptingContext
             );
         }
     }
-    
+
     /**
      * @AfterStep
      *
@@ -86,7 +87,7 @@ class ScreenshotContext implements Context, SnippetAcceptingContext
     public function takeScreenshotOnStepFailure(AfterStepScope $scope)
     {
         if (!$scope->getTestResult()->isPassed()) {
-            if( $this->isSeleniumDriver() ) {
+            if ($this->isSeleniumDriver()) {
                 $scenario = $this->getScenario($scope);
                 $this->debugContext->saveScreenshot(
                     sprintf('fail__%s_%s__%s.png',
@@ -103,7 +104,8 @@ class ScreenshotContext implements Context, SnippetAcceptingContext
     protected function getCurrentProfile(): string
     {
         $input = new ArgvInput($_SERVER['argv']);
-        return $input->getParameterOption(array('--profile', '-p')) ? : 'default';
+
+        return $input->getParameterOption(array('--profile', '-p')) ?: 'default';
     }
 
     protected function getCanonicalizedFeatureName(FeatureNode $feature): string

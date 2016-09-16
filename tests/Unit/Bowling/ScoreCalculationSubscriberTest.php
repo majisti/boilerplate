@@ -32,7 +32,7 @@ class ScoreCalculationSubscriberTest extends UnitTest
 
         return $listener;
     }
-    
+
     public function testUsesScoreCalculatorOnEveryRoll()
     {
         $game = new Game();

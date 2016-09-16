@@ -40,7 +40,7 @@ trait Hamcrest
             array(MatcherAssert::class, 'assertThat'),
             $args
         );
-        
+
         $this->incrementAssertionCounterByOne();
     }
 }

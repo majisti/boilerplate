@@ -19,6 +19,7 @@ use Tests\Unit\UnitTest;
 
 /**
  * @method GameCoordinator uut()
+ *
  * @property m\MockInterface|EventDispatcher dispatcher
  * @property HandCalculator|m\MockInterface handCalculator
  * @property Player|m\MockInterface player
@@ -79,13 +80,13 @@ class GameCoordinatorTest extends UnitTest
     public function testCanAddEventSubscribers()
     {
         $subscriber = m::mock(EventSubscriberInterface::class);
-        
+
         $this->dispatcher->shouldReceive('addSubscriber')->once()
             ->with($subscriber);
-        
+
         $this->uut()->addSubscriber($subscriber);
     }
-    
+
     public function testDealerBlackjackAtStartOfGameSendsAnEvent()
     {
         $this->dispatcher->shouldReceive('dispatch')
@@ -112,7 +113,7 @@ class GameCoordinatorTest extends UnitTest
         $this->dispatcher->shouldReceive('dispatch')
             ->once()
             ->with(PlayerEvent::DEALER_END_OF_TURN, PlayerEvent::class);
-        
+
         $this->uut()->dealerTurn();
     }
 
@@ -165,7 +166,7 @@ class GameCoordinatorTest extends UnitTest
 
         $this->uut()->dealerTurn();
     }
-    
+
     public function testDealerStartOfTurnSendsAnEvent()
     {
         $this->dispatcher->shouldReceive('dispatch')
@@ -174,7 +175,7 @@ class GameCoordinatorTest extends UnitTest
 
         $this->uut()->dealerTurn();
     }
-    
+
     public function testDealerTurnTriesToOutplayPlayer()
     {
         $this->dealer->shouldReceive('outplay')->once();
@@ -190,7 +191,7 @@ class GameCoordinatorTest extends UnitTest
     public function testItEndsPlayersTurnOnPlayerBlackjackBySendingEvent()
     {
         $this->player->shouldReceive('hasBlackjack')->andReturn(true);
-        
+
         $this->dispatcher->shouldReceive('dispatch')
             ->once()
             ->with(PlayerEvent::PLAYER_END_OF_TURN, PlayerEvent::class);
@@ -225,14 +226,14 @@ class GameCoordinatorTest extends UnitTest
         $this->dealer->shouldReceive('hit')->once()->with($this->player);
         $this->player->shouldReceive('calculateHand')->once()
             ->with($this->handCalculator);
-        
+
         $this->dispatcher->shouldReceive('dispatch')
             ->once()
             ->with(PlayerEvent::PLAYER_HIT, PlayerEvent::class);
 
         $this->uut()->playerHit();
     }
-    
+
     public function testPlayerStandSendsAnEvent()
     {
         $this->dispatcher->shouldReceive('dispatch')
@@ -250,7 +251,7 @@ class GameCoordinatorTest extends UnitTest
 
         $this->uut()->startGame();
     }
-    
+
     public function testPlayerStartOfTurnSendsAnEvent()
     {
         $this->dispatcher->shouldReceive('dispatch')

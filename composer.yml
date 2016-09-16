@@ -8,7 +8,7 @@ authors:
         email: steven.rosato@majisti.com
 autoload:
     psr-4:
-        '': [src/]
+        '': [src/, tests/]
     classmap:
         - app/AppKernel.php
         - app/AppCache.php

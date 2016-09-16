@@ -4,7 +4,6 @@ namespace Unit\Blackjack\Ui;
 
 use Blackjack\Card;
 use Blackjack\Ui\AsciiCardDrawer;
-use Mockery as m;
 use Tests\Unit\UnitTest;
 
 /**
@@ -24,7 +23,7 @@ class AsciiCardDrawerTest extends UnitTest
 
     public function getCards()
     {
-        $drawing = <<<EOF
+        $drawing = <<<'EOF'
 -------------
 | 2         |
 |           |
@@ -37,7 +36,7 @@ class AsciiCardDrawerTest extends UnitTest
 EOF;
         yield [[new Card(2, Card::SUIT_CLUBS)], $drawing];
 
-        $drawing = <<<EOF
+        $drawing = <<<'EOF'
 -------------
 | J         |
 |           |
@@ -50,7 +49,7 @@ EOF;
 EOF;
         yield [[new Card(Card::RANK_JACK, Card::SUIT_HEARTS)], $drawing];
 
-        $drawing = <<<EOF
+        $drawing = <<<'EOF'
 -------------
 | Q         |
 |           |
@@ -63,7 +62,7 @@ EOF;
 EOF;
         yield [[new Card(Card::RANK_QUEEN, Card::SUIT_SPADES)], $drawing];
 
-        $drawing = <<<EOF
+        $drawing = <<<'EOF'
 -------------
 | K         |
 |           |
@@ -76,7 +75,7 @@ EOF;
 EOF;
         yield [[new Card(Card::RANK_KING, Card::SUIT_DIAMONDS)], $drawing];
 
-        $drawing = <<<EOF
+        $drawing = <<<'EOF'
 -------------
 | A         |
 |           |
@@ -89,7 +88,7 @@ EOF;
 EOF;
         yield [[new Card(Card::RANK_ACE, Card::SUIT_DIAMONDS)], $drawing];
 
-        $drawing = <<<EOF
+        $drawing = <<<'EOF'
 -------------   -------------
 | A         |   | 10        |
 |           |   |           |
@@ -105,10 +104,10 @@ EOF;
                 new Card(Card::RANK_ACE, Card::SUIT_DIAMONDS),
                 new Card(10, Card::SUIT_DIAMONDS),
             ],
-            $drawing
+            $drawing,
         ];
 
-        $drawing = <<<EOF
+        $drawing = <<<'EOF'
 -------------   -------------
 |###########|   | K         |
 |###########|   |           |
@@ -125,7 +124,7 @@ EOF;
                 new Card(Card::RANK_KING, Card::SUIT_DIAMONDS),
             ],
             $drawing,
-            $shouldHideFirstCard = true
+            $shouldHideFirstCard = true,
         ];
     }
 
@@ -133,7 +132,7 @@ EOF;
      * @param Card[] $card
      * @dataProvider getCards()
      */
-    public function testCanDrawAnAsciiRepresentationOfACard(array $cards, string $expectedDrawing, 
+    public function testCanDrawAnAsciiRepresentationOfACard(array $cards, string $expectedDrawing,
         bool $shouldHideFirstCard = false)
     {
         $this->uut()->setShouldHideFirstCard($shouldHideFirstCard);

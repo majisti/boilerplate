@@ -6,7 +6,6 @@ use ArrayIterator;
 use Bowling\Exception\MaximumScoreExceededException;
 use Bowling\Frame;
 use Bowling\Roll;
-use Mockery as m;
 use Tests\Unit\UnitTest;
 
 /**
@@ -90,12 +89,12 @@ class FrameTest extends UnitTest
 
         $this->verifyThat($this->uut()->getRoll(Frame::FIRST_ROLL), equalTo(Roll::FOUR_PINS()));
     }
-    
+
     public function testCanRemoveLastRoll()
     {
         $this->uut()->addRoll(Roll::ONE_PIN());
         $this->uut()->addRoll(Roll::THREE_PINS());
-        
+
         $this->uut()->removeLastRoll();
 
         $this->verifyThat($this->uut()->getRollsCount(), equalTo(1));
@@ -105,7 +104,7 @@ class FrameTest extends UnitTest
     public function testIsIterable()
     {
         $this->uut()->setAsLastFrame();
-        
+
         $this->uut()->addRoll(Roll::ONE_PIN());
         $this->uut()->addRoll(Roll::SPARE());
         $this->uut()->addRoll(Roll::THREE_PINS());

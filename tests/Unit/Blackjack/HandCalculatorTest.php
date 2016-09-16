@@ -5,7 +5,6 @@ namespace Unit\Blackjack;
 use Blackjack\Card;
 use Blackjack\Hand;
 use Blackjack\HandCalculator;
-use Mockery as m;
 use Tests\Unit\UnitTest;
 
 /**
@@ -24,7 +23,7 @@ class HandCalculatorTest extends UnitTest
     {
         return new HandCalculator();
     }
-    
+
     public function testCanCalculateABlackJack()
     {
         $hand = new Hand();
@@ -52,7 +51,7 @@ class HandCalculatorTest extends UnitTest
         $hand->addCards([new Card(2), new Card(5)]);
 
         $this->uut()->calculate($hand);
-        
+
         $this->verifyThat($hand->getBestScore(), equalTo(7));
         $this->verifyThat($hand->hasAlternateScore(), is(false));
     }

@@ -4,7 +4,6 @@ namespace Unit\Bowling;
 
 use Bowling\Game;
 use Bowling\Roll;
-use Mockery as m;
 use Tests\Unit\UnitTest;
 
 /**
@@ -33,7 +32,7 @@ class RollTest extends UnitTest
 
     public function testItShouldHaveStringRepresentation()
     {
-        $this->verifyThat((string)Roll::EIGHT_PINS(), equalTo('8'));
+        $this->verifyThat((string) Roll::EIGHT_PINS(), equalTo('8'));
     }
 
     public function testItShouldSupportRollEquality()

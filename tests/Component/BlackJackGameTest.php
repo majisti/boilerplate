@@ -11,7 +11,6 @@ use Blackjack\Game;
 use Blackjack\GameCoordinator;
 use Mockery as m;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Tests\Component\ComponentTest;
 
 /**
@@ -22,7 +21,7 @@ use Tests\Component\ComponentTest;
  * @property Deck deck
  * @property GameCoordinator gameCoordinator
  */
-class BlackJackGameTest extends ComponentTest implements EventSubscriberInterface
+class BlackJackGameTest extends ComponentTest
 {
     protected function setUp()
     {
@@ -36,15 +35,6 @@ class BlackJackGameTest extends ComponentTest implements EventSubscriberInterfac
         $this->gameCoordinator = new GameCoordinator();
         $this->gameCoordinator->setEventDispatcher($this->dispatcher);
         $this->gameCoordinator->setDeckBuilder($this->deckBuilder);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function getSubscribedEvents()
-    {
-        return [
-        ];
     }
 
     private function initialDealerCards(Card $firstCard, Card $secondCard)
@@ -89,7 +79,7 @@ class BlackJackGameTest extends ComponentTest implements EventSubscriberInterfac
     protected function playerWillHitTimes(int $count = 1)
     {
         $this->dispatcher->addListener(PlayerEvent::PLAYER_START_OF_TURN, function () use ($count) {
-            for ($i = $count; $i <= $count; $i++) {
+            for ($i = $count; $i <= $count; ++$i) {
                 $this->gameCoordinator->playerHit();
             }
         });
@@ -109,6 +99,7 @@ class BlackJackGameTest extends ComponentTest implements EventSubscriberInterfac
     {
         $this->gameCoordinator->prepareGame();
         $this->gameCoordinator->startGame();
+
         return $this->gameCoordinator->getGame();
     }
 

@@ -5,8 +5,6 @@ namespace Unit\Blackjack;
 use Blackjack\Card;
 use Blackjack\CardCollection;
 use Blackjack\Deck;
-use Doctrine\Common\Collections\ArrayCollection;
-use Mockery as m;
 use Tests\Unit\UnitTest;
 
 /**
@@ -23,7 +21,7 @@ class DeckTest extends UnitTest
     {
         return new Deck();
     }
-    
+
     public function testIsCardCollection()
     {
         $this->verifyThat($this->uut(), is(anInstanceOf(CardCollection::class)));
@@ -45,8 +43,9 @@ class DeckTest extends UnitTest
         $this->verifyThat($this->uut()->count(), equalTo(8));
     }
 
-    private function addManyCards(int $count) {
-        for ($i = 0; $i < $count; $i++) {
+    private function addManyCards(int $count)
+    {
+        for ($i = 0; $i < $count; ++$i) {
             $this->uut()->addCard(new Card());
         }
     }

@@ -6,7 +6,6 @@ use Bowling\Frame;
 use Bowling\Game;
 use Bowling\BowlingFactory;
 use Bowling\Roll;
-use Mockery as m;
 use Tests\Unit\UnitTest;
 
 /**

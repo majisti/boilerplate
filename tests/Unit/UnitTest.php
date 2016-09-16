@@ -47,10 +47,11 @@ abstract class UnitTest extends PHPUnit_Framework_TestCase
 
         return null;
     }
-    
+
     protected function getUutNamespace(): string
     {
         $rc = new \ReflectionClass($this->uut());
+
         return $rc->getNamespaceName();
     }
 

@@ -60,7 +60,7 @@ class GameTest extends UnitTest
         $this->frame->shouldReceive('isComplete')->andReturn(false, true);
 
         $rollCount = 10;
-        for ($i = 0; $i < $rollCount; $i++) {
+        for ($i = 0; $i < $rollCount; ++$i) {
             $this->uut()->addRoll(Roll::GUTTER());
         }
 
@@ -71,7 +71,7 @@ class GameTest extends UnitTest
     {
         $this->frame->shouldReceive('isComplete')->andReturn(false, true, true, true, true, true, true, true, true, true, false);
 
-        for ($i = 0; $i < Game::MAX_NUMBER_OF_STRIKES_POSSIBLE + 20; $i++) {
+        for ($i = 0; $i < Game::MAX_NUMBER_OF_STRIKES_POSSIBLE + 20; ++$i) {
             $this->addRolls([Roll::STRIKE()]);
         }
 
@@ -88,7 +88,7 @@ class GameTest extends UnitTest
 
         $this->bowlingFactory->shouldReceive('createFrame')->andReturn($unwantedFrame, $expectedFrame);
 
-        for ($i = 0; $i < Game::MAX_NUMBER_OF_STRIKES_POSSIBLE; $i++) {
+        for ($i = 0; $i < Game::MAX_NUMBER_OF_STRIKES_POSSIBLE; ++$i) {
             $this->addRolls([Roll::STRIKE()]);
         }
 
@@ -131,14 +131,14 @@ class GameTest extends UnitTest
         $frame = $this->uut()->getFrame($expectedIndex = 1);
         $this->verifyThat($this->uut()->getFrameIndex($frame), equalTo($expectedIndex));
     }
-    
+
     public function testAdvancingFrameShouldCompleteWithSpareWhenFrameHasOneRoll()
     {
         $this->frame->shouldDeferMissing();
 
         $this->addRolls([Roll::EIGHT_PINS()]);
         $frame = $this->uut()->advanceFrame();
-        
+
         $this->verifyThat($frame->isComplete(), is(true));
         $this->verifyThat($frame->getRollsCount(), equalTo(2));
         $this->verifyThat($frame->getRoll(Frame::SECOND_ROLL), equalTo(Roll::SPARE()));

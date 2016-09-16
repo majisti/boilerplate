@@ -8,7 +8,7 @@ use Tests\Utils\Hamcrest;
 abstract class Element extends BaseElement
 {
     use Hamcrest;
-    
+
     public function verifyNonEmpty()
     {
         $this->verifyThat($this->getHtml(), is(nonEmptyString()));
@@ -19,7 +19,7 @@ abstract class Element extends BaseElement
         $elements = $this->findAll('css', $containerSelector);
 
         $this->verifyThat($elements, is(notNullValue()));
-        $this->verifyThat("The number of expected elements mismatches",
+        $this->verifyThat('The number of expected elements mismatches',
             count($elements), atMost($maximumExpectedCount));
     }
 }

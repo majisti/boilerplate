@@ -5,7 +5,6 @@ namespace Unit\Blackjack;
 use Blackjack\Card;
 use Blackjack\Deck;
 use Blackjack\DeckShuffler;
-use Mockery as m;
 use Tests\Unit\UnitTest;
 
 /**
@@ -28,7 +27,7 @@ class DeckShufflerTest extends UnitTest
         $unShuffledDeck = new Deck();
         $unShuffledCards = [];
 
-        for ($i = 0; $i < 50; $i++) {
+        for ($i = 0; $i < 50; ++$i) {
             $card = Card::createRandom();
 
             $unShuffledCards[] = $card;

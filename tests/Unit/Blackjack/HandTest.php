@@ -5,7 +5,6 @@ namespace Unit\Blackjack;
 use Blackjack\Card;
 use Blackjack\CardCollection;
 use Blackjack\Hand;
-use Mockery as m;
 use Tests\Unit\UnitTest;
 
 /**
@@ -34,7 +33,7 @@ class HandTest extends UnitTest
         $hand = new Hand();
         $hand->addCards([new Card(Card::RANK_KING), new Card(Card::RANK_ACE)]);
         $this->verifyThat($hand->hasBlackjack(), is(true));
-        
+
         $this->uut()->addCard(new Card(1));
         $this->verifyThat($this->uut()->hasBlackjack(), is(false));
     }
@@ -42,7 +41,7 @@ class HandTest extends UnitTest
     public function testCanTellWhenItContainsAnAce()
     {
         $this->verifyThat($this->uut()->hasAce(), is(false));
-        
+
         $this->uut()->addCards([new Card(Card::RANK_ACE), new Card(1)]);
 
         $this->verifyThat($this->uut()->hasAce(), is(true));
@@ -95,7 +94,7 @@ class HandTest extends UnitTest
     {
         $this->verifyThat($this->uut(), is(anInstanceOf(CardCollection::class)));
     }
-    
+
     public function testScoresShouldBeZeroWhenNeverSet()
     {
         $this->verifyThat($this->uut()->getBestScore(), equalTo(0));

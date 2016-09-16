@@ -4,7 +4,6 @@ namespace Unit\Blackjack;
 
 use AspectMock\Test;
 use Blackjack\Card;
-use Mockery as m;
 use Tests\Unit\UnitTest;
 
 /**
@@ -23,7 +22,7 @@ class CardTest extends UnitTest
     {
         return new Card();
     }
-    
+
     public function testCanCreateRandomCard()
     {
         $phpRandFunction = Test::func($this->getUutNamespace(), 'rand', Card::RANK_ACE);
@@ -47,9 +46,9 @@ class CardTest extends UnitTest
         $this->verifyThat(Card::estimateScoreValue($card), equalTo(10));
 
         $card = new Card(Card::RANK_QUEEN);
-        $this->verifyThat(Card::estimateScoreValue($card) , equalTo(10));
+        $this->verifyThat(Card::estimateScoreValue($card), equalTo(10));
 
         $card = new Card(Card::RANK_KING);
-        $this->verifyThat(Card::estimateScoreValue($card) , equalTo(10));
+        $this->verifyThat(Card::estimateScoreValue($card), equalTo(10));
     }
 }
