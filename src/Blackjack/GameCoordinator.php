@@ -83,11 +83,13 @@ class GameCoordinator
             $this->deckBuilder = new DeckBuilder();
         }
 
-        $this->deck = $this->deckBuilder
-            ->startOver()
-            ->addAllCards()
-            ->shuffle()
-            ->getDeck();
+        if (!$this->deck) {
+            $this->deck = $this->deckBuilder
+                ->startOver()
+                ->addAllCards()
+                ->shuffle()
+                ->getDeck();
+        }
 
         if (!$this->dealer) {
             $this->dealer = new Dealer($this->deck);
@@ -157,6 +159,11 @@ class GameCoordinator
     public function setPlayer(Player $player)
     {
         $this->player = $player;
+    }
+
+    public function setDeck(Deck $deck)
+    {
+        $this->deck = $deck;
     }
 
     public function startGame()
@@ -230,7 +237,7 @@ class GameCoordinator
 
     public function resetGame(Game $game = null)
     {
-        $this->player = $this->dealer = null;
+        $this->deck = $this->player = $this->dealer = null;
 
         if (!$game) {
             $game = new Game();

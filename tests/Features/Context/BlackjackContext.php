@@ -9,7 +9,6 @@ use Behat\Gherkin\Node\TableNode;
 use Behat\Symfony2Extension\Context\KernelDictionary;
 use Blackjack\Card;
 use Blackjack\Deck;
-use Blackjack\DeckBuilder;
 use Blackjack\GameCoordinator;
 use Mockery as m;
 use PSS\Behat\Symfony2MockerExtension\ServiceMocker;
@@ -61,16 +60,10 @@ class BlackjackContext implements Context
     {
         $this->deck = new Deck();
 
-        $deckBuilder = m::mock(DeckBuilder::class);
-        $deckBuilder->shouldReceive('startOver')->andReturnSelf();
-        $deckBuilder->shouldReceive('addAllCards')->andReturnSelf();
-        $deckBuilder->shouldReceive('shuffle')->andReturnSelf();
-        $deckBuilder->shouldReceive('getDeck')->once()->andReturn($this->deck);
-
         $this->gameCoordinator = $this->serviceMocker
             ->mockService('app.games.blackjack.game_coordinator', GameCoordinator::class)
             ->shouldDeferMissing();
-        $this->gameCoordinator->setDeckBuilder($deckBuilder);
+        $this->gameCoordinator->setDeck($this->deck);
     }
 
     /**

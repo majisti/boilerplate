@@ -2,28 +2,29 @@
 
 namespace AppBundle\Command;
 
-use Blackjack\Player;
+use Blackjack\Card;
 use Blackjack\Dealer;
+use Blackjack\Deck;
 use Blackjack\Event\GameEvent;
 use Blackjack\Event\PlayerEvent;
 use Blackjack\Game;
 use Blackjack\GameCoordinator;
 use Blackjack\Hand;
+use Blackjack\Player;
 use Blackjack\Ui\AsciiCardDrawer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-/**
- * WIP. This command is an experiment only and will be refactored with proper
- * TDD/BDD.
- */
 class BlackjackCommand extends Command implements EventSubscriberInterface
 {
+    const OPTION_CHEAT = 'cheat';
+
     /**
      * @var GameCoordinator
      */
@@ -32,7 +33,7 @@ class BlackjackCommand extends Command implements EventSubscriberInterface
     /**
      * @var AsciiCardDrawer
      */
-    private $drawer;
+    private $cardDrawer;
 
     /**
      * @var InputInterface
@@ -54,9 +55,17 @@ class BlackjackCommand extends Command implements EventSubscriberInterface
 
     protected function configure()
     {
+        $cheatDescription = <<<'EOF'
+Tricks the deck by passing in predefined cards. 
+This wipes the deck. Ex: <info>--cheat=10,3,5,1</info>. 
+The cards are added in FILO order. The dealer's card will also be revealed.
+<comment>Provide enough cards so that you or the dealer can play!</comment>
+EOF;
+
         $this
             ->setName('majisti:game:blackjack')
             ->setDescription('Play a game of BlackJack against the computer!')
+            ->addOption(self::OPTION_CHEAT, 'c', InputOption::VALUE_OPTIONAL, $this->getDescriptionOnOneLine($cheatDescription))
         ;
     }
 
@@ -64,7 +73,6 @@ class BlackjackCommand extends Command implements EventSubscriberInterface
     {
         $this->hideHoleCard = false;
         $this->drawBoard($this->gameCoordinator->getGame());
-        $this->gameCoordinator->endOfGame();
     }
 
     public function dealerEndOfTurn(PlayerEvent $event)
@@ -91,9 +99,9 @@ class BlackjackCommand extends Command implements EventSubscriberInterface
 
     protected function drawDealerHand(Dealer $dealer)
     {
-        $this->drawer->setShouldHideFirstCard($this->hideHoleCard);
+        $this->cardDrawer->setShouldHideFirstCard($this->hideHoleCard);
         $this->output->writeln('<info>DEALER</info>');
-        $this->output->writeln($this->drawer->drawCards($dealer->getHand()->toArray()));
+        $this->output->writeln($this->cardDrawer->drawCards($dealer->getHand()->toArray()));
 
         if (!$this->hideHoleCard) {
             $this->drawScore($dealer);
@@ -102,9 +110,9 @@ class BlackjackCommand extends Command implements EventSubscriberInterface
 
     protected function drawPlayerHand(Player $player)
     {
-        $this->drawer->setShouldHideFirstCard(false);
+        $this->cardDrawer->setShouldHideFirstCard(false);
         $this->output->writeln('<info>PLAYER #1</info>');
-        $this->output->writeln($this->drawer->drawCards($player->getCards()));
+        $this->output->writeln($this->cardDrawer->drawCards($player->getCards()));
         $this->drawScore($player);
     }
 
@@ -126,11 +134,13 @@ class BlackjackCommand extends Command implements EventSubscriberInterface
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        //this is far from complete yet, just playing around with ascii card drawing
-
         $this->input = $input;
         $this->output = $output;
-        $this->drawer = new AsciiCardDrawer();
+        $this->cardDrawer = new AsciiCardDrawer();
+
+        if ($cardsList = $input->getOption(self::OPTION_CHEAT)) {
+            $this->cheat($cardsList);
+        }
 
         $this->gameCoordinator->prepareGame();
         $this->gameCoordinator->addSubscriber($this);
@@ -239,5 +249,24 @@ class BlackjackCommand extends Command implements EventSubscriberInterface
         $this->hideHoleCard = true;
         $this->gameCoordinator->resetGame();
         $this->gameCoordinator->startGame();
+    }
+
+    protected function cheat(string $cardsList)
+    {
+        $this->hideHoleCard = false;
+
+        $cards = explode(',', $cardsList);
+
+        $deck = new Deck();
+        foreach ($cards as $card) {
+            $deck->addCard(new Card((int) $card));
+        }
+
+        $this->gameCoordinator->setDeck($deck);
+    }
+
+    protected function getDescriptionOnOneLine(string $cheatDescription): string
+    {
+        return trim(preg_replace('/\s+/', ' ', $cheatDescription));
     }
 }
