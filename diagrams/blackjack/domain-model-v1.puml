@@ -1,0 +1,35 @@
+@startuml
+
+title BlackJack Game v1
+
+class Player {
+    - score
+    - alternate_score
+    - hit()
+    - stand()
+}
+class Dealer
+class Deck
+class DeckBuilder {
+    - addAllCards()
+    - shuffle()
+    - getDeck()
+}
+class Card
+class Game
+class Hand {
+    - score
+}
+class BlackjackCommand {
+    - playGame()
+}
+
+Player <|-down- Dealer
+Player "1" - "1" Hand : "has"
+Hand "1" o- "0..*" Card
+Game "1" o-down- "1" Player
+Game "1" o- "1" Dealer
+Deck "1" o-down- "52" Card
+DeckBuilder - Deck : "builds"
+
+@enduml

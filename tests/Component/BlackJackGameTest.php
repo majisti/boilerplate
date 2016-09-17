@@ -26,16 +26,11 @@ class BlackJackGameTest extends ComponentTest
     protected function setUp()
     {
         $this->deck = new Deck();
-        $this->deckBuilder = m::mock(DeckBuilder::class);
-        $this->deckBuilder->shouldReceive('startOver')->andReturnSelf();
-        $this->deckBuilder->shouldReceive('addAllCards')->andReturnSelf();
-        $this->deckBuilder->shouldReceive('shuffle')->andReturnSelf();
-        $this->deckBuilder->shouldReceive('getDeck')->andReturn($this->deck);
 
         $this->dispatcher = m::spy(new EventDispatcher());
         $this->gameCoordinator = new GameCoordinator();
+        $this->gameCoordinator->setDeck($this->deck);
         $this->gameCoordinator->setEventDispatcher($this->dispatcher);
-        $this->gameCoordinator->setDeckBuilder($this->deckBuilder);
     }
 
     private function initialDealerCards(Card $firstCard, Card $secondCard)

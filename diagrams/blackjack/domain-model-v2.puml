@@ -1,0 +1,30 @@
+@startuml
+
+title BlackJack Game v2
+
+class Player {
+    - score
+    - alternate_score
+    - hit()
+    - stand()
+}
+class Dealer
+class Game {
+    - winner
+}
+class GameCoordinator<<Controller|Manager>> {
+    - prepareGame()
+    - determineWinner()
+    - startGame()
+}
+class WinnerDeterminer {
+    - determine(Game)
+}
+
+Game "1" o-down- "1" Player
+Game "1" o- "1" Dealer
+GameCoordinator - Game : "coordinates"
+WinnerDeterminer -down- Game : "determines winner for"
+GameCoordinator -down- WinnerDeterminer : "delegates job to"
+
+@enduml

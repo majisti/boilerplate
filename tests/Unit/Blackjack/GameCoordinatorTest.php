@@ -2,6 +2,7 @@
 
 namespace Unit\Blackjack;
 
+use Blackjack\Card;
 use Blackjack\Dealer;
 use Blackjack\Deck;
 use Blackjack\DeckBuilder;
@@ -65,6 +66,15 @@ class GameCoordinatorTest extends UnitTest
         $this->deckBuilder->shouldReceive('shuffle')->once()->andReturnSelf();
         $this->deckBuilder->shouldReceive('getDeck')->once()->andReturn(new Deck());
 
+        $this->uut()->prepareGame();
+    }
+
+    public function testCanTrickDeck()
+    {
+        $deck = m::spy(Deck::class);
+        $deck->shouldReceive('draw')->andReturn(new Card());
+
+        $this->uut()->setDeck($deck);
         $this->uut()->prepareGame();
     }
 
