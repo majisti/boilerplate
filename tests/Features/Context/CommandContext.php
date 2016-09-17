@@ -135,7 +135,6 @@ class CommandContext extends RawMinkContext implements KernelAwareContext, Snipp
     public function theCommandExitCodeShouldBe($exitCode)
     {
         $this->checkThatCommandHasRun();
-
         $this->verifyThat($this->exitCode, equalTo($exitCode));
     }
 
@@ -145,7 +144,6 @@ class CommandContext extends RawMinkContext implements KernelAwareContext, Snipp
     public function iShouldSeeInTheCommandOutput($str)
     {
         $this->checkThatCommandHasRun();
-
         $this->verifyThat($this->tester->getDisplay(), containsString($str));
     }
 
@@ -209,10 +207,11 @@ class CommandContext extends RawMinkContext implements KernelAwareContext, Snipp
     protected function initHelperSet()
     {
         $this->questionHelper = m::mock(QuestionHelper::class);
+        $this->questionHelper->shouldReceive('getName')->andReturn('question');
         $this->questionHelper->shouldDeferMissing();
 
         $helperSet = new HelperSet();
-        $helperSet->set($this->questionHelper, 'question');
+        $helperSet->set($this->questionHelper);
 
         $this->application->setHelperSet($helperSet);
     }

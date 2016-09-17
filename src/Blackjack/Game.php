@@ -27,6 +27,9 @@ class Game
     public function dealerWins()
     {
         $this->winner = $this->getDealer();
+        $this->winner->wins();
+
+        $this->getPlayer()->loses();
     }
 
     public function getDealer(): Dealer
@@ -99,6 +102,9 @@ class Game
     public function playerWins()
     {
         $this->winner = $this->getPlayer();
+        $this->winner->wins();
+
+        $this->getDealer()->loses();
     }
 
     public function setIsDraw()

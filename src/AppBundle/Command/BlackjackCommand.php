@@ -59,6 +59,7 @@ class BlackjackCommand extends Command implements EventSubscriberInterface
 Tricks the deck by passing in predefined cards. 
 This wipes the deck. Ex: <info>--cheat=10,3,5,1</info>. 
 The cards are added in FILO order. The dealer's card will also be revealed.
+In this example, the dealer will receive 3 and 10, and the player 1 and 5
 <comment>Provide enough cards so that you or the dealer can play!</comment>
 EOF;
 
@@ -100,7 +101,7 @@ EOF;
     protected function drawDealerHand(Dealer $dealer)
     {
         $this->cardDrawer->setShouldHideFirstCard($this->hideHoleCard);
-        $this->output->writeln('<info>DEALER</info>');
+        $this->output->writeln(sprintf('<info>DEALER (<comment>W: %s</comment>)</info>', $dealer->getWinsCount()));
         $this->output->writeln($this->cardDrawer->drawCards($dealer->getHand()->toArray()));
 
         if (!$this->hideHoleCard) {
@@ -111,7 +112,7 @@ EOF;
     protected function drawPlayerHand(Player $player)
     {
         $this->cardDrawer->setShouldHideFirstCard(false);
-        $this->output->writeln('<info>PLAYER #1</info>');
+        $this->output->writeln(sprintf('<info>PLAYER (<comment>W: %s</comment>)</info>', $player->getWinsCount()));
         $this->output->writeln($this->cardDrawer->drawCards($player->getCards()));
         $this->drawScore($player);
     }
@@ -238,6 +239,7 @@ EOF;
             case 'y':
                 $this->resetGame();
                 break;
+            case 'n':
             case false:
                 $this->output->writeln('Thank you for playing!');
                 break;
@@ -247,7 +249,7 @@ EOF;
     protected function resetGame()
     {
         $this->hideHoleCard = true;
-        $this->gameCoordinator->resetGame();
+        $this->gameCoordinator->resetGame(true);
         $this->gameCoordinator->startGame();
     }
 
@@ -255,7 +257,7 @@ EOF;
     {
         $this->hideHoleCard = false;
 
-        $cards = explode(',', $cardsList);
+        $cards = array_reverse(explode(',', $cardsList));
 
         $deck = new Deck();
         foreach ($cards as $card) {

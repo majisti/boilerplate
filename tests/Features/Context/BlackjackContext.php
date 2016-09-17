@@ -5,19 +5,23 @@ namespace Tests\Features\Context;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\AfterStepScope;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Behat\Gherkin\Node\TableNode;
 use Behat\Symfony2Extension\Context\KernelDictionary;
 use Blackjack\Card;
 use Blackjack\Deck;
 use Blackjack\GameCoordinator;
 use Mockery as m;
 use PSS\Behat\Symfony2MockerExtension\ServiceMocker;
+use Symfony\Component\Console\Question\ChoiceQuestion;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Tests\Utils\Hamcrest;
 
 class BlackjackContext implements Context
 {
     use KernelDictionary;
     use Hamcrest;
+
+    const QUESTION_HIT_OR_STAND = 'Hit or stand';
+    const QUESTION_PLAY_AGAIN = 'play again';
 
     /**
      * @var Deck
@@ -75,7 +79,7 @@ class BlackjackContext implements Context
 
         $this->commandContext->getQuestionHelper()
             ->shouldReceive('ask')
-            ->atLeast()->once()
+            ->with(anything(), anything(), anInstanceOf(ChoiceQuestion::class))
             ->andReturnValues($moves);
     }
 
@@ -93,16 +97,6 @@ class BlackjackContext implements Context
     public function thePlayerShouldHaveWon()
     {
         $this->commandContext->iShouldSeeInTheCommandOutput('You win!');
-    }
-
-    /**
-     * @Given /^the deck returns the following cards in a FILO order:$/
-     */
-    public function theDeckReturnsTheFollowingCardsInAFILOOrder(TableNode $cardsTable)
-    {
-        foreach (array_reverse($cardsTable->getRows()) as $row) {
-            $this->deck->addCard(new Card($row[0]));
-        }
     }
 
     /**
@@ -145,24 +139,53 @@ class BlackjackContext implements Context
     }
 
     /**
-     * @When /^I neither will have to hit nor stand$/
+     * @Then /^I will be asked for a rematch and answer "([^"]*)"$/
      */
-    public function iNeitherWillHaveToHitNorStand()
+    public function iWillBeAskedForARematchAndAnswer(string $answersList)
     {
-        $this->commandContext->getQuestionHelper()->shouldReceive('ask')->never();
-    }
-
-    /**
-     * @Then /^I should be asked for a rematch and answer "([^"]*)"$/
-     */
-    public function iShouldBeAskedForARematchAndAnswer(string $answer)
-    {
-        $question = 'Do you want to play again? [y/n]';
+        $answers = explode(',', $answersList);
 
         $this->commandContext->getQuestionHelper()
             ->shouldReceive('ask')
             ->once()
-            ->with(containsString($question))
-            ->andReturn($answer);
+            ->with(anything(), anything(), anInstanceOf(ConfirmationQuestion::class))
+            ->andReturnValues($answers)
+        ;
+    }
+
+    /**
+     * @Given /^I will have a blackjack$/
+     */
+    public function iWillHaveABlackjack()
+    {
+        $this->theDeckReturnsTheFollowingCardsInAFIFOOrder1('5,5,10,1');
+    }
+
+    /**
+     * @Then /^I should see that I won "([^"]*)" games$/
+     */
+    public function iShouldSeeThatIWonGames(int $numberOfWins)
+    {
+        $this->commandContext->iShouldSeeInTheCommandOutput("PLAYER (W: {$numberOfWins})");
+    }
+
+    /**
+     * @Then /^I should see that the dealer has won "([^"]*)" games$/
+     */
+    public function iShouldSeeThatTheDealerHasWonGames(int $numberOfWins)
+    {
+        $this->commandContext->iShouldSeeInTheCommandOutput("DEALER (W: {$numberOfWins})");
+    }
+
+    /**
+     * @Given /^the deck returns the following cards in a FIFO order "([^"]*)"$/
+     */
+    public function theDeckReturnsTheFollowingCardsInAFIFOOrder1(string $cardsList)
+    {
+        $cards = explode(',', $cardsList);
+
+        foreach (array_reverse($cards) as $card) {
+            $this->deck->addCard(new Card((int) $card));
+        }
     }
 }

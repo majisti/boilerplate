@@ -9,6 +9,10 @@ class Player
      */
     protected $hand;
 
+    private $numberOfWins = 0;
+
+    private $numberOfLosses = 0;
+
     public function __construct()
     {
         $this->hand = new Hand();
@@ -72,5 +76,35 @@ class Player
     public function receiveCard(Card $card)
     {
         $this->hand->addCard($card);
+    }
+
+    public function wins()
+    {
+        ++$this->numberOfWins;
+    }
+
+    public function loses()
+    {
+        ++$this->numberOfLosses;
+    }
+
+    public function getWinsCount(): int
+    {
+        return $this->numberOfWins;
+    }
+
+    public function getLossesCount(): int
+    {
+        return $this->numberOfLosses;
+    }
+
+    public function resetHand()
+    {
+        $this->setHand(new Hand());
+    }
+
+    public function getCardsCount(): int
+    {
+        return count($this->getCards());
     }
 }

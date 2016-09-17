@@ -60,11 +60,14 @@ class GameCoordinatorTest extends UnitTest
         return $manager;
     }
 
-    public function testBuildStandardDeckAndShufflesIt()
+    public function testPrepareGame()
     {
         $this->deckBuilder->shouldReceive('addAllCards')->once()->andReturnSelf();
         $this->deckBuilder->shouldReceive('shuffle')->once()->andReturnSelf();
         $this->deckBuilder->shouldReceive('getDeck')->once()->andReturn(new Deck());
+
+        $this->game->shouldReceive('setPlayer')->once();
+        $this->game->shouldReceive('setDealer')->once();
 
         $this->uut()->prepareGame();
     }
@@ -320,13 +323,21 @@ class GameCoordinatorTest extends UnitTest
         $this->deckBuilder->shouldReceive('startOver')->once()->andReturnSelf();
         $this->deckBuilder->shouldReceive('shuffle')->andReturnSelf();
 
-        $game = m::mock(Game::class);
-        $game->shouldReceive('setPlayer')->once()->with(anInstanceOf(Player::class));
-        $game->shouldReceive('setDealer')->once()->with(anInstanceOf(Dealer::class));
-
-        $this->uut()->resetGame($game);
+        $this->uut()->resetGame();
 
         $this->verifyThat($this->uut()->getDeck(), is(not(sameInstance($lastDeck))));
         $this->verifyThat($this->uut()->getGame(), not(sameInstance($lastGame)));
+    }
+
+    public function testCanResetGameButKeepPlayers()
+    {
+        $this->player->shouldReceive('resetHand')->once();
+        $this->dealer->shouldReceive('resetHand')->once();
+
+        $this->uut()->prepareGame();
+        $this->uut()->resetGame(true);
+
+        $this->verifyThat($this->uut()->getPlayer(), is(sameInstance($this->player)));
+        $this->verifyThat($this->uut()->getDealer(), is(sameInstance($this->dealer)));
     }
 }

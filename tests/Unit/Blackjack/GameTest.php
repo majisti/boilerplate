@@ -70,4 +70,20 @@ class GameTest extends UnitTest
         $this->verifyThat($this->uut()->getPlayerBestScore(), is(equalTo(3)));
         $this->verifyThat($this->uut()->getDealerBestScore(), is(equalTo(5)));
     }
+
+    public function testWillTellPlayerHeWins()
+    {
+        $this->player->shouldReceive('wins')->once();
+        $this->dealer->shouldReceive('loses')->once();
+
+        $this->uut()->playerWins();
+    }
+
+    public function testWillTellDealerHeWins()
+    {
+        $this->player->shouldReceive('loses')->once();
+        $this->dealer->shouldReceive('wins')->once();
+
+        $this->uut()->dealerWins();
+    }
 }

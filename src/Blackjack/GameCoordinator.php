@@ -136,6 +136,14 @@ class GameCoordinator
         $this->player->calculateHand($this->handCalculator);
     }
 
+    /**
+     * @return Dealer|null
+     */
+    public function getDealer()
+    {
+        return $this->dealer;
+    }
+
     public function setDealer(Dealer $dealer)
     {
         $this->dealer = $dealer;
@@ -154,6 +162,14 @@ class GameCoordinator
     public function setHandCalculator(HandCalculator $calculator)
     {
         $this->handCalculator = $calculator;
+    }
+
+    /**
+     * @return Player|null
+     */
+    public function getPlayer()
+    {
+        return $this->player;
     }
 
     public function setPlayer(Player $player)
@@ -235,15 +251,17 @@ class GameCoordinator
         return $this->deck;
     }
 
-    public function resetGame(Game $game = null)
+    public function resetGame(bool $keepPlayers = false)
     {
-        $this->deck = $this->player = $this->dealer = null;
+        $this->deck = $this->game = null;
 
-        if (!$game) {
-            $game = new Game();
+        if (!$keepPlayers) {
+            $this->player = $this->dealer = null;
+        } else {
+            $this->player->resetHand();
+            $this->dealer->resetHand();
         }
 
-        $this->game = $game;
         $this->prepareGame();
     }
 }

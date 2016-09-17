@@ -57,4 +57,27 @@ class PlayerTest extends UnitTest
 
         $this->uut()->calculateHand($handCalculator);
     }
+
+    public function testCanTrackHisNumberOfWinsAndLosses()
+    {
+        $this->verifyThat($this->uut()->getWinsCount(), equalTo(0));
+        $this->verifyThat($this->uut()->getLossesCount(), equalTo(0));
+
+        $this->uut()->wins();
+        $this->verifyThat($this->uut()->getWinsCount(), equalTo(1));
+        $this->verifyThat($this->uut()->getLossesCount(), equalTo(0));
+
+        $this->uut()->loses();
+        $this->verifyThat($this->uut()->getWinsCount(), equalTo(1));
+        $this->verifyThat($this->uut()->getLossesCount(), equalTo(1));
+    }
+
+    public function testCanResetHand()
+    {
+        $lastHand = new Hand();
+        $this->uut()->setHand($lastHand);
+
+        $this->uut()->resetHand();
+        $this->verifyThat($this->uut()->getHand(), is(not(sameInstance($lastHand))));
+    }
 }
