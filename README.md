@@ -36,6 +36,26 @@ The following is provided out of the box:
     - ...
 - Blackjack Game
     - You can play a game of BlackJack within the Symfony Console! Just run the command `docker-compose run --rm php bin/console majisti:game:blackjack`
+    - Splitting Pairs [Todo]
+    - Betting [Todo]
+    - Persisting Game [Todo]
+    - Statistics [Todo]
+    
+# The BlackJack Game
+
+This boilerplate comes with a BlackJack game, playable within the Symfony Console. It was programmed in order to showcase full stack testing techniques.
+
+- Behat is used for testing the console command
+- Codeception is used to test at the Component level. This is were we test the edge cases from the rules.
+- PHPUnit is used for Unit testing
+- Mockery is used as the mocking framework
+- Hamcrest is used as the assertion library
+- AspectMock is used for testing some randomness (such as the PHP's rand function)
+
+Here is a little screenshot:
+
+![alt text](https://raw.githubusercontent.com/majisti/boilerplate/develop/web/assets/img/blackjack-symfony-console.png "Symfony Console BlackJack Game")
+
 
 ## Known Bugs
 

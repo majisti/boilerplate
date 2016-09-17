@@ -31,7 +31,7 @@ class CardTest extends UnitTest
         $this->verifyThat($card, is(anInstanceOf(Card::class)));
         $this->verifyThat($card->getRank(), is(equalTo(Card::RANK_ACE)));
 
-        $phpRandFunction->verifyInvoked([Card::RANK_ACE, Card::RANK_KING]);
+        $phpRandFunction->verifyInvoked([Card::RANK_ACE]);
     }
 
     public function testCanEstimateScoreValue()
