@@ -9,7 +9,7 @@ DC_TEST=bin/test_env.sh
 PHP_TEST=$(DC_TEST) run --rm php
 
 ci: all cs test
-all: configure build start vendors-install ruby-install node-install gulp
+all: configure build start vendors-install ruby-install node-install assets
 clean: stop
 restart: stop build start
 restart-test: test-stop test-start
