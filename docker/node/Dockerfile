@@ -4,7 +4,7 @@ ENV NODE_VERSION 5.0.0
 
 RUN apt-get update
 RUN apt-get install -y \
-    curl
+    curl git
 
 RUN curl -L -o /tmp/nodejs.tar.gz https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.gz \
     && tar xfvz /tmp/nodejs.tar.gz -C /usr/local --strip-components=1 \
