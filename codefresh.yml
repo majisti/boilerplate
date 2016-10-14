@@ -6,25 +6,12 @@ steps:
     dockerfile: Dockerfile
     image-name: majisti/fpm
     working-directory: ${{initial-clone}}/docker/fpm
-    tag: experimentcodefresh
+    tag: 7.0.11
 
   push-fpm-image:
     type: push
     candidate: ${{build-fpm-image}}
-    tag: experimentcodefresh
-
-  build-nginx-image:
-    type: build
-    description: Build the nginx image
-    dockerfile: Dockerfile
-    image-name: majisti/nginx
-    working-directory: ${{initial-clone}}/docker/nginx
-    tag: experimentcodefresh
-
-  push-nginx-image:
-    type: push
-    candidate: ${{build-nginx-image}}
-    tag: experimentcodefresh
+    tag: 7.0.11
 
   build-node-image:
     type: build
@@ -32,12 +19,12 @@ steps:
     dockerfile: Dockerfile
     image-name: majisti/node
     working-directory: ${{initial-clone}}/docker/node
-    tag: experimentcodefresh
+    tag: 5.0.0
 
   push-node-image:
     type: push
     candidate: ${{build-node-image}}
-    tag: experimentcodefresh
+    tag: 5.0.0
 
   build-php-image:
     type: build
@@ -45,12 +32,12 @@ steps:
     dockerfile: Dockerfile
     image-name: majisti/php-cli
     working-directory: ${{initial-clone}}/docker/php
-    tag: experimentcodefresh
+    tag: 7.0.11
 
   push-php-image:
     type: push
     candidate: ${{build-php-image}}
-    tag: experimentcodefresh
+    tag: 7.0.11
 
   build-ruby-image:
     type: build
@@ -58,9 +45,9 @@ steps:
     dockerfile: Dockerfile
     image-name: majisti/ruby
     working-directory: ${{initial-clone}}/docker/ruby
-    tag: experimentcodefresh
+    tag: 1.9.3
 
   push-ruby-image:
     type: push
     candidate: ${{build-ruby-image}}
-    tag: experimentcodefresh
+    tag: 1.9.3
