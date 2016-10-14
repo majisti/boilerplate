@@ -1,6 +1,6 @@
 var gulp = require('gulp')
     , sass = require('gulp-sass')
-    , sourcemaps = require('gulp-sourcemaps')
+    // , sourcemaps = require('gulp-sourcemaps')
     , concat = require('gulp-concat')
     , uglifycss = require('gulp-uglifycss')
     , uglify = require('gulp-uglify')
@@ -44,22 +44,22 @@ gulp.scssFiles = {
 
 gulp.task('css', function generateCss(done) {
     var cssStream = gulp.src(array_values(gulp.cssFiles))
-        .pipe(sourcemaps.init())
+        // .pipe(sourcemaps.init())
         .pipe(sass({outputStyle: 'compressed'}))
         .pipe(concat('vendors.css'))
         // .pipe(uglifycss())
-        .pipe(sourcemaps.write())
+        // .pipe(sourcemaps.write())
         .pipe(gulp.dest('./web/assets/css'))
     ;
 
     var scssStream = gulp.src(array_values(gulp.scssFiles))
-        .pipe(sourcemaps.init())
+        // .pipe(sourcemaps.init())
         .pipe(concat('styles.css'))
         .pipe(sass({
             // outputStyle: 'compressed'
         }))
         .on('error', done)
-        .pipe(sourcemaps.write())
+        // .pipe(sourcemaps.write())
         .pipe(gulp.dest('./web/assets/css'))
     ;
 

@@ -11,7 +11,7 @@ PHP_TEST=$(DC_TEST) run --rm php
 ci: all cs test
 all: configure build start vendors-install ruby-install node-install assets
 clean: stop
-restart: stop build start
+restart: stop start
 restart-test: test-stop test-start
 test: test-prepare test-integration test-acceptance
 

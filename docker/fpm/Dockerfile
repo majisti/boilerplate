@@ -1,7 +1,6 @@
-FROM php:7-fpm
+FROM php:7.0.11-fpm
 
 # Environment variable
-ENV SYMFONY_ENV prod
 ENV APCU_VERSION 5.1.2
 ENV APCU_BC_VERSION 1.0.0
 
@@ -32,7 +31,7 @@ RUN git clone --depth 1 -b v$APCU_VERSION https://github.com/krakjoe/apcu.git /u
     && rm -rf /tmp/* /var/tmp/*
 
 # Xdebug
-RUN pecl install -o -f xdebug-2.4.0RC3 \
+RUN pecl install -o -f xdebug-2.4.0 \
     && rm -rf /tmp/pear
 
 #Blackfire

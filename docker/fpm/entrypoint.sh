@@ -12,4 +12,4 @@ if [ "$XDEBUG" = "0" ]; then
     rm -f /usr/local/etc/php/conf.d/xdebug.ini
 fi
 
-php-fpm
+php-fpm -R
