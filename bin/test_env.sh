@@ -2,6 +2,8 @@
 
 set -e
 
-docker-compose -p test_$(pwd | xargs basename | tr -cd 'A-Za-z0-9_-') \
+directoryName=$(pwd | xargs basename | tr -cd 'A-Za-z0-9_-')
+
+docker-compose -p test_${directoryName} \
     -f docker-compose.yml \
     -f docker-compose.test.yml $*

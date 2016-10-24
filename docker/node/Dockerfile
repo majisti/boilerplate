@@ -2,9 +2,8 @@ FROM ubuntu:14.04
 
 ENV NODE_VERSION 5.0.0
 
-RUN apt-get update
-RUN apt-get install -y \
-    curl git
+RUN apt-get update && apt-get install -y \
+    curl git bzip2 g++ python=2.7.5-5ubuntu3 make
 
 RUN curl -L -o /tmp/nodejs.tar.gz https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.gz \
     && tar xfvz /tmp/nodejs.tar.gz -C /usr/local --strip-components=1 \
