@@ -6,12 +6,12 @@ steps:
     dockerfile: Dockerfile
     image-name: majisti/fpm
     working-directory: ${{initial-clone}}/docker/fpm
-    tag: 7.0.11.0
+    tag: 7.1.0.0
 
   push-fpm-image:
     type: push
     candidate: ${{build-fpm-image}}
-    tag: 7.0.11.0
+    tag: 7.1.0.0
 
   build-node-image:
     type: build
@@ -32,12 +32,12 @@ steps:
     dockerfile: Dockerfile
     image-name: majisti/php-cli
     working-directory: ${{initial-clone}}/docker/php
-    tag: 7.0.11.0
+    tag: 7.1.0.0
 
   push-php-image:
     type: push
     candidate: ${{build-php-image}}
-    tag: 7.0.11.0
+    tag: 7.1.0.0
 
   build-ruby-image:
     type: build

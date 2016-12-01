@@ -1,4 +1,4 @@
-FROM php:7.0.11-fpm
+FROM php:7.1.0RC6-fpm
 
 # Environment variable
 ENV APCU_VERSION 5.1.2
