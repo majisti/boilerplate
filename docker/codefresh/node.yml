@@ -1,0 +1,14 @@
+version: '1.0'
+steps:
+  build-node-image:
+    type: build
+    description: Build the node image
+    dockerfile: Dockerfile
+    image-name: majisti/node
+    working-directory: ${{initial-clone}}/docker/node
+    tag: 7.2.0.0
+
+  push-node-image:
+    type: push
+    candidate: ${{build-node-image}}
+    tag: 7.2.0.0

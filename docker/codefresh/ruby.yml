@@ -1,0 +1,14 @@
+version: '1.0'
+steps:
+  build-ruby-image:
+    type: build
+    description: Build the ruby image
+    dockerfile: Dockerfile
+    image-name: majisti/ruby
+    working-directory: ${{initial-clone}}/docker/ruby
+    tag: 1.9.3.0
+
+  push-ruby-image:
+    type: push
+    candidate: ${{build-ruby-image}}
+    tag: 1.9.3.0
