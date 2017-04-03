@@ -2,7 +2,7 @@
 
 namespace Tests\Features\Context;
 
-use Sanpi\Behatch\Context\BaseContext;
+use Behatch\Context\BaseContext;
 use SensioLabs\Behat\PageObjectExtension\Context\PageObjectAware;
 use Tests\Features\Utils\PageObjectContextTrait;
 
