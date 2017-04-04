@@ -1,0 +1,4 @@
+suites:
+    blackjack:
+        spec_prefix: Spec
+        spec_path: tests
