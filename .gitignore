@@ -28,3 +28,4 @@ web/assets/css/styles.css
 .php_cs.cache
 
 tests/_output/*
+/web/assets/js/main.js

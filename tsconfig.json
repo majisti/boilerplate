@@ -1,0 +1,29 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "es5",
+    "lib": ["es6", "dom"],
+    "module": "commonjs",
+    "sourceMap": true,
+    "jsx": "react",
+    "moduleResolution": "node",
+    "forceConsistentCasingInFileNames": true,
+    "removeComments": true,
+    "outDir": "compiled/source",
+    "experimentalDecorators": true,
+    "allowJs": true,
+    "paths": {
+      "*": [
+        "src/Frontend/*",
+        "tests/*"
+      ]
+    }
+  },
+  "include": [
+    "src/Frontend/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

@@ -1,6 +1,6 @@
 FROM ubuntu:14.04
 
-ENV NODE_VERSION 7.2.0
+ENV NODE_VERSION 7.9.0
 
 RUN apt-get update && apt-get install -y \
     curl git bzip2 g++ python=2.7.5-5ubuntu3 make

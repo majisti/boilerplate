@@ -13,6 +13,8 @@ var gulp = require('gulp')
     , merge = require('merge-stream')
 ;
 
+require('require-dir')('./config/gulp');
+
 var array_values = function(object) {
     var values = [];
     for( var key in object ) {

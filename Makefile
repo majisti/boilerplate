@@ -9,7 +9,7 @@ DC_TEST=bin/test_env.sh
 PHP_TEST=$(DC_TEST) run --rm php
 
 ci: all cs test
-all: configure build start vendors-install ruby-install node-install assets
+all: configure build start vendors-install node-install assets
 clean: stop
 restart: stop start
 restart-test: test-stop test-start
@@ -32,12 +32,8 @@ build:
 	$(DC) pull
 	$(DC) build
 
-ruby-install:
-	$(RUBY) bundle install
-
 node-install:
-	$(NODE) npm install
-	ln -sf ../node_modules/bower/bin/bower bin/bower
+	$(NODE) yarn install
 	ln -sf ../node_modules/gulp/bin/gulp.js bin/gulp
 
 assets:
