@@ -21,20 +21,6 @@
           "type": "type"
         }
       ]
-    },
-    {
-      "language": "php",
-      "provider": "class_interface",
-      "signature": [
-        "Mockery\\MockInterface::shouldReceive"
-      ],
-      "signatures": [
-        {
-          "class": "Mockery\\MockInterface",
-          "method": "shouldReceive",
-          "type": "type"
-        }
-      ]
     }
   ]
 }

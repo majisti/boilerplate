@@ -4,10 +4,11 @@ namespace Blackjack;
 
 class WinnerDeterminer
 {
-    public function determine(Game $game)
+    public function determine(Dealer $dealer, Player $player)
     {
-        $dealer = $game->getDealer();
-        $player = $game->getPlayer();
+        $game = new Game();
+        $game->setPlayer($player);
+        $game->setDealer($dealer);
 
         if ($dealer->hasBlackjack() && $player->hasBlackjack()) {
             $game->setIsDraw();
@@ -15,13 +16,18 @@ class WinnerDeterminer
             $game->dealerWins();
         } elseif ($player->hasBlackjack()) {
             $game->playerWins();
-        } elseif ($player->hasBusted() || $dealer->getBestScore() > $player->getBestScore()
-            && !$dealer->hasBusted()) {
+        } elseif ($player->hasBusted()) {
+            $game->dealerWins();
+        } elseif ($dealer->hasBusted()) {
+            $game->playerWins();
+        } elseif ($dealer->getBestScore() > $player->getBestScore()) {
             $game->dealerWins();
         } elseif ($dealer->getBestScore() !== $player->getBestScore()) {
             $game->playerWins();
         } else {
             $game->setIsDraw();
         }
+
+        return $game;
     }
 }

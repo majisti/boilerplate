@@ -184,7 +184,7 @@ class GameCoordinator
 
     private function determineWinner()
     {
-        $this->getWinnerDeterminer()->determine($this->game);
+        $this->getWinnerDeterminer()->determine($this->dealer, $this->player);
     }
 
     public function playerEndOfTurn()
