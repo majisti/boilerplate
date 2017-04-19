@@ -34,6 +34,7 @@ build:
 
 node-install:
 	$(NODE) yarn install
+	$(NODE) npm rebuild node-sass
 	ln -sf ../node_modules/gulp/bin/gulp.js bin/gulp
 
 assets:

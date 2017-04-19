@@ -1,9 +1,9 @@
 {% extends 'layout.html.twig' %}
 
-{% block javascripts %}{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript" charset="UTF-8" src="{{ asset('assets/js/main.js') }}"></script>
+{% endblock %}
 
 {% block content %}
-    Hello World
-
-    <button>A button</button>
+    <div id="react-root"></div>
 {% endblock %}
