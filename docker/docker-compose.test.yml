@@ -11,22 +11,22 @@ php:
        - firefox:firefox
 
 phantomjs:
-    image: cmfatih/phantomjs
+    image: wernight/phantomjs
     command: "--webdriver=4444"
     entrypoint: phantomjs
     links:
-        - nginx:majisti.skeleton
+        - nginx:majisti.local
 
 chrome:
     image: selenium/standalone-chrome:2.53.0
     volumes:
         - /dev/shm:/dev/shm
     links:
-        - nginx:majisti.skeleton
+        - nginx:majisti.local
 
 firefox:
     image: selenium/standalone-firefox:2.53.0
     volumes:
         - /dev/shm:/dev/shm
     links:
-        - nginx:majisti.skeleton
+        - nginx:majisti.local

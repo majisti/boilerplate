@@ -1,0 +1,3 @@
+nginx:
+    environment:
+      VIRTUAL_HOST: majisti.local

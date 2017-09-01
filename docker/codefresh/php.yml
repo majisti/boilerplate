@@ -5,7 +5,7 @@ steps:
     description: Build the fpm image
     dockerfile: Dockerfile
     image-name: majisti/fpm
-    working-directory: ${{initial-clone}}/docker/fpm
+    working-directory: ${{initial-clone}}/docker/php/fpm
     tag: 7.1.0.0
 
   push-fpm-image:
@@ -18,7 +18,7 @@ steps:
     description: Build the php image
     dockerfile: Dockerfile
     image-name: majisti/php-cli
-    working-directory: ${{initial-clone}}/docker/php
+    working-directory: ${{initial-clone}}/docker/php/cli
     tag: 7.1.0.0
 
   push-php-image:

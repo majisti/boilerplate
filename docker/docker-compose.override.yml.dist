@@ -1,6 +1,6 @@
 nginx:
     environment:
-        VIRTUAL_HOST: majisti.skeleton
+        VIRTUAL_HOST: majisti.local
 
 #fpm:
     #environment:

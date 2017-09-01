@@ -84,13 +84,13 @@ make clean && make
 Add to your `/etc/host` file:
 
 ```
-127.0.0.1   majisti.skeleton
+127.0.0.1   majisti.local
 ```
 
 
 ##Usage
 
-- Browse the site at `http://majisti.skeleton` or `http://majisti.skeleton:port` if you used a different port.
+- Browse the site at `http://majisti.local` or `http://majisti.local:port` if you used a different port.
 - You can also boot the tmux terminal using `sh tmux.sh`
 
 # Continuous Integration
@@ -98,7 +98,7 @@ Add to your `/etc/host` file:
 To run the entire setup with tests: `make ci`
 
 # Testing with Behaviour Driven Development
-You can run all tests using `make test`. This will run the whole testing pyramid, such as Acceptance,
+You can run all tests using `ENV=test make test`. This will run the whole testing pyramid, such as Acceptance,
 Functional, Integration and Unit tests
 
 The project is setup to be tested using BDD techniques. It is far from perfect
@@ -143,13 +143,13 @@ Do not try to test directly your Javascript (Mocha and Chai would be better)
 
 Running Functional tests using BrowserKit (fastest, but does not support JavaScript)
 ```
-docker-compose run --rm php bin/behat -vvv
+ENV=test make test-acceptance
 ```
 
 Running Functional tests in a real browser
 ```
-docker-compose run --rm php bin/behat -vvv -p firefox
-docker-compose run --rm php bin/behat -vvv -p chrome
+ENV=test make test-acceptance-firefox
+ENV=test make test-acceptance-chrome
 ```
 
 Running Functional tests in phantomjs

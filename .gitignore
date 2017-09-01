@@ -26,5 +26,7 @@ web/assets/js/app.js
 web/assets/css/styles.css
 .bundle/
 .php_cs.cache
+composer.phar
+yarn-error.log
 
 tests/_output/*

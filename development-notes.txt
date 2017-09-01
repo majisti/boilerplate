@@ -1,0 +1,16 @@
+Running make ci will fail when trying to install assets under Windows.
+I have removed the install assets from composer.json, but I do not think it fixes the problem.
+
+make ci
+OR
+docker-compose -p local_majisti-boilerplate -f docker/docker-compose.yml -f docker/docker-compose.local.yml -f docker/docker-compose.override.yml run --rm php bin/console assets:install web --symlink
+
+Gives output:
+Starting localmajistiboilerplate_data_1
+time="2017-09-01T17:42:34-04:00" level=info msg="Unable to use system certificate pool: crypto/x509: system root pool is not available on Windows"
+
+
+  [RuntimeException]
+  The Doctrine Proxy directory "/var/www/html/var/cache/dev/doctrine/orm/Proxies" is not writeable for the current system user.
+
+The thing is, it seems to only happen when running make ci, but running the full command works...

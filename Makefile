@@ -1,22 +1,49 @@
+ENV?=local
+
+ifeq ($(ENV), local)
+	SYMFONY_ENV=dev
+else ifeq ($(ENV), test)
+	SYMFONY_ENV=test
+else ifeq ($(ENV), demo)
+	SYMFONY_ENV=prod
+else
+	SYMFONY_ENV=$(ENV)
+endif
+
+DIRECTORY_NAME := $(shell pwd | xargs basename | tr -cd 'A-Za-z0-9_-')
 THIS_FILE := $(lastword $(MAKEFILE_LIST))
-DC=docker-compose
+
+DC?=docker-compose \
+	-p $(ENV)_$(DIRECTORY_NAME) \
+    -f docker/docker-compose.yml \
+    -f docker/docker-compose.$(ENV).yml \
+    -f docker/docker-compose.override.yml
+
 PHP=$(DC) run --rm php
 NODE=$(DC) run --rm node
 RUBY=$(DC) run --rm ruby
-COMPOSER=$(PHP) php -n -d extension=zip.so /usr/local/bin/composer
-
-DC_TEST=bin/test_env.sh
-PHP_TEST=$(DC_TEST) run --rm php
+COMPOSER?=$(PHP) php -n -d extension=zip.so -d memory_limit=-1 composer.phar
 
 ci: all cs test
-all: configure build start vendors-install ruby-install node-install assets
+all: configure build start composer-install vendors-install backend-assets node-install frontend-assets
 clean: stop
 restart: stop start
 restart-test: test-stop test-start
 test: test-prepare test-integration test-acceptance
 
+#cleans the containers for all environments
+clean-all:
+	$(eval $@_NAME := $(shell echo $(DIRECTORY_NAME) | tr -d '_-'))
+	docker stop $(shell docker ps -a -q --filter="name=$($@_NAME)")
+	docker rm -vf $(shell docker ps -a -q --filter="name=$($@_NAME)")
+
+#removes ALL containers, not just does under this project
+clean-docker:
+	docker kill $(docker ps -a -q)
+	docker rm $(docker ps -a -q)
+
 configure:
-	cp -n docker-compose.override.yml.dist docker-compose.override.yml
+	cp -n docker/docker-compose.override.yml.dist docker/docker-compose.override.yml
 
 up:
 	$(DC) up
@@ -32,16 +59,23 @@ build:
 	$(DC) pull
 	$(DC) build
 
-ruby-install:
-	$(RUBY) bundle install
+console:
+	$(PHP) php bin/console
 
 node-install:
-	$(NODE) npm install
-	ln -sf ../node_modules/bower/bin/bower bin/bower
-	ln -sf ../node_modules/gulp/bin/gulp.js bin/gulp
+	$(NODE) yarn install --no-bin-links
 
-assets:
-	$(NODE) bin/gulp
+frontend-assets:
+	$(NODE) node_modules/gulp/bin/gulp.js
+
+frontend-assets-watch:
+	$(NODE) node_modules/gulp/bin/gulp.js watch
+
+backend-assets:
+	$(PHP) bin/console assets:install web --symlink
+
+composer-install:
+	$(php) bash -c 'if [ -f composer.phar ]; then echo "updating composer..." && php composer.phar self-update; else echo "installing composer..." && curl -s http://getcomposer.org/installer | php; fi'
 
 composer-compile:
 	$(PHP) php yaml-to-json.phar convert composer.yml composer.json
@@ -53,30 +87,29 @@ vendors-update:
 	$(MAKE) -f $(THIS_FILE) composer-compile
 	$(COMPOSER) update
 
-test-start:
-	$(DC_TEST) up -d
-
-test-stop:
-	$(DC_TEST) kill
-	$(DC_TEST) rm -vf
-
 test-prepare:
-	$(PHP_TEST) bin/codecept build
+	$(PHP) bin/codecept build
 
 test-acceptance:
-	$(PHP_TEST) bin/behat -vvv
+	$(PHP) bin/behat -vvv
+
+test-acceptance-firefox:
+	$(PHP) bin/behat -vvv -p firefox
+
+test-acceptance-chrome:
+	$(PHP) bin/behat -vvv -p chrome
 
 test-integration:
-	$(PHP_TEST) bin/codecept -v run
+	$(PHP) bin/codecept -v run
 
 test-component:
-	$(PHP_TEST) bin/codecept -v run Component
+	$(PHP) bin/codecept -v run Component
 
 test-unit:
-	$(PHP_TEST) bin/codecept -v run Unit
+	$(PHP) bin/codecept -v run Unit
 
 cs:
-	$(PHP) php -n bin/php-cs-fixer fix --no-interaction --dry-run --diff -vvv
+	$(PHP) php -n vendor/fabpot/php-cs-fixer/php-cs-fixer fix --no-interaction --dry-run --diff -vvv
 
 cs-fix:
-	$(PHP) php -n bin/php-cs-fixer fix --no-interaction
+	$(PHP) php -n vendor/fabpot/php-cs-fixer/php-cs-fixer fix --no-interaction

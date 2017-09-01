@@ -28,7 +28,7 @@ default:
                 env: "test"
                 debug: "true"
         Behat\MinkExtension:
-            base_url: http://majisti.skeleton
+            base_url: http://majisti.local
             default_session: default
             show_cmd: "cp %s var/logs/last_response.html"
             sessions:
