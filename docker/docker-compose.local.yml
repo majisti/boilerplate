@@ -1,3 +1,7 @@
 nginx:
     environment:
       VIRTUAL_HOST: majisti.local
+
+fpm:
+    environment:
+        SYMFONY_ENV: dev
