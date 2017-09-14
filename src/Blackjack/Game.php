@@ -83,7 +83,7 @@ class Game
 
     public function hasWinner(): bool
     {
-        return $this->winner !== null;
+        return null !== $this->winner;
     }
 
     public function hasPlayerWon(): bool

@@ -108,28 +108,28 @@ class AsciiCardDrawer
         $tile = $hideCard ? static::TILE_CARD_FACE_DOWN : static::TILE_CARD_FACE_UP;
         $row .= str_repeat($tile, $this->columnsCount - 2 * strlen(static::VERTICAL_BORDER));
 
-        if ($currentRowIndex === 0 && !$hideCard) {
-            if ($card->getRank() === 10) {
-                $row{strlen(static::VERTICAL_BORDER) + 1} = '1';
-                $row{strlen(static::VERTICAL_BORDER) + 2} = '0';
+        if (0 === $currentRowIndex && !$hideCard) {
+            if (10 === $card->getRank()) {
+                $row[strlen(static::VERTICAL_BORDER) + 1] = '1';
+                $row[strlen(static::VERTICAL_BORDER) + 2] = '0';
             } else {
-                $row{strlen(static::VERTICAL_BORDER) + 1} = $this->getCorrespondingRankDisplay($card->getRank());
+                $row[strlen(static::VERTICAL_BORDER) + 1] = $this->getCorrespondingRankDisplay($card->getRank());
             }
         }
 
         if ($currentRowIndex === (int) ($this->rowsCount / 2) && !$hideCard) {
-            $row{(int) ($this->columnsCount / 2)} = static::PLACEHOLDER_CARD_SUIT;
+            $row[(int) ($this->columnsCount / 2)] = static::PLACEHOLDER_CARD_SUIT;
             $row = $this->replaceSuitPlaceholder($row, $card->getSuit());
         }
 
         if ($currentRowIndex === $this->rowsCount - 1 && !$hideCard) {
             $charIndex = $this->columnsCount - strlen(static::VERTICAL_BORDER)
                 - 2 * strlen(static::VERTICAL_BORDER);
-            if ($card->getRank() === 10) {
-                $row{$charIndex - 1} = '1';
-                $row{$charIndex} = '0';
+            if (10 === $card->getRank()) {
+                $row[$charIndex - 1] = '1';
+                $row[$charIndex] = '0';
             } else {
-                $row{$charIndex} = $this->getCorrespondingRankDisplay($card->getRank());
+                $row[$charIndex] = $this->getCorrespondingRankDisplay($card->getRank());
             }
         }
 

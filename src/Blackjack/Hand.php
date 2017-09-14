@@ -11,7 +11,7 @@ class Hand extends CardCollection
 
     public function hasBlackjack(): bool
     {
-        if ($this->count() == 2) {
+        if (2 == $this->count()) {
             return $this->hasAce() && $this->hasTen();
         }
 
@@ -32,7 +32,7 @@ class Hand extends CardCollection
     private function hasTen()
     {
         foreach ($this->toArray() as $card) {
-            if (Card::estimateScoreValue($card) === 10) {
+            if (10 === Card::estimateScoreValue($card)) {
                 return true;
             }
         }

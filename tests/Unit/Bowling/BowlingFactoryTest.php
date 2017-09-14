@@ -43,7 +43,7 @@ class BowlingFactoryTest extends UnitTest
 
         foreach ($game->getFrames() as $frame) {
             foreach ($frame->getRolls() as $index => $roll) {
-                if ($index === self::FIRST_ROLL_INDEX_ON_EACH_FRAME || $index === self::LAST_ROLL_INDEX_ON_LAST_FRAME) {
+                if (self::FIRST_ROLL_INDEX_ON_EACH_FRAME === $index || self::LAST_ROLL_INDEX_ON_LAST_FRAME === $index) {
                     $this->verifyThat($roll->isEqual($rollThatIsNotASpare));
                     continue;
                 }

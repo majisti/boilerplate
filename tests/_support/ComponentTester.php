@@ -22,7 +22,7 @@ class ComponentTester extends \Codeception\Actor
 {
     use _generated\ComponentTesterActions;
 
-   /*
-    * Define custom actions here
-    */
+    /*
+     * Define custom actions here
+     */
 }

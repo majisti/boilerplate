@@ -38,17 +38,17 @@ class Roll extends Enum
 
     public function isStrike(): bool
     {
-        return $this->getValue() === self::STRIKE;
+        return self::STRIKE === $this->getValue();
     }
 
     public function isSpare(): bool
     {
-        return $this->getValue() === self::SPARE;
+        return self::SPARE === $this->getValue();
     }
 
     public function isGutter(): bool
     {
-        return $this->getValue() === self::GUTTER;
+        return self::GUTTER === $this->getValue();
     }
 
     public function isEqual(Roll $roll): bool

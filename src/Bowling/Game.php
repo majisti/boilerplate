@@ -251,7 +251,7 @@ class Game implements IteratorAggregate
     {
         $lastFrame = $this->getLastFrame();
 
-        if ($lastFrame && $lastFrame->getRollsCount() === 1) {
+        if ($lastFrame && 1 === $lastFrame->getRollsCount()) {
             $lastFrame->addRoll(Roll::SPARE());
         }
     }

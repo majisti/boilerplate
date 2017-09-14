@@ -201,7 +201,7 @@ EOF;
                 case 'stand':
                     break;
             }
-        } while (!$player->hasBusted() && $answer === 'hit' && $player->getBestScore() < Hand::MAXIMUM_SCORE);
+        } while (!$player->hasBusted() && 'hit' === $answer && $player->getBestScore() < Hand::MAXIMUM_SCORE);
 
         if ($player->hasBusted()) {
             $this->output->writeln('<comment>You busted!</comment>');
