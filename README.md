@@ -84,13 +84,13 @@ make clean && make
 Add to your `/etc/host` file:
 
 ```
-127.0.0.1   majisti.local
+127.0.0.1   majisti-boilerplate.local
 ```
 
 
 ##Usage
 
-- Browse the site at `http://majisti.local` or `http://majisti.local:port` if you used a different port.
+- Browse the site at `http://majisti-boilerplate.local` or `http://majisti-boilerplate.local:port` if you used a different port.
 - You can also boot the tmux terminal using `sh tmux.sh`
 
 # Continuous Integration
