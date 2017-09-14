@@ -11,6 +11,7 @@ else
 endif
 
 DIRECTORY_NAME := $(shell pwd | xargs basename | tr -cd 'A-Za-z0-9_-')
+DOCKER_HOST_IP := $(shell docker-machine ip 2> /dev/null)
 THIS_FILE := $(lastword $(MAKEFILE_LIST))
 
 DC?=docker-compose \
@@ -25,11 +26,15 @@ RUBY=$(DC) run --rm ruby
 COMPOSER?=$(PHP) php -n -d extension=zip.so -d memory_limit=-1 composer.phar
 
 ci: all cs test
-all: configure build start composer-install vendors-install backend-assets node-install frontend-assets
+all: configure build composer-install vendors-install backend-assets node-install frontend-assets restart
 clean: stop
 restart: stop start
 restart-test: test-stop test-start
 test: test-prepare test-integration test-acceptance
+
+init-nginx-proxy:
+	docker stop nginx-proxy || true && docker rm nginx-proxy || true
+	docker run --name=nginx-proxy -d -p $(DOCKER_HOST_IP):80:80 -v /var/run/docker.sock:/tmp/docker.sock:ro jwilder/nginx-proxy
 
 #cleans the containers for all environments
 clean-all:
@@ -44,6 +49,12 @@ clean-docker:
 
 configure:
 	cp -n docker/docker-compose.override.yml.dist docker/docker-compose.override.yml
+
+ps:
+	$(DC) ps
+
+logs:
+	$(DC) logs
 
 up:
 	$(DC) up
@@ -75,7 +86,7 @@ backend-assets:
 	$(PHP) bin/console assets:install web --symlink
 
 composer-install:
-	$(php) bash -c 'if [ -f composer.phar ]; then echo "updating composer..." && php composer.phar self-update; else echo "installing composer..." && curl -s http://getcomposer.org/installer | php; fi'
+	$(PHP) bash -c 'if [ -f composer.phar ]; then echo "updating composer..." && php composer.phar self-update; else echo "installing composer..." && curl -s http://getcomposer.org/installer | php; fi'
 
 composer-compile:
 	$(PHP) php yaml-to-json.phar convert composer.yml composer.json
@@ -108,8 +119,8 @@ test-component:
 test-unit:
 	$(PHP) bin/codecept -v run Unit
 
-cs:
-	$(PHP) php -n vendor/fabpot/php-cs-fixer/php-cs-fixer fix --no-interaction --dry-run --diff -vvv
+lint:
+	$(PHP) php -n vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix --no-interaction --dry-run --diff -vvv
 
-cs-fix:
-	$(PHP) php -n vendor/fabpot/php-cs-fixer/php-cs-fixer fix --no-interaction
+lint-fix:
+	$(PHP) php -n vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix --no-interaction

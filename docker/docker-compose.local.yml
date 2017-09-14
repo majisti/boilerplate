@@ -1,6 +1,6 @@
 nginx:
     environment:
-      VIRTUAL_HOST: majisti.local
+      VIRTUAL_HOST: majisti-boilerplate.local
 
 fpm:
     environment:

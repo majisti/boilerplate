@@ -1,14 +1,21 @@
 <?php
 
-$finder = Symfony\CS\Finder::create()
+use PhpCsFixer\Config;
+use PhpCsFixer\Finder;
+
+$finder = Finder::create()
     ->in(__DIR__.'/src')
-    ->exclude('_support/_generated')
-    ->notPath('/.*Tests\/_support\/.*Tester.php/')
     ->in(__DIR__.'/tests')
 ;
 
-return Symfony\CS\Config::create()
+return Config::create()
     ->setUsingCache(true)
-    ->fixers(['-empty_return', '-psr0'])
-    ->finder($finder)
+    ->setRules([
+        '@Symfony' => true,
+        'no_useless_return' => true,
+        'psr0' => false,
+        'phpdoc_add_missing_param_annotation' => false,
+        'phpdoc_align' => false,
+    ])
+    ->setFinder($finder)
 ;

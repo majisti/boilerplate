@@ -1,18 +1,13 @@
-nginx:
-    environment:
-        VIRTUAL_HOST: majisti.local
-
 #fpm:
     #environment:
-        #SYMFONY_ENV: dev
         #SYMFONY__CACHE_DIR: /tmp/cache
         #SYMFONY__LOG_DIR: /tmp/logs
 
-#php:
-    #environment:
+php:
+    environment:
         #SYMFONY__CACHE_DIR: /tmp/cache
         #SYMFONY__LOG_DIR: /tmp/logs
 
-#        XDEBUG_CONFIG: idekey=PHPSTORM remote_host=192.168.241.130
-#        PHP_IDE_CONFIG: serverName=CUBE_API
+        XDEBUG_CONFIG: idekey=PHPSTORM remote_host=YOUR_IP
+        PHP_IDE_CONFIG: serverName=MAJISTI_BOILERPLATE
 #        XDEBUG: 1

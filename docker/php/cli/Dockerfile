@@ -40,9 +40,8 @@ COPY php.ini /usr/local/etc/php/php.ini
 COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
 RUN useradd --shell /bin/bash -c "" -m user
-WORKDIR /home/user
 
-RUN mkdir -p /var/www/html
+RUN mkdir -p /var/www/html && mkdir -p /home/user/.composer
 WORKDIR /var/www/html/
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
