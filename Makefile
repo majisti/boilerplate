@@ -1,15 +1,5 @@
 ENV?=local
 
-ifeq ($(ENV), local)
-	SYMFONY_ENV=dev
-else ifeq ($(ENV), test)
-	SYMFONY_ENV=test
-else ifeq ($(ENV), demo)
-	SYMFONY_ENV=prod
-else
-	SYMFONY_ENV=$(ENV)
-endif
-
 DIRECTORY_NAME := $(shell pwd | xargs basename | tr -cd 'A-Za-z0-9_-')
 DOCKER_HOST_IP := $(shell docker-machine ip 2> /dev/null)
 THIS_FILE := $(lastword $(MAKEFILE_LIST))
