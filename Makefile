@@ -25,7 +25,7 @@ NODE=$(DC) run --rm node
 RUBY=$(DC) run --rm ruby
 COMPOSER?=$(PHP) php -n -d extension=zip.so -d memory_limit=-1 composer.phar
 
-ci: all cs test
+ci: all lint test
 all: configure build composer-install vendors-install backend-assets node-install frontend-assets restart
 clean: stop
 restart: stop start

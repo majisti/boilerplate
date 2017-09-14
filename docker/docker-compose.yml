@@ -1,29 +1,24 @@
 nginx:
     build: nginx
-    volumes_from:
-        - data
     links:
         - fpm
     environment:
       VIRTUAL_HOST: majisti.local
+    volumes:
+        - ..:/var/www/html
 
 fpm:
     build: php/fpm
-    volumes_from:
-        - data
+    volumes:
+        - ..:/var/www/html
 
 node:
     build: node
-    volumes_from:
-        - data
+    volumes:
+        - ..:/var/www/html
 
 php:
     build: php/cli
-    volumes_from:
-        - data
-
-data:
-    image: busybox
     volumes:
         - ..:/var/www/html
         - ~/.composer:/home/user/.composer
