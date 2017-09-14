@@ -1,8 +1,6 @@
 #this abstract behat file is meant to be imported by the concrete project.
 
 default:
-    autoload:
-        '': %paths.base%/vendor/quebecor/cube-frontend-bundle/tests/Features/Context
     calls:
         error_reporting: 16383 # E_ALL & ~E_USER_DREPRECATED
     formatters:
@@ -14,8 +12,8 @@ default:
             filters:
                 tags: "~@skip"
             contexts:
-                - behatch:browser
-                - behatch:debug
+                - behatch:context:browser
+                - behatch:context:debug
                 - Behat\MinkExtension\Context\MinkContext
                 - Tests\Features\Context\ScreenshotContext: [%paths.base%/var/logs/screenshots]
                 - Tests\Features\Context\FeatureContext: {}
@@ -34,7 +32,7 @@ default:
             sessions:
                 default:
                     symfony2: ~
-        Sanpi\Behatch\Extension: ~
+        Behatch\Extension: ~
         SensioLabs\Behat\PageObjectExtension:
             namespaces:
                 page: [Tests\Features\Context\Page]

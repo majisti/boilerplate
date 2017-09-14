@@ -6,7 +6,7 @@ use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Behat\Hook\Scope\AfterStepScope;
 use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Mink\Exception\DriverException;
-use Sanpi\Behatch\Context\BaseContext;
+use Behatch\Context\BaseContext;
 
 /**
  * Defines application features from the specific context.
